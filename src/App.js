@@ -2,11 +2,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import './App.scss';
-import LogIn from './LogIn';
-import Join from './Join';
+import LogIn from './components/LogIn';
+import Join from './components/Join';
 import { Link, Route, Switch } from 'react-router-dom';
-import Welcome from './Welcome';
-import Main from './Main';
+import Welcome from './components/Welcome';
+import Main from './components/Main';
 import data from './data/userInfo.js';
 
 let Title = styled.h1`

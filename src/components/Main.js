@@ -1,8 +1,9 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import './Main.scss';
-import letters from './data/userLetters.js';
+import letters from '../data/userLetters.js';
+import topTags from '../data/topTagList.js';
 
 let Img = styled.img`
     width: 100px;
@@ -52,6 +53,37 @@ let BottomArrow = styled.img`
 
 function Main() {
     let [글검색, 글검색표시] = useState(false)
+    let [실시간, 실시간변경] = useState(() => {
+        let arr = []
+        for (var i in topTags) {
+            arr.push(false)
+        }
+        arr[0] = true
+        return arr
+    })
+    let index = 0;
+    let arrCopy = [...실시간]
+    useEffect(() => {
+        let 타이머 = setInterval(() => {
+            if (index < topTags.length - 1) {
+                console.log("시작" + index, arrCopy)
+                arrCopy[index] = false
+                arrCopy[index+1] = true
+                index += 1
+                console.log("끝" + index, arrCopy)
+            } else {
+                console.log("최대치 시작" + index, arrCopy)
+                arrCopy[index] = false
+                arrCopy[0] = true
+                index = 0
+                console.log("최대치 끝" + index, arrCopy)
+            }
+            실시간변경(arrCopy)
+        }, 2000)
+        return () => { clearInterval(타이머) }
+    }, [실시간변경])
+
+
     return (
         <div className="mainContainer">
             <UserTag />
@@ -81,7 +113,7 @@ function Main() {
                 {
                     글검색 &&
                     <>
-                        <input className="searchAnotherLetters"/>
+                        <input className="searchAnotherLetters" placeholder="닉네임을 입력하세요" autoFocus/>
                         <button>검색</button>
                     </>
                 }
@@ -89,26 +121,18 @@ function Main() {
                 <div>
                     <b>인기꼬리표</b>
                     <ul className="topHashList">
-                        <li>
-                            <TagImg src="/images/hashTag.png" alt="해시" />
-                            <p>맛집</p>
-                        </li>
-                        <li>
-                            <TagImg src="/images/hashTag.png" alt="해시" />
-                            <p>여행</p>
-                        </li>
-                        <li>
-                            <TagImg src="/images/hashTag.png" alt="해시" />
-                            <p>여행</p>
-                        </li>
-                        <li>
-                            <TagImg src="/images/hashTag.png" alt="해시" />
-                            <p>여행</p>
-                        </li>
-                        <li>
-                            <TagImg src="/images/hashTag.png" alt="해시" />
-                            <p>여행</p>
-                        </li>
+                        {
+                            topTags.map((tag, i) => {
+                                if (실시간[i]) {
+                                    return(
+                                        <li>
+                                            <TagImg src="/images/hashTag.png" alt="해시" />
+                                            <p>{tag.title}</p>
+                                        </li>
+                                    )
+                                }
+                            })
+                        }
                     </ul>
                     <BottomArrow src="/images/right-arrow.png" alt=""></BottomArrow>
                 </div>
@@ -116,8 +140,8 @@ function Main() {
             <div className="lettersContainer">
                 <div className="letters">
                     {
-                        letters.map((letter, i) => {
-                            return <Letter letter={letter} key={i}/>
+                        letters.map((letter) => {
+                            return <Letter letter={letter} key={letter.id}/>
                         })
                     }
                 </div>
