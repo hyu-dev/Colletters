@@ -1,0 +1,125 @@
+@import './reset.scss';
+
+.joinContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    button {
+        cursor: pointer;
+    }
+    .labelContainer {
+        @extend .joinContainer;
+        width: 400px;
+        align-items: flex-start;
+        margin: 20px 0;
+        label {
+            font-size: 25px;
+        }
+        .btnContainer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 400px;
+        }
+        .joinBtn {
+            width: 180px;
+            height: 70px;
+            background: $backColor;
+            border: 3px solid $join;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 25px;
+            letter-spacing: 1px;
+            color: $join;
+            padding: 0 10px;
+            outline: none;
+            position: relative;
+            margin-top: 10px;
+            &:hover {
+                background: $join;
+                color: $backColor;
+                transition: all 0.3s;
+            }
+            &:active {
+                top: 3px;
+            }
+        }
+        .backBtn {
+            @extend .joinBtn;
+            border-color: $cancel;
+            color: $cancel;
+            &:hover {
+                background:$cancel;
+                color: $backColor;
+                transition: all 0.3s;
+            }
+        }
+        .sendCertifyBtn {
+            @extend .joinBtn;
+            width: 400px;
+            margin: 10px 0 0;
+            height: 40px;
+            font-size: 20px;
+            border-color: $certify;
+            color: $certify;
+            &:hover {
+                background: $certify;
+                color: $backColor;
+                transition: all 0.3s;
+            }
+            &:active {
+                top: 3px;
+            }
+        }
+
+        .emailContainer {
+            @extend .joinContainer;
+            width: 400px;
+            flex-direction: row;
+            justify-content: space-between;
+            .userEmail {
+                width: 180px;
+                height: 70px;
+                border: 2px solid $cancel;
+                border-radius: 10px;
+                box-sizing: border-box;
+                font-size: 20px;
+                letter-spacing: 1px;
+                padding: 0 10px;
+                outline: none;
+                &:focus {
+                    border-color: $login;
+                }
+                option {
+                    font-size: 15px;
+                    border: none;
+                }
+            }
+            .certifyInfo {
+                @extend .userEmail;
+                width: 300px;
+                &:focus {
+                    border-color: $login;
+                }
+            }
+
+            .certifyBtn {
+                @extend .joinBtn;
+                margin: 0;
+                width: 80px;
+                font-size: 20px;
+                border-color: $certify;
+                color: $certify;
+                &:hover {
+                    background: $certify;
+                    color: $backColor;
+                    transition: all 0.3s;
+                }
+                &:active {
+                    top: 3px;
+                }
+            }
+        }
+    }
+}

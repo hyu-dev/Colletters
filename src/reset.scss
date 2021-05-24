@@ -1,0 +1,30 @@
+html, body {
+    margin: 0;
+}
+
+body::-webkit-scrollbar {
+    background: white;
+    width: 8px;
+}
+
+body::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-clip: padding-box;
+    border: 3px solid transparent;
+    background: lightgray;
+}
+
+body::-webkit-scrollbar-track {
+    background-color: white;
+    border-radius: 2px;
+}
+
+div {
+    box-sizing: border-box;
+}
+
+$join : #FF9BD1;
+$login : #7165FF;
+$certify : #87E8D6;
+$backColor : white;
+$cancel: black;
