@@ -20,8 +20,13 @@ let SearchTag = styled.img`
 `;
 
 let TagImg = styled.img`
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
+`;
+
+let TagImgInLetter = styled.img`
+    width: 15px;
+    height: 15px;
 `;
 
 let LetterImg = styled.img`
@@ -29,6 +34,18 @@ let LetterImg = styled.img`
     height: 250px;
     box-shadow: 0px 2px 5px #a9a9db;
     box-sizing: border-box;
+`;
+
+let CountImg = styled.img`
+    width: 30px;
+    height: 30px;
+`;
+
+let BottomArrow = styled.img`
+    width: 25px;
+    height: 25px;
+    transform: rotate(90deg);
+    cursor: pointer;
 `;
 
 function Main() {
@@ -44,15 +61,20 @@ function Main() {
                 </div>
             </div>
             <div className="selectionContainer">
-                <select name="" id="">
-                    <option>모든 글을 모아보다</option>
-                    <option>내 글만 모아보다</option>
-                    <option>누군가의 글을 엿보다</option>
-                </select>
-                <input />
+                <div>
+                    <select className="selectLetters">
+                        <option>모든 글을 모아보다</option>
+                        <option>내 글만 모아보다</option>
+                        <option>누군가의 글을 엿보다</option>
+                    </select>
+                </div>
+                <div>
+                    <input className="searchAnotherLetters"/>
+                    <button>검색</button>
+                </div>
                 <div>
                     <b>인기꼬리표</b>
-                    <ul>
+                    <ul className="topHashList">
                         <li>
                             <TagImg src="/images/hashTag.png" alt="해시" />
                             <p>맛집</p>
@@ -61,11 +83,31 @@ function Main() {
                             <TagImg src="/images/hashTag.png" alt="해시" />
                             <p>여행</p>
                         </li>
+                        <li>
+                            <TagImg src="/images/hashTag.png" alt="해시" />
+                            <p>여행</p>
+                        </li>
+                        <li>
+                            <TagImg src="/images/hashTag.png" alt="해시" />
+                            <p>여행</p>
+                        </li>
+                        <li>
+                            <TagImg src="/images/hashTag.png" alt="해시" />
+                            <p>여행</p>
+                        </li>
                     </ul>
+                    <BottomArrow src="/images/right-arrow.png" alt=""></BottomArrow>
                 </div>
             </div>
             <div className="lettersContainer">
                 <div className="letters">
+                    <Letter />
+                    <Letter />
+                    <Letter />
+                    <Letter />
+                    <Letter />
+                    <Letter />
+                    <Letter />
                     <Letter />
                     <Letter />
                     <Letter />
@@ -94,23 +136,43 @@ function Letter() {
             <p className="letterTitle">여기는 제목을 적습니다여기는 제목을 적습니다여기는 제목을 적습니다여기는 제목을 적습니다</p>
             <ul className="tags">
                 <li>
-                    <img src="" alt="" />
-                    <p>맛집</p>
+                    <TagImgInLetter src="/images/hashTag.png" alt="태그" />
+                    <p>맛집efefefwiwuefhiwuehf</p>
                 </li>
                 <li>
-                    <img src="" alt="" />
+                    <TagImgInLetter src="/images/hashTag.png" alt="태그" />
+                    <p>여행</p>
+                </li>
+                <li>
+                    <TagImgInLetter src="/images/hashTag.png" alt="태그" />
+                    <p>여행</p>
+                </li>
+                <li>
+                    <TagImgInLetter src="/images/hashTag.png" alt="태그" />
+                    <p>여행</p>
+                </li>
+                <li>
+                    <TagImgInLetter src="/images/hashTag.png" alt="태그" />
                     <p>여행</p>
                 </li>
             </ul>
-            <div>
-                <img src="" alt="" />
-                <p></p>
-            </div>
-            <div>
-                <img src="" alt="" />
-                <p></p>
+            <div className="countContainer">
+                <div className="count viewCount">
+                    <CountImg src="/images/eyes.png" alt="조회수" />
+                    <p>0</p>
+                </div>
+                <div className="count likeCount">
+                    <CountImg src="/images/like_none.png" alt="좋아요" />
+                    <p>0</p>
+                </div>
             </div>
         </div>
+    )
+}
+
+function DetailLetter() {
+    return(
+        <div></div>
     )
 }
 

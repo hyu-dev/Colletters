@@ -17,7 +17,7 @@
         justify-content: center;
         align-items: center;
         margin-top: 50px;
-        border: 2px solid red;
+        // border: 2px solid red;
         background-color: rgba(255, 255, 255, 0.5);
         .search {
             display: flex;
@@ -51,11 +51,58 @@
 
     .selectionContainer {
         width: 1100px;
-        height: 150px;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-        border: 2px solid red;
+        // border: 2px solid red;
+        div {
+            flex: 1;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            // border: 2px solid red;
+            .selectLetters {
+                width: 300px;
+                height: 60px;
+                border-radius: 10px;
+                outline: none;
+                padding: 0 10px;
+                font-family: Roboto;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 16px;
+            }
+            .topHashList {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                height: 45px;
+                // background-color: #87E8D6;
+                box-sizing: border-box;
+                li {
+                    width: 150px;
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    padding: 12px;
+                    // border: 2px solid red;
+                    p {
+                        margin: 0;
+                        padding: 0 10px;
+                        width: 100%;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        cursor: pointer;
+                        // border: 2px solid red;
+                    }
+                }
+                
+            }
+        }
     }
 
     .lettersContainer {
@@ -73,7 +120,7 @@
             align-items: flex-start;
             justify-items: center;
             margin: 0 auto;
-            border: 2px solid red;
+            // border: 2px solid red;
         }
     }
 
@@ -83,7 +130,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        border: 2px solid red;
+        // border: 2px solid red;
         .moreBtn {
             width: auto;
             height: 150px;
@@ -116,11 +163,10 @@
     height: 400px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     position: relative;
     background-color: #f6f6f6;
-    // border: 2px solid red;
     .userProfile {
         width: 70px;
         height: 70px;
@@ -134,6 +180,7 @@
         margin: 0;
         width: 100%;
         line-height: 30px;
+        height: 30px;
         align-items: center;
         text-align: center;
         letter-spacing: 0.1em;
@@ -141,28 +188,75 @@
         font-style: normal;
         font-weight: normal;
         font-size: 15px;
-        // border: 2px solid red;
     }
     .letterTitle {
         margin: 0;
         width: 250px;
-        height: 30px;
         line-height: 30px;
         letter-spacing: 0.1em;
         font-family: Rockwell;
         font-style: normal;
         font-weight: normal;
         font-size: 13px;
+        overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        border: 2px solid red;
     }
     .tags {
         list-style-type: none;
+        width: 50%;
+        height: 80px;
+        align-self: flex-start;
         margin: 0;
-        padding: 0;
+        padding: 0 0 0 25px;
+        box-sizing: border-box;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        // border: 2px solid red;
         li {
-
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            width: 100%;
+            padding: 3px 0;
+            margin: 5px 0;
+            p {
+                margin: 0;
+                padding: 0 0 0 5px;
+                width: 100%;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+    .countContainer {
+        width: 100px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        .count {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            p {
+                margin: 0;
+                padding: 0;
+                font-family: Rockwell;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 10px;
+                text-align: center;
+            }
         }
     }
 }
