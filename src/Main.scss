@@ -63,45 +63,45 @@
             align-items: center;
             overflow: hidden;
             // border: 2px solid red;
-            .selectLetters {
-                width: 300px;
-                height: 60px;
-                border-radius: 10px;
-                outline: none;
-                padding: 0 10px;
-                font-family: Roboto;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 16px;
-            }
-            .topHashList {
-                list-style-type: none;
-                margin: 0;
-                padding: 0;
-                overflow: hidden;
-                height: 45px;
-                // background-color: #87E8D6;
-                box-sizing: border-box;
-                li {
-                    width: 150px;
-                    display: flex;
-                    justify-content: flex-start;
-                    align-items: center;
-                    padding: 12px;
+        }
+        .selectLetters {
+            width: 300px;
+            height: 60px;
+            border-radius: 10px;
+            outline: none;
+            padding: 0 10px;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+        }
+        .topHashList {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 45px;
+            // background-color: #87E8D6;
+            box-sizing: border-box;
+            li {
+                width: 150px;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                padding: 12px;
+                // border: 2px solid red;
+                p {
+                    margin: 0;
+                    padding: 0 10px;
+                    width: 100%;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    cursor: pointer;
                     // border: 2px solid red;
-                    p {
-                        margin: 0;
-                        padding: 0 10px;
-                        width: 100%;
-                        overflow: hidden;
-                        white-space: nowrap;
-                        text-overflow: ellipsis;
-                        cursor: pointer;
-                        // border: 2px solid red;
-                    }
                 }
-                
             }
+            
         }
     }
 

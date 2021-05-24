@@ -7,7 +7,7 @@ import Join from './Join';
 import { Link, Route, Switch } from 'react-router-dom';
 import Welcome from './Welcome';
 import Main from './Main';
-import data from './data.js';
+import data from './data/userInfo.js';
 
 let Title = styled.h1`
   margin: 0;

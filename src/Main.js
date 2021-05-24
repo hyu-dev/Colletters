@@ -1,7 +1,8 @@
 /* eslint-disable */
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import './Main.scss';
+import letters from './data/userLetters.js';
 
 let Img = styled.img`
     width: 100px;
@@ -48,7 +49,9 @@ let BottomArrow = styled.img`
     cursor: pointer;
 `;
 
+
 function Main() {
+    let [글검색, 글검색표시] = useState(false)
     return (
         <div className="mainContainer">
             <UserTag />
@@ -62,15 +65,26 @@ function Main() {
             </div>
             <div className="selectionContainer">
                 <div>
-                    <select className="selectLetters">
+                    <select className="selectLetters" onChange={(e) => {
+                        if (e.target.value == '누군가의 글을 엿보다') {
+                            글검색표시(true)
+                        } else {
+                            글검색표시(false)
+                        }
+                    }}>
                         <option>모든 글을 모아보다</option>
                         <option>내 글만 모아보다</option>
                         <option>누군가의 글을 엿보다</option>
                     </select>
                 </div>
                 <div>
-                    <input className="searchAnotherLetters"/>
-                    <button>검색</button>
+                {
+                    글검색 &&
+                    <>
+                        <input className="searchAnotherLetters"/>
+                        <button>검색</button>
+                    </>
+                }
                 </div>
                 <div>
                     <b>인기꼬리표</b>
@@ -101,21 +115,15 @@ function Main() {
             </div>
             <div className="lettersContainer">
                 <div className="letters">
-                    <Letter />
-                    <Letter />
-                    <Letter />
-                    <Letter />
-                    <Letter />
-                    <Letter />
-                    <Letter />
-                    <Letter />
-                    <Letter />
-                    <Letter />
-                    <Letter />
+                    {
+                        letters.map((letter, i) => {
+                            return <Letter letter={letter} key={i}/>
+                        })
+                    }
                 </div>
             </div>
             <div className="btnContainer">
-                <button className="moreBtn">더보다</button>
+                <button className="moreBtn" onClick={() => {}}>더보다</button>
             </div>
         </div>
     );
@@ -127,43 +135,33 @@ function UserTag() {
     )
 }
 
-function Letter() {
+function Letter(props) {
     return(
         <div className="letter">
             <img className="userProfile" src="/images/userProfile.png" alt="" />
-            <p className="userNickName">아무닉네임</p>
-            <LetterImg src="/images/letterImg2.jpg" alt="이미지" />
-            <p className="letterTitle">여기는 제목을 적습니다여기는 제목을 적습니다여기는 제목을 적습니다여기는 제목을 적습니다</p>
+            <p className="userNickName">{props.letter.nickName}</p>
+            <LetterImg src={props.letter.mainAtt} alt="이미지" />
+            <p className="letterTitle">{props.letter.title}</p>
             <ul className="tags">
-                <li>
-                    <TagImgInLetter src="/images/hashTag.png" alt="태그" />
-                    <p>맛집efefefwiwuefhiwuehf</p>
-                </li>
-                <li>
-                    <TagImgInLetter src="/images/hashTag.png" alt="태그" />
-                    <p>여행</p>
-                </li>
-                <li>
-                    <TagImgInLetter src="/images/hashTag.png" alt="태그" />
-                    <p>여행</p>
-                </li>
-                <li>
-                    <TagImgInLetter src="/images/hashTag.png" alt="태그" />
-                    <p>여행</p>
-                </li>
-                <li>
-                    <TagImgInLetter src="/images/hashTag.png" alt="태그" />
-                    <p>여행</p>
-                </li>
+                {
+                    props.letter.tag.map((tag) => {
+                        return (
+                            <li>
+                                <TagImgInLetter src="/images/hashTag.png" alt="태그" />
+                                <p>{tag}</p>
+                            </li>
+                        )
+                    })
+                }
             </ul>
             <div className="countContainer">
                 <div className="count viewCount">
                     <CountImg src="/images/eyes.png" alt="조회수" />
-                    <p>0</p>
+                    <p>{props.letter.viewCount}</p>
                 </div>
                 <div className="count likeCount">
                     <CountImg src="/images/like_none.png" alt="좋아요" />
-                    <p>0</p>
+                    <p>{props.letter.likeCount}</p>
                 </div>
             </div>
         </div>
