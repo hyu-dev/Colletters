@@ -47,7 +47,9 @@ function App() {
           <Route path="/welcome">
             <Welcome />
           </Route>
-          <Route path="/main" component={Main} />
+          <Route path="/main">
+            <Main />
+          </Route>
         </LogInContainer>
     </div>
   );

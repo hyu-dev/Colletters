@@ -1,20 +1,10 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import './Main.scss';
 import letters from '../data/userLetters.js';
 import topTags from '../data/topTagList.js';
-
-let Img = styled.img`
-    width: 100px;
-    height: 100px;
-    position: absolute;
-    left: 170px;
-    top: 0px;
-    &:active {
-        top: 5px;
-    }
-`;
+import { Link, withRouter } from 'react-router-dom';
 
 let SearchTag = styled.img`
     position: absolute;
@@ -50,8 +40,69 @@ let BottomArrow = styled.img`
     cursor: pointer;
 `;
 
+let UserTagContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0);
+    transition: all 0.7s ease-in;
+    z-index: 5;
+    ${props => 
+        props.표시 && css`
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+        `
+    }
+    .infoContainer {
+        width: 1100px;
+        height: 0;
+        border-radius: 0 0 30px 30px;
+        box-sizing: border-box;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+        position: relative;
+        background: white;
+        transition: all 0.7s ease-in-out;
+        ${props =>
+            props.표시 &&
+            css`
+                height: 800px;
+            `
+        }
+        .profile {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+        }
+        .tagImg {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 5;
+            transform: translateX(-50%);
+            transition: all 0.7s ease-in-out;
+            ${props =>
+                props.표시 &&
+                css`
+                    top: 805px;
+                `
+            }
+        }
+    }
+    
+`;
 
-function Main() {
+
+
+function Main(props) {
+    console.log(props)
     let [글검색, 글검색표시] = useState(false)
     let [실시간, 실시간변경] = useState(() => {
         let arr = []
@@ -63,31 +114,31 @@ function Main() {
     })
     let index = 0;
     let arrCopy = [...실시간]
-    useEffect(() => {
-        let 타이머 = setInterval(() => {
-            if (index < topTags.length - 1) {
-                console.log("시작" + index, arrCopy)
-                arrCopy[index] = false
-                arrCopy[index+1] = true
-                index += 1
-                console.log("끝" + index, arrCopy)
-            } else {
-                console.log("최대치 시작" + index, arrCopy)
-                arrCopy[index] = false
-                arrCopy[0] = true
-                index = 0
-                console.log("최대치 끝" + index, arrCopy)
-            }
-            실시간변경(arrCopy)
-        }, 2000)
-        return () => { clearInterval(타이머) }
-    }, [실시간변경])
+    // useEffect(() => {
+    //     let 타이머 = setInterval(() => {
+    //         if (index < topTags.length - 1) {
+    //             console.log("시작" + index, arrCopy)
+    //             arrCopy[index] = false
+    //             arrCopy[index+1] = true
+    //             index += 1
+    //             console.log("끝" + index, arrCopy)
+    //         } else {
+    //             console.log("최대치 시작" + index, arrCopy)
+    //             arrCopy[index] = false
+    //             arrCopy[0] = true
+    //             index = 0
+    //             console.log("최대치 끝" + index, arrCopy)
+    //         }
+    //         실시간변경(arrCopy)
+    //     }, 2000)
+    //     return () => { clearInterval(타이머) }
+    // }, [실시간변경])
 
 
     return (
+        <>
+        <UserTag />
         <div className="mainContainer">
-            <UserTag />
-            <Img src="/images/tag.gif" alt="태그" />
             <div className="searchContainer">
                 <div className="search">
                     <SearchTag src="/images/hashTag.png" alt="해시" />
@@ -150,12 +201,49 @@ function Main() {
                 <button className="moreBtn" onClick={() => {}}>더보다</button>
             </div>
         </div>
+        </>
     );
 }
 
 function UserTag() {
+    let [표시, 표시변경] = useState(false)
+
     return(
-        <div></div>
+        <UserTagContainer 표시={표시}>
+            <div className="infoContainer" 표시={표시}>
+                <div className="buttonContainer">
+                    <button>내 정보 보다</button>
+                    <button>대표사진 바꾸다</button>
+                    <button>접속번호 바꾸다</button>
+                    <button>EMAIL 바꾸다</button>
+                </div>
+                <div className="userProfile">
+                    <table>
+                        <tr>
+                            <td rowSpan='3'>
+                                <img className="profile" src="/images/attachment/att1.jpg" alt="프로필사진" />
+                            </td>
+                            <td colSpan='2'>#user</td>
+                        </tr>
+                        <tr>
+                            <td colSpan='2'>아무닉네임</td>
+                        </tr>
+                        <tr>
+                            <td colSpan='2'>hyu630115@gmail.com</td>
+                        </tr>
+                        <tr>
+                            <td colSpan='3'>
+                                <b>최근 끼적인 글 제목</b>
+                                <p>잘 모르겠지만, 앞으로도 잘 모르지만, 잘 될거라고 생각? 할까?</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div></div>
+                <div></div>
+                <img className="tagImg" src="/images/tag.gif" alt="태그" 표시={표시} onClick={ () => { 표시변경(!표시) } }/>
+            </div>
+        </UserTagContainer>
     )
 }
 
@@ -198,4 +286,4 @@ function DetailLetter() {
     )
 }
 
-export default Main;
+export default withRouter(Main);
