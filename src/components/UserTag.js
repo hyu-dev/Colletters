@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
-
+import './UserTag.scss';
+import { withRouter } from 'react-router-dom';
 
 let UserTagContainer = styled.div`
     display: flex;
@@ -60,19 +61,95 @@ let UserTagContainer = styled.div`
     }
 `;
 
-function UserTag() {
+let Button = styled.button`
+    width: 220px;
+    height: 70px;
+    background: white;
+    border: 3px solid #7165FF;
+    border-radius: 10px;
+    box-sizing: border-box;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 25px;
+    color: #7165FF;
+    margin: 0 21px;
+    position: relative;
+    transition: all 0.3s ease-in;
+    &:hover {
+        background-color: #7165FF;
+        color: white;
+    }
+    &:active {
+        background-color: #7165FF;
+        color: white;
+        top: 5px;
+    }
+    ${props => 
+        props.children === '글 끼적이러 가다' &&
+        css`
+            border-color: #FF9BD1;
+            width: 300px;
+            color: #FF9BD1;
+            &:hover {
+                background-color: #FF9BD1;
+                color: white;
+            }
+            &:active {
+                background-color: #FF9BD1;
+                color: white;
+                top: 5px;
+            }
+        `
+    }
+`;
+
+let TextButton = styled.button`
+    width: auto;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 35px;
+    line-height: 41px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.1em;
+    color: #000000;
+    background: none;
+    outline: none;
+    border: none;
+    position: relative;
+    text-shadow: 0px 1px 5px rgba(0, 0, 0, 0.40);
+    &:hover {
+        color: #7165FF;
+    }
+    &:active {
+        top: 5px;
+    }
+`;
+
+function UserTag(props) {
     let [표시, 표시변경] = useState(false)
     return (
         <UserTagContainer 표시={표시}>
             <div className="infoContainer" 표시={표시}>
+            {
+                표시 && 
+                <>
                 <div className="buttonContainer">
-                    <button>내 정보 보다</button>
-                    <button>대표사진 바꾸다</button>
-                    <button>접속번호 바꾸다</button>
-                    <button>EMAIL 바꾸다</button>
+                    <Button>내 정보 보다</Button>
+                    <Button>대표사진 바꾸다</Button>
+                    <Button>접속번호 바꾸다</Button>
+                    <Button>EMAIL 바꾸다</Button>
                 </div>
                 <div className="userProfile">
                     <table>
+                        <colgroup>
+                            <col width="40%"/>
+                            <col width="30%"/>
+                            <col width="30%"/>
+                        </colgroup>
                         <tr>
                             <td rowSpan='3'>
                                 <img className="profile" src="/images/attachment/att1.jpg" alt="프로필사진" />
@@ -93,12 +170,19 @@ function UserTag() {
                         </tr>
                     </table>
                 </div>
-                <div></div>
-                <div></div>
-                <img className="tagImg" src="/images/tag.gif" alt="태그" 표시={표시} onClick={ () => { 표시변경(!표시) } }/>
+                <div><Button onClick={() => {
+
+                }}>글 끼적이러 가다</Button></div>
+                <div className="textBtnContainer">
+                    <TextButton>지우다</TextButton>
+                    <TextButton>그만하다</TextButton>
+                </div>
+                </>
+            }
+            <img className="tagImg" src="/images/tag.gif" alt="태그" 표시={표시} onClick={ () => { 표시변경(!표시) } }/>
             </div>
         </UserTagContainer>
     );
 }
 
-export default UserTag;
+export default withRouter(UserTag);
