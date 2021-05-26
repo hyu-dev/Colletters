@@ -28,7 +28,7 @@ function Letter(props) {
             <p className="letterTitle">{props.letter.title}</p>
             <ul className="tags">
                 {
-                    props.letter.tag.map((tag) => {
+                    props.letter.tag.map((tag, i) => {
                         return (
                             <li>
                                 <TagImgInLetter src="/images/hashTag.png" alt="태그" />

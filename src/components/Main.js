@@ -6,6 +6,7 @@ import letters from '../data/userLetters.js';
 import topTags from '../data/topTagList.js';
 import UserTag from './UserTag.js';
 import Letter from './Letter.js';
+import DetailLetter from './DetailLetter.js';
 import { Link, withRouter } from 'react-router-dom';
 
 let SearchTag = styled.img`
@@ -64,6 +65,7 @@ function Main(props) {
     return (
         <>
         <UserTag />
+        <DetailLetter />
         <div className="mainContainer">
             <div className="searchContainer">
                 <div className="search">
@@ -117,7 +119,7 @@ function Main(props) {
             <div className="lettersContainer">
                 <div className="letters">
                     {
-                        letters.map((letter) => {
+                        letters.map((letter, i) => {
                             return <Letter letter={letter} key={letter.id}/>
                         })
                     }
@@ -131,12 +133,5 @@ function Main(props) {
     );
 }
 
-
-
-function DetailLetter() {
-    return(
-        <div></div>
-    )
-}
 
 export default withRouter(Main);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import './UserTag.scss';
 import { withRouter } from 'react-router-dom';
@@ -58,6 +58,35 @@ let UserTagContainer = styled.div`
                 `
             }
         }
+        .buttonContainer {
+            position: absolute;
+            bottom: 100%;
+            transform: translateY(0);
+            transition: all 0.7s ease-in;
+            ${props =>
+                props.표시 &&
+                css`
+                transform: translateY(100%);
+                `
+            }
+        }
+        .userProfile {
+            position: absolute;
+            padding: 0;
+            bottom: 250px;
+        }
+        .writeBtnContainer {
+            position: absolute;
+            bottom: 30px;
+        }
+        .textBtnContainer {
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            bottom: 0;
+        }
     }
 `;
 
@@ -102,6 +131,13 @@ let Button = styled.button`
             }
         `
     }
+    ${props =>
+        props.children === props.change &&
+        css`
+            background-color: #7165FF;
+            color: white;
+        `
+    }
 `;
 
 let TextButton = styled.button`
@@ -131,17 +167,20 @@ let TextButton = styled.button`
 
 function UserTag(props) {
     let [표시, 표시변경] = useState(false)
+    let [change, setChange] = useState('내 정보 보다')
+
+    useEffect(() => {
+         
+    }, [])
+
     return (
         <UserTagContainer 표시={표시}>
             <div className="infoContainer" 표시={표시}>
-            {
-                표시 && 
-                <>
                 <div className="buttonContainer">
-                    <Button>내 정보 보다</Button>
-                    <Button>대표사진 바꾸다</Button>
-                    <Button>접속번호 바꾸다</Button>
-                    <Button>EMAIL 바꾸다</Button>
+                    <Button change={change} onClick={() => { setChange('내 정보 보다') } }>내 정보 보다</Button>
+                    <Button change={change} onClick={() => { setChange('대표사진 바꾸다') } }>대표사진 바꾸다</Button>
+                    <Button change={change} onClick={() => { setChange('접속번호 바꾸다') } }>접속번호 바꾸다</Button>
+                    <Button change={change} onClick={() => { setChange('EMAIL 바꾸다') } }>EMAIL 바꾸다</Button>
                 </div>
                 <div className="userProfile">
                     <table>
@@ -170,16 +209,14 @@ function UserTag(props) {
                         </tr>
                     </table>
                 </div>
-                <div><Button onClick={() => {
+                <div className="writeBtnContainer"><Button onClick={() => {
 
                 }}>글 끼적이러 가다</Button></div>
                 <div className="textBtnContainer">
-                    <TextButton>지우다</TextButton>
-                    <TextButton>그만하다</TextButton>
+                    <TextButton>영원히안녕</TextButton>
+                    <TextButton>또보자</TextButton>
                 </div>
-                </>
-            }
-            <img className="tagImg" src="/images/tag.gif" alt="태그" 표시={표시} onClick={ () => { 표시변경(!표시) } }/>
+                <img className="tagImg" src="/images/tag.gif" alt="태그" 표시={표시} onClick={ () => { 표시변경(!표시) } }/>
             </div>
         </UserTagContainer>
     );
