@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css, createClobalStyle } from 'styled-components';
 import './UserTag.scss';
 import { withRouter } from 'react-router-dom';
 
-let UserTagContainer = styled.div`
+
+const UserTagContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -90,7 +91,7 @@ let UserTagContainer = styled.div`
     }
 `;
 
-let Button = styled.button`
+const Button = styled.button`
     width: 220px;
     height: 70px;
     background: white;
@@ -140,7 +141,7 @@ let Button = styled.button`
     }
 `;
 
-let TextButton = styled.button`
+const TextButton = styled.button`
     width: auto;
     font-family: Roboto;
     font-style: normal;

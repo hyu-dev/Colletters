@@ -31,20 +31,24 @@
                 width: 800px;
                 height: 100px;
                 border: none;
-                border-bottom: 5px solid black;
-                padding: 0 15px 0 105px;
+                border-bottom: 5px solid #ced4da;
+                padding: 10px 15px 0 105px;
                 box-sizing: border-box;
                 font-family: NanumGothic;
                 font-style: normal;
                 font-weight: normal;
                 font-size: 58px;
-                align-items: center;
                 text-align: left;
                 outline: none;
+                color: #343a40;
                 background-color: rgba(255, 255, 255, 0.5);
                 &:focus {
                     border-bottom: 5px solid #87E8D6;
                 }
+            }
+            .searchInput::placeholder {
+                color: #ced4da;
+                text-align: center;
             }
         }
     }

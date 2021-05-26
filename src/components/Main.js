@@ -8,19 +8,25 @@ import UserTag from './UserTag.js';
 import Letter from './Letter.js';
 import DetailLetter from './DetailLetter.js';
 import { Link, withRouter } from 'react-router-dom';
+import { FaSlackHash } from 'react-icons/fa';
+import { IconContext } from 'react-icons/lib';
 
-let SearchTag = styled.img`
+
+const SearchTagDiv = styled.div`
+    width: 100px;
+    height: 100px;
     position: absolute;
     left: 10px;
+
 `;
 
-let TagImg = styled.img`
+const TagImg = styled.img`
     width: 20px;
     height: 20px;
 `;
 
 
-let BottomArrow = styled.img`
+const BottomArrow = styled.img`
     width: 25px;
     height: 25px;
     transform: rotate(90deg);
@@ -60,7 +66,7 @@ function Main(props) {
     //     }, 2000)
     //     return () => { clearInterval(타이머) }
     // }, [실시간변경])
-
+    const [iconColor, setIconColor] = useState('#dee2e6')
 
     return (
         <>
@@ -69,8 +75,15 @@ function Main(props) {
         <div className="mainContainer">
             <div className="searchContainer">
                 <div className="search">
-                    <SearchTag src="/images/hashTag.png" alt="해시" />
-                    <input className="searchInput" />
+                    <IconContext.Provider value={{size: 90, color: iconColor}}>
+                    <SearchTagDiv><FaSlackHash /></SearchTagDiv>
+                    </IconContext.Provider>
+                    <input 
+                        className="searchInput"
+                        placeholder="꼬리표를 검색하다"
+                        onFocus={()=> {setIconColor('#87E8D6')}}
+                        onBlur={() => {setIconColor('#dee2e6')}}
+                    />
                     <div className="searchResult"></div>
                 </div>
             </div>
