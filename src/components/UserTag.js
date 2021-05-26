@@ -1,95 +1,140 @@
 import React, { useEffect, useState } from 'react';
-import styled, { css, createClobalStyle } from 'styled-components';
-import './UserTag.scss';
+import styled, { css } from 'styled-components';
 import { withRouter } from 'react-router-dom';
+import './UserTag.scss';
+import NestContainer from './NestContainer.js';
+import { connect } from 'react-redux';
 
 
-const UserTagContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
+const InfoContainer = styled.div`
+    width: 1100px;
     height: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: rgba(255, 255, 255, 0);
-    transition: all 0.7s ease-in;
-    z-index: 5;
-    ${props => 
-        props.표시 && css`
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 0 0 30px 30px;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+    position: relative;
+    background: white;
+    transition: all 0.7s ease-in-out;
+    ${props =>
+        props.modal &&
+        css`
+            height: 800px;
         `
     }
-    .infoContainer {
-        width: 1100px;
-        height: 0;
-        border-radius: 0 0 30px 30px;
-        box-sizing: border-box;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
-        position: relative;
-        background: white;
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 50px 0;
+    }
+    .profile {
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+    }
+    .tagImg {
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 5;
+        transform: translateX(-50%);
         transition: all 0.7s ease-in-out;
         ${props =>
-            props.표시 &&
+            props.modal &&
             css`
-                height: 800px;
+                top: 805px;
             `
         }
-        .profile {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-        }
-        .tagImg {
-            width: 100px;
-            height: 100px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 5;
-            transform: translateX(-50%);
-            transition: all 0.7s ease-in-out;
-            ${props =>
-                props.표시 &&
-                css`
-                    top: 805px;
-                `
-            }
-        }
-        .buttonContainer {
-            position: absolute;
-            bottom: 100%;
-            transform: translateY(0);
-            transition: all 0.7s ease-in;
-            ${props =>
-                props.표시 &&
-                css`
-                transform: translateY(100%);
-                `
-            }
-        }
-        .userProfile {
-            position: absolute;
-            padding: 0;
-            bottom: 250px;
-        }
-        .writeBtnContainer {
-            position: absolute;
-            bottom: 30px;
-        }
-        .textBtnContainer {
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: absolute;
-            bottom: 0;
+    }
+    .buttonContainer {
+        position: absolute;
+        bottom: 100%;
+        transform: translateY(0);
+        transition: all 0.7s ease-in;
+        ${props =>
+            props.modal &&
+            css`
+            transform: translateY(100%);
+            `
         }
     }
+    .userProfile {
+        position: absolute;
+        padding: 0;
+        bottom: 250px;
+    }
+    .writeBtnContainer {
+        position: absolute;
+        bottom: 30px;
+    }
+    .textBtnContainer {
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        bottom: 0;
+    }
+    table {
+        width: 80%;
+        td {
+            // border: 1px solid red;
+            text-align: center;
+            font-family: Rockwell;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 25px;
+        }
+        tr:nth-of-type(2) {
+            td {
+                text-align: left;
+            }
+        }
+        tr:nth-of-type(3) {
+            td {
+                text-align: left;
+            }
+        }
+        tr:nth-of-type(4) {
+            td {
+                padding-top: 20px;
+                // line-height: 50px;
+                // text-align: left;
+                b {
+                    font-family: Rockwell;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 15px;
+                    width: 100%;
+                    display: inline-block;
+                    padding: 0 20px;
+                    // border: 2px solid red;
+                    text-align: left;
+                }
+                p {
+                    margin: 0;
+                    padding: 10px 0 10px 20px;
+                    font-family: Rockwell;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 25px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+
+        td:nth-of-type(2) {
+            text-align: left;
+        }
+    }
+        
 `;
+        
 
 const Button = styled.button`
     width: 220px;
@@ -167,7 +212,6 @@ const TextButton = styled.button`
 `;
 
 function UserTag(props) {
-    let [표시, 표시변경] = useState(false)
     let [change, setChange] = useState('내 정보 보다')
 
     useEffect(() => {
@@ -175,8 +219,8 @@ function UserTag(props) {
     }, [])
 
     return (
-        <UserTagContainer 표시={표시}>
-            <div className="infoContainer" 표시={표시}>
+        <NestContainer modal={props.modal}>
+            <InfoContainer modal={props.modal}>
                 <div className="buttonContainer">
                     <Button change={change} onClick={() => { setChange('내 정보 보다') } }>내 정보 보다</Button>
                     <Button change={change} onClick={() => { setChange('대표사진 바꾸다') } }>대표사진 바꾸다</Button>
@@ -217,10 +261,16 @@ function UserTag(props) {
                     <TextButton>영원히안녕</TextButton>
                     <TextButton>또보자</TextButton>
                 </div>
-                <img className="tagImg" src="/images/tag.gif" alt="태그" 표시={표시} onClick={ () => { 표시변경(!표시) } }/>
-            </div>
-        </UserTagContainer>
+                <img className="tagImg" src="/images/tag.gif" alt="태그" modal={props.modal} onClick={ () => { props.dispatch( {type : 'OPEN'}) } }/>
+            </InfoContainer>
+        </NestContainer>
     );
 }
 
-export default withRouter(UserTag);
+function openModal(state) {
+    return {
+        modal : state
+    }
+}
+
+export default connect(openModal)(withRouter(UserTag));

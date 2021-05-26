@@ -10,6 +10,7 @@ import DetailLetter from './DetailLetter.js';
 import { Link, withRouter } from 'react-router-dom';
 import { FaSlackHash } from 'react-icons/fa';
 import { IconContext } from 'react-icons/lib';
+import { connect } from 'react-redux';
 
 
 const SearchTagDiv = styled.div`
@@ -36,8 +37,8 @@ const BottomArrow = styled.img`
 
 function Main(props) {
     console.log(props)
-    let [글검색, 글검색표시] = useState(false)
-    let [실시간, 실시간변경] = useState(() => {
+    const [글검색, 글검색표시] = useState(false)
+    const [실시간, 실시간변경] = useState(() => {
         let arr = []
         for (var i in topTags) {
             arr.push(false)
@@ -70,8 +71,8 @@ function Main(props) {
 
     return (
         <>
-        <UserTag />
-        <DetailLetter />
+        <UserTag modal={props.modal} />
+        <DetailLetter modal={props.modal} />
         <div className="mainContainer">
             <div className="searchContainer">
                 <div className="search">
@@ -146,5 +147,10 @@ function Main(props) {
     );
 }
 
+function openModal(state) {
+    return {
+        modal : state
+    }
+}
 
-export default withRouter(Main);
+export default connect(openModal)(withRouter(Main));
