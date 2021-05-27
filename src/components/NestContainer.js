@@ -11,8 +11,8 @@ const NestContainer = styled.div`
     top: 0;
     left: 0;
     background-color: rgba(255, 255, 255, 0);
-    transition: all 0.7s ease-in;
-    z-index: 5;
+    /* transition: all 0.1s ease-in; */
+    z-index: 2;
     ${props => 
         props.modal &&
         css`

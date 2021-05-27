@@ -8,6 +8,7 @@ import { FaSlackHash } from 'react-icons/fa';
 
 import NestContainer from './NestContainer.js';
 import '../scss/DetailLetter.scss';
+import { useOpenLetterDispatch, useOpenLetterState } from '../data/ModalContext.js';
 
 const DetailContainer = styled.div`
     width: 1100px;
@@ -17,9 +18,16 @@ const DetailContainer = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
+    z-index: 5;
+    ${ props =>
+        props.modal &&
+        css`
+            display: flex;
+        `
+    }
 `;
 
 const CloseButtonContainer = styled.div`
@@ -30,6 +38,7 @@ const CloseButtonContainer = styled.div`
     left: 0;
     transform: translate(-40%, -40%) rotate(45deg);
     cursor: pointer;
+    z-index: 6;
 `;
 
 const NickNameTitle = styled.h2`
@@ -81,14 +90,18 @@ const ToggleContainer = styled.div`
 
 
 function DetailLetter(props) {
-    const [showLetter, setShowLetter] = useState(false);
-    
+    const openLetterState = useOpenLetterState();
+    const openLetterDispatch = useOpenLetterDispatch();
+    console.log(openLetterState)
+
     return (
-        <NestContainer model={props.model}>
-            <DetailContainer>
-                <IconContext.Provider value={{size:60}}>
-                    <CloseButtonContainer><FaPlus /></CloseButtonContainer>
-                </IconContext.Provider>
+        <NestContainer modal={ openLetterState }>
+            <DetailContainer modal={ openLetterState }>
+                <CloseButtonContainer onClick={ () => { openLetterDispatch({ type: 'OPEN' }); console.log("상세페이지닫기") } }>
+                    <IconContext.Provider value={{size:60}}>
+                        <FaPlus />
+                    </IconContext.Provider>
+                </CloseButtonContainer>
                 <NickNameTitle>아무닉네임 님이 끼적인 글</NickNameTitle>
                 <ToggleContainer>
                     <p>바꾸다</p>
@@ -119,38 +132,6 @@ function DetailLetter(props) {
                             <img src="/images/userProfile.png" alt="프로필" />
                             <p>댓글남김</p>
                         </li>
-                        <li>
-                            <img src="/images/userProfile.png" alt="프로필" />
-                            <p>댓글남김</p>
-                        </li>
-                        <li>
-                            <img src="/images/userProfile.png" alt="프로필" />
-                            <p>댓글남김</p>
-                        </li>
-                        <li>
-                            <img src="/images/userProfile.png" alt="프로필" />
-                            <p>댓글남김</p>
-                        </li>
-                        <li>
-                            <img src="/images/userProfile.png" alt="프로필" />
-                            <p>댓글남김</p>
-                        </li>
-                        <li>
-                            <img src="/images/userProfile.png" alt="프로필" />
-                            <p>댓글남김</p>
-                        </li>
-                        <li>
-                            <img src="/images/userProfile.png" alt="프로필" />
-                            <p>댓글남김</p>
-                        </li>
-                        <li>
-                            <img src="/images/userProfile.png" alt="프로필" />
-                            <p>댓글남김</p>
-                        </li>
-                        <li>
-                            <img src="/images/userProfile.png" alt="프로필" />
-                            <p>댓글남김</p>
-                        </li>
                     </ul>
                     <div className="sendReplyContainer">
                         <img src="/images/userProfile.png" alt="작성자"/>
@@ -163,10 +144,4 @@ function DetailLetter(props) {
     );
 }
 
-function openModal(state) {
-    return {
-        modal : state
-    }
-}
-
-export default connect(openModal)(DetailLetter);
+export default DetailLetter;

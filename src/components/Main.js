@@ -11,6 +11,8 @@ import { Link, withRouter } from 'react-router-dom';
 import { FaSlackHash } from 'react-icons/fa';
 import { IconContext } from 'react-icons/lib';
 import { connect } from 'react-redux';
+import { useLetterState } from '../data/LetterContext';
+import { OpenLetterProvider, OpenTagProvider, useModalDispatch, useModalState, useOpenLetterDispatch, useOpenTagState } from '../data/ModalContext';
 
 
 const SearchTagDiv = styled.div`
@@ -36,6 +38,8 @@ const BottomArrow = styled.img`
 
 
 function Main(props) {
+    const letterState = useLetterState();
+    
     console.log(props)
     const [글검색, 글검색표시] = useState(false)
     const [실시간, 실시간변경] = useState(() => {
@@ -71,86 +75,92 @@ function Main(props) {
 
     return (
         <>
-        <UserTag modal={props.modal} />
-        <DetailLetter modal={props.modal} />
-        <div className="mainContainer">
-            <div className="searchContainer">
-                <div className="search">
-                    <IconContext.Provider value={{size: 90, color: iconColor}}>
-                    <SearchTagDiv><FaSlackHash /></SearchTagDiv>
-                    </IconContext.Provider>
-                    <input 
-                        className="searchInput"
-                        placeholder="꼬리표를 검색하다"
-                        onFocus={()=> {setIconColor('#87E8D6')}}
-                        onBlur={() => {setIconColor('#dee2e6')}}
-                    />
-                    <div className="searchResult"></div>
+        <OpenTagProvider>
+            <UserTag />
+        </OpenTagProvider>
+        <OpenLetterProvider>
+            <DetailLetter />
+            <div className="mainContainer">
+                <div className="searchContainer">
+                    <div className="search">
+                        <IconContext.Provider value={{size: 90, color: iconColor}}>
+                            <SearchTagDiv>
+                                <FaSlackHash />
+                            </SearchTagDiv>
+                        </IconContext.Provider>
+                        <input 
+                            className="searchInput"
+                            placeholder="꼬리표를 검색하다"
+                            onFocus={()=> {setIconColor('#87E8D6')}}
+                            onBlur={() => {setIconColor('#dee2e6')}}
+                        />
+                        <div className="searchResult"></div>
+                    </div>
                 </div>
-            </div>
-            <div className="selectionContainer">
-                <div>
-                    <select className="selectLetters" onChange={(e) => {
-                        if (e.target.value == '누군가의 글을 엿보다') {
-                            글검색표시(true)
-                        } else {
-                            글검색표시(false)
-                        }
-                    }}>
-                        <option>모든 글을 모아보다</option>
-                        <option>내 글만 모아보다</option>
-                        <option>누군가의 글을 엿보다</option>
-                    </select>
+                <div className="selectionContainer">
+                    <div>
+                        <select className="selectLetters" onChange={(e) => {
+                            if (e.target.value == '누군가의 글을 엿보다') {
+                                글검색표시(true)
+                            } else {
+                                글검색표시(false)
+                            }
+                        }}>
+                            <option>모든 글을 모아보다</option>
+                            <option>내 글만 모아보다</option>
+                            <option>누군가의 글을 엿보다</option>
+                        </select>
+                    </div>
+                    <div>
+                    {
+                        글검색 &&
+                        <>
+                            <input className="searchAnotherLetters" placeholder="닉네임을 입력하세요" autoFocus/>
+                            <button>검색</button>
+                        </>
+                    }
+                    </div>
+                    <div>
+                        <b>인기꼬리표</b>
+                        <ul className="topHashList">
+                            {
+                                topTags.map((tag, i) => {
+                                    if (실시간[i]) {
+                                        return(
+                                            <li>
+                                                <TagImg src="/images/hashTag.png" alt="해시" />
+                                                <p>{tag.title}</p>
+                                            </li>
+                                        )
+                                    }
+                                })
+                            }
+                        </ul>
+                        <BottomArrow src="/images/right-arrow.png" alt=""></BottomArrow>
+                    </div>
                 </div>
-                <div>
-                {
-                    글검색 &&
-                    <>
-                        <input className="searchAnotherLetters" placeholder="닉네임을 입력하세요" autoFocus/>
-                        <button>검색</button>
-                    </>
-                }
-                </div>
-                <div>
-                    <b>인기꼬리표</b>
-                    <ul className="topHashList">
+                <div className="lettersContainer">
+                    <div className="letters">
                         {
-                            topTags.map((tag, i) => {
-                                if (실시간[i]) {
-                                    return(
-                                        <li>
-                                            <TagImg src="/images/hashTag.png" alt="해시" />
-                                            <p>{tag.title}</p>
-                                        </li>
-                                    )
-                                }
+                            letters.map((letter, i) => {
+                                return (
+                                    <Letter 
+                                        letter={letter} 
+                                        key={i} 
+                                    />
+                                )
                             })
                         }
-                    </ul>
-                    <BottomArrow src="/images/right-arrow.png" alt=""></BottomArrow>
+                    </div>
+                </div>
+                <div className="btnContainer">
+                    <button className="moreBtn" onClick={() => {}}>더보다</button>
                 </div>
             </div>
-            <div className="lettersContainer">
-                <div className="letters">
-                    {
-                        letters.map((letter, i) => {
-                            return <Letter letter={letter} key={letter.id} />
-                        })
-                    }
-                </div>
-            </div>
-            <div className="btnContainer">
-                <button className="moreBtn" onClick={() => {}}>더보다</button>
-            </div>
-        </div>
+        </OpenLetterProvider>
         </>
     );
 }
 
-function openModal(state) {
-    return {
-        modal : state
-    }
-}
 
-export default connect(openModal)(withRouter(Main));
+export default withRouter(Main);

@@ -8,6 +8,8 @@ import { Link, Route, Switch } from 'react-router-dom';
 import Welcome from './components/Welcome';
 import Main from './components/Main';
 import data from './data/userInfo.js';
+import { LetterProvider } from './data/LetterContext';
+import { ModalProvider } from './data/ModalContext';
 
 let Title = styled.h1`
   margin: 0;
@@ -37,20 +39,22 @@ function App() {
   return (
     <div className="App">
       <Title>COLLETTERS</Title>
-        <LogInContainer>
-          <Route exact path="/">
-            <LogIn 회원정보={회원정보} />
-          </Route>
-          <Route path="/join">
-            <Join />
-          </Route>
-          <Route path="/welcome">
-            <Welcome />
-          </Route>
+      <LogInContainer>
+        <Route exact path="/">
+          <LogIn 회원정보={회원정보} />
+        </Route>
+        <Route path="/join">
+          <Join />
+        </Route>
+        <Route path="/welcome">
+          <Welcome />
+        </Route>
+        <LetterProvider>
           <Route path="/main">
-            <Main />
+              <Main />
           </Route>
-        </LogInContainer>
+        </LetterProvider>
+      </LogInContainer>
     </div>
   );
 }

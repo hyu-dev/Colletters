@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import '../scss/UserTag.scss';
 import NestContainer from './NestContainer.js';
+import { useOpenTagDispatch, useOpenTagState } from '../data/ModalContext';
 
 
 const InfoContainer = styled.div`
@@ -13,9 +14,11 @@ const InfoContainer = styled.div`
     border-radius: 0 0 30px 30px;
     box-sizing: border-box;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
-    position: relative;
+    position: fixed;
+    top: 0;
     background: white;
-    transition: all 0.7s ease-in-out;
+    z-index: 5;
+    transition: all 0.6s ease-in-out;
     ${props =>
         props.modal &&
         css`
@@ -42,7 +45,7 @@ const InfoContainer = styled.div`
         left: 0;
         z-index: 5;
         transform: translateX(-50%);
-        transition: all 0.7s ease-in-out;
+        transition: all 0.6s ease-in-out;
         ${props =>
             props.modal &&
             css`
@@ -54,7 +57,7 @@ const InfoContainer = styled.div`
         position: absolute;
         bottom: 100%;
         transform: translateY(0);
-        transition: all 0.7s ease-in;
+        transition: all 0.6s ease-in;
         ${props =>
             props.modal &&
             css`
@@ -133,7 +136,6 @@ const InfoContainer = styled.div`
             text-align: left;
         }
     }
-        
 `;
         
 
@@ -213,20 +215,18 @@ const TextButton = styled.button`
 `;
 
 function UserTag(props) {
-    let [change, setChange] = useState('내 정보 보다')
-
-    useEffect(() => {
-         
-    }, [])
+    const openTagState = useOpenTagState();
+    const openTagDispatch = useOpenTagDispatch();
+    const [change, setChange] = useState('내 정보 보다')
 
     return (
-        <NestContainer modal={props.modal}>
-            <InfoContainer modal={props.modal}>
+        <NestContainer modal={ openTagState }>
+            <InfoContainer modal={ openTagState }>
                 <div className="buttonContainer">
-                    <Button change={change} onClick={() => { setChange('내 정보 보다') } }>내 정보 보다</Button>
-                    <Button change={change} onClick={() => { setChange('대표사진 바꾸다') } }>대표사진 바꾸다</Button>
-                    <Button change={change} onClick={() => { setChange('접속번호 바꾸다') } }>접속번호 바꾸다</Button>
-                    <Button change={change} onClick={() => { setChange('EMAIL 바꾸다') } }>EMAIL 바꾸다</Button>
+                    <Button change={ change } onClick={() => { setChange('내 정보 보다') } }>내 정보 보다</Button>
+                    <Button change={ change } onClick={() => { setChange('대표사진 바꾸다') } }>대표사진 바꾸다</Button>
+                    <Button change={ change } onClick={() => { setChange('접속번호 바꾸다') } }>접속번호 바꾸다</Button>
+                    <Button change={ change } onClick={() => { setChange('EMAIL 바꾸다') } }>EMAIL 바꾸다</Button>
                 </div>
                 <div className="userProfile">
                     <table>
@@ -262,16 +262,17 @@ function UserTag(props) {
                     <TextButton>영원히안녕</TextButton>
                     <TextButton>또보자</TextButton>
                 </div>
-                <img className="tagImg" src="/images/tag.gif" alt="태그" modal={props.modal} onClick={ () => { props.dispatch( {type : 'OPEN'}) } }/>
+                <img 
+                    className="tagImg"
+                    src="/images/tag.gif" 
+                    alt="태그" 
+                    modal={ openTagState } 
+                    onClick={ () => { openTagDispatch({ type: 'TAGOPEN' }) } }
+                />
             </InfoContainer>
         </NestContainer>
     );
 }
 
-function openModal(state) {
-    return {
-        modal : state
-    }
-}
 
-export default connect(openModal)(withRouter(UserTag));
+export default withRouter(UserTag);

@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useLetterState } from '../data/LetterContext';
+import { useOpenLetterDispatch } from '../data/ModalContext';
 import '../scss/Main.scss';
 
 let TagImgInLetter = styled.img`
@@ -20,8 +22,10 @@ let CountImg = styled.img`
 `;
 
 function Letter(props) {
+    const openLetterDispatch = useOpenLetterDispatch();
+    // console.log(props)
     return(
-        <div className="letter">
+        <div className="letter" onClick={ () => { openLetterDispatch({ type: 'OPEN' }); console.log("클릭되니?") } }>
             <img className="userProfile" src="/images/userProfile.png" alt="" />
             <p className="userNickName">{props.letter.nickName}</p>
             <LetterImg src={props.letter.mainAtt} alt="이미지" />
