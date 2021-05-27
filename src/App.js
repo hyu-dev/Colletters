@@ -8,6 +8,7 @@ import { Link, Route, Switch } from 'react-router-dom';
 import Welcome from './components/Welcome';
 import Main from './components/Main';
 import data from './data/userInfo.js';
+import LetterForm from './components/LetterForm';
 import { LetterProvider } from './data/LetterContext';
 import { ModalProvider } from './data/ModalContext';
 
@@ -54,6 +55,9 @@ function App() {
               <Main />
           </Route>
         </LetterProvider>
+        <Route path="/form">
+          <LetterForm />
+        </Route>
       </LogInContainer>
     </div>
   );

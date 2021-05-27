@@ -6,28 +6,10 @@ import App from './App';
 
 import { BrowserRouter } from 'react-router-dom';
 
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-
-
-const openState = false 
-
-function reducer(state = openState, action) {
-  if(action.type === 'OPEN') {
-    return !state
-  } else {
-    return state
-  }
-}
-
-const store = createStore(reducer);
-
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Provider store={store}>
-        <App />
-      </Provider>
+      <App />
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')

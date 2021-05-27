@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
-import { FaPlus } from 'react-icons/fa';
 import { IconContext } from 'react-icons';
 import { connect } from 'react-redux';
 
 import { FaSlackHash } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 
 import NestContainer from './NestContainer.js';
 import '../scss/DetailLetter.scss';
