@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import './UserTag.scss';
-import NestContainer from './NestContainer.js';
 import { connect } from 'react-redux';
+
+import '../scss/UserTag.scss';
+import NestContainer from './NestContainer.js';
 
 
 const InfoContainer = styled.div`

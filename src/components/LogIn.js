@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import './LogIn.scss'
+import '../scss/LogIn.scss'
 import { Link, withRouter } from 'react-router-dom';
 import Main from './Main.js';
 

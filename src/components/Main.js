@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import './Main.scss';
+import '../scss/Main.scss';
 import letters from '../data/userLetters.js';
 import topTags from '../data/topTagList.js';
 import UserTag from './UserTag.js';
@@ -134,7 +134,7 @@ function Main(props) {
                 <div className="letters">
                     {
                         letters.map((letter, i) => {
-                            return <Letter letter={letter} key={letter.id}/>
+                            return <Letter letter={letter} key={letter.id} />
                         })
                     }
                 </div>

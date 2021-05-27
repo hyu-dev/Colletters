@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import './Main.scss';
+import '../scss/Main.scss';
 
 let TagImgInLetter = styled.img`
     width: 15px;
