@@ -256,7 +256,9 @@ function UserTag(props) {
                     </table>
                 </div>
                 <div className="writeBtnContainer"><Button onClick={() => {
-
+                    props.history.push({
+                        pathname: "/form",
+                    })
                 }}>글 끼적이러 가다</Button></div>
                 <div className="textBtnContainer">
                     <TextButton>영원히안녕</TextButton>
