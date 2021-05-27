@@ -23,7 +23,9 @@ let CountImg = styled.img`
 
 function Letter(props) {
     const openLetterDispatch = useOpenLetterDispatch();
-    // console.log(props)
+    const letterState = useLetterState();
+    console.log(props)
+    console.log(letterState)
     return(
         <div className="letter" onClick={ () => { openLetterDispatch({ type: 'OPEN' }); console.log("클릭되니?") } }>
             <img className="userProfile" src="/images/userProfile.png" alt="" />
