@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useLetterState } from '../data/LetterContext';
+import { useDetailLetterDispatch } from '../data/DetailLetterContext';
 import { useOpenLetterDispatch } from '../data/ModalContext';
 import '../scss/Main.scss';
 
@@ -21,20 +21,29 @@ let CountImg = styled.img`
     height: 30px;
 `;
 
-function Letter(props) {
+
+
+function Letter({ letter }) {
     const openLetterDispatch = useOpenLetterDispatch();
-    const letterState = useLetterState();
-    console.log(props)
-    console.log(letterState)
+    const detailLetterDispatch = useDetailLetterDispatch();
+
     return(
-        <div className="letter" onClick={ () => { openLetterDispatch({ type: 'OPEN' }); console.log("클릭되니?") } }>
+        <div 
+            className="letter" 
+            onClick={
+                () => { 
+                    openLetterDispatch({ type: 'OPEN' }); 
+                    detailLetterDispatch({ type: 'UPDATE', letter: letter }); 
+                } 
+            }
+        >
             <img className="userProfile" src="/images/userProfile.png" alt="" />
-            <p className="userNickName">{props.letter.nickName}</p>
-            <LetterImg src={props.letter.mainAtt} alt="이미지" />
-            <p className="letterTitle">{props.letter.title}</p>
+            <p className="userNickName">{ letter.nickName }</p>
+            <LetterImg src={ `${ letter.attRoot }${ letter.attName.main }` } alt="이미지" />
+            <p className="letterTitle">{ letter.letter.title }</p>
             <ul className="tags">
                 {
-                    props.letter.tag.map((tag, i) => {
+                    letter.letter.tag.map((tag) => {
                         return (
                             <li>
                                 <TagImgInLetter src="/images/hashTag.png" alt="태그" />
@@ -47,11 +56,11 @@ function Letter(props) {
             <div className="countContainer">
                 <div className="count viewCount">
                     <CountImg src="/images/eyes.png" alt="조회수" />
-                    <p>{props.letter.viewCount}</p>
+                    <p>{ letter.letter.viewCount }</p>
                 </div>
                 <div className="count likeCount">
                     <CountImg src="/images/like_none.png" alt="좋아요" />
-                    <p>{props.letter.likeCount}</p>
+                    <p>{ letter.letter.likeCount }</p>
                 </div>
             </div>
         </div>

@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import '../scss/LogIn.scss'
 import { Link, withRouter } from 'react-router-dom';
 import Main from './Main.js';
+import { useLoginUserDispatch } from '../data/LoginUserContext';
 
-let Input = styled.input`
+export const Input = styled.input`
     width: 400px;
     height: 70px;
     background: #fff;
@@ -21,38 +22,38 @@ let Input = styled.input`
 `;
 
 function LogIn(props) {
-    console.log(props)
-    let [아이디, 아이디변경] = useState('')
-    let [비밀번호, 비밀번호변경] = useState('')
-    let userInfo = props.회원정보.find((info) => {
-        if (info.id === 아이디 && info.pwd === 비밀번호) {
+    const [userId, setUserId] = useState('')
+    const [userPwd, setUserPwd] = useState('')
+    const loginUserDispatch = useLoginUserDispatch();
+    const userInfo = props.users.find((user) => {
+        if (user.id === userId && user.pwd === userPwd) {
             return true
         }
     })
-    let [아이디찾기, 아이디찾기변경] = useState(false);
-    let [비밀번호찾기, 비밀번호찾기변경] = useState(false);
+    const login = (props, userInfo) => {
+        props.history.push({ pathname: '/main' });
+        loginUserDispatch({ type: 'UPDATE', user: userInfo })
+    }
+    const [findUserId, setFindUserId] = useState(false);
+    const [findUserPwd, setFindUserPwd] = useState(false);
 
     return(
         <div className="loginContainer">
             <div className="labelContainer">
                 <label>당신의 식별문자</label>
-                <Input onChange={(e) => {아이디변경(e.target.value)}}/>
+                <Input onChange={ (e) => { setUserId(e.target.value)} }/>
             </div>
             <div className="labelContainer">
                 <label>당신의 식별문자 접속번호</label>
-                <Input type="password" onChange={(e) => {비밀번호변경(e.target.value)}}/>
+                <Input type="password" onChange={ (e) => { setUserPwd(e.target.value)} }/>
             </div>
             <div className="labelContainer">
                 <label>그럼 이제</label>
                 <button className="loginBtn" onClick={() => {
                     userInfo != null
-                    ? props.history.push({
-                        pathname: "/main",
-                        state: {userInfo}
-                    })
-                    : alert('식별문자와 접속번호를 정확히 기입하세요')
+                    ? login(props, userInfo)
+                    : alert('식별문자와 접속번호를 정확히 기입하세요');
                 }}>접속하다</button>
-                
             </div>
             <div className="labelContainer">
                 <label>식별문자가 없네</label>
@@ -63,21 +64,24 @@ function LogIn(props) {
             <div className="labelContainer">
                 <label>기억이 안나네</label>
                 <div className="searchContianer">
-                    <button className="searchId" onClick={() => {아이디찾기변경(true)}}>식별문자가</button>
-                    <button className="searchPwd" onClick={() => {비밀번호찾기변경(true)}}>접속번호가</button>
+                    <button className="searchId" onClick={ () => { setFindUserId(true) } }>식별문자가</button>
+                    <button className="searchPwd" onClick={ () => { setFindUserPwd(true) } }>접속번호가</button>
                 </div>
             </div>
-            <div className="labelContainer">
-                <label>가입없이</label>
-                <Link to="/main">
-                    <button className="notLoginView">염탐하다</button>
-                </Link>
-            </div>
             {
-                아이디찾기 && <SearchId 아이디찾기변경={아이디찾기변경}/>
+                !props.isMain &&
+                <div className="labelContainer">
+                    <label>가입없이</label>
+                    <Link to="/main">
+                        <button className="notLoginView">염탐하다</button>
+                    </Link>
+                </div>
             }
             {
-                비밀번호찾기 && <SearchPwd 비밀번호찾기변경={비밀번호찾기변경}/>
+                findUserId && <SearchId setFindUserId={setFindUserId}/>
+            }
+            {
+                findUserPwd && <SearchPwd setFindUserPwd={setFindUserPwd}/>
             }
         </div>
     )
@@ -98,7 +102,7 @@ function SearchId(props) {
                 </div>
                 <div>
                     <button className="searchBtn">찾다</button>
-                    <button className="closeBtn" onClick={() => { props.아이디찾기변경(false)}}>닫다</button>
+                    <button className="closeBtn" onClick={() => { props.setFindUserId(false)}}>닫다</button>
                 </div>
             </div>
         </div>
@@ -124,7 +128,7 @@ function SearchPwd(props) {
                 </div>
                 <div>
                     <button className="searchBtn">찾다</button>
-                    <button className="closeBtn" onClick={() => { props.비밀번호찾기변경(false)}}>닫다</button>
+                    <button className="closeBtn" onClick={() => { props.setFindUserPwd(false)}}>닫다</button>
                 </div>
             </div>
         </div>

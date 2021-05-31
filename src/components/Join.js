@@ -3,21 +3,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import '../scss/Join.scss';
+import { Input } from './LogIn';
 
-let Input = styled.input`
-    width: 400px;
-    height: 70px;
-    background: #fff;
-    border: 2px solid #000;
-    border-radius: 10px;
-    box-sizing: border-box;
-    font-size: 20px;
-    padding: 0 10px;
-    outline: none;
-    &:focus {
-        border: 2px solid #7165FF;
-    }
-`;
 
 function Join() {
     return (

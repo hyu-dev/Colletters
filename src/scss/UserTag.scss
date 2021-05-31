@@ -1,1 +1,254 @@
 @import './reset.scss';
+
+.profile {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+}
+.tagImg {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    transform: translateX(-50%);
+    transition: all 0.6s ease-in-out;
+}
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 50px 0;
+    position: absolute;
+    bottom: 100%;
+    transform: translateY(0);
+    transition: all 0.6s ease-in;
+}
+.userProfile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 50px 0;
+    position: absolute;
+    padding: 0;
+    bottom: 250px;
+    .profileInput {
+        display: none;
+    }
+}
+.writeBtnContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 50px 0;
+    position: absolute;
+    bottom: 30px;
+}
+.textBtnContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+}
+table {
+    width: 80%;
+    td {
+        text-align: center;
+        font-family: Rockwell;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 25px;
+    }
+    tr:nth-of-type(2) {
+        td {
+            text-align: left;
+        }
+    }
+    tr:nth-of-type(3) {
+        td {
+            text-align: left;
+        }
+    }
+    tr:nth-of-type(4) {
+        td {
+            padding-top: 20px;
+            b {
+                font-family: Rockwell;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 15px;
+                width: 100%;
+                display: inline-block;
+                padding: 0 20px;
+                text-align: left;
+            }
+            p {
+                margin: 0;
+                padding: 10px 0 10px 20px;
+                font-family: Rockwell;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 25px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+    td:nth-of-type(2) {
+        text-align: left;
+    }
+}
+
+.loginModal {
+    width: 100%;
+    height: 800px;
+    position: absolute;
+    bottom: 0px;
+}
+
+.changePwdContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 1100px;
+    height: 800px;
+    border-radius: 0 0 30px 30px;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+    position: fixed;
+    top: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 6;
+    transition: all 0.6s ease-in-out;
+    .labelContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        width: 400px;
+        margin: 20px 0;
+        label {
+            font-size: 25px;
+            color: white;
+        }
+    }
+    .changeButtonContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 400px;
+        margin: 20px 0;
+        button {
+            width: 180px;
+            height: 70px;
+            background: #7165FF;
+            border: 3px solid white;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 25px;
+            letter-spacing: 1px;
+            color: white;
+            padding: 0 10px;
+            outline: none;
+            position: relative;
+            cursor: pointer;
+            &:active {
+                top: 5px;
+            }
+        }
+    }
+}
+
+.emailContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    flex-direction: row;
+    justify-content: space-between;
+    .userEmail {
+        width: 180px;
+        height: 70px;
+        border: 2px solid $cancel;
+        border-radius: 10px;
+        box-sizing: border-box;
+        font-size: 20px;
+        letter-spacing: 1px;
+        padding: 0 10px;
+        outline: none;
+        &:focus {
+            border-color: $login;
+        }
+        option {
+            font-size: 15px;
+            border: none;
+        }
+    }
+    .certifyInfo {
+        @extend .userEmail;
+        width: 300px;
+        &:focus {
+            border-color: $login;
+        }
+    }
+
+    .certifyBtn {
+        width: 80px;
+        height: 70px;
+        background: $backColor;
+        border: 3px solid $certify;
+        border-radius: 10px;
+        box-sizing: border-box;
+        letter-spacing: 1px;
+        padding: 0 10px;
+        outline: none;
+        position: relative;
+        margin: 0;
+        font-size: 20px;
+        color: $certify;
+        &:hover {
+            background: $certify;
+            color: $backColor;
+            transition: all 0.3s;
+        }
+        &:active {
+            top: 3px;
+        }
+    }
+}
+.sendCertifyBtn {
+    width: 400px;
+    margin: 10px 0 0;
+    height: 40px;
+    font-size: 20px;
+    letter-spacing: 1px;
+    background: $backColor;
+    border: 3px solid $certify;
+    border-radius: 10px;
+    color: $certify;
+    box-sizing: border-box;
+    padding: 0 10px;
+    outline: none;
+    position: relative;
+    &:hover {
+        background: $certify;
+        color: $backColor;
+        transition: all 0.3s;
+    }
+    &:active {
+        top: 3px;
+    }
+}

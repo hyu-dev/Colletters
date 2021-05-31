@@ -7,10 +7,13 @@ import Join from './components/Join';
 import { Link, Route, Switch } from 'react-router-dom';
 import Welcome from './components/Welcome';
 import Main from './components/Main';
-import data from './data/userInfo.js';
 import LetterForm from './components/LetterForm';
 import { LetterProvider } from './data/LetterContext';
 import { ModalProvider } from './data/ModalContext';
+import { DetailLetterProvider } from './data/DetailLetterContext';
+import { UserProvider, useUserState } from './data/UserContext';
+import { LoginUserProvider } from './data/LoginUserContext';
+import { TopTagsProvider } from './data/TopTagsContext';
 
 let Title = styled.h1`
   margin: 0;
@@ -35,14 +38,15 @@ let LogInContainer = styled.div`
 
 
 function App() {
-  let [회원정보, 회원정보변경] = useState(data);
+  const userState = useUserState();
 
   return (
     <div className="App">
       <Title>COLLETTERS</Title>
+      <LoginUserProvider>
       <LogInContainer>
         <Route exact path="/">
-          <LogIn 회원정보={회원정보} />
+          <LogIn users={ userState } isMain={false} />
         </Route>
         <Route path="/join">
           <Join />
@@ -51,14 +55,19 @@ function App() {
           <Welcome />
         </Route>
         <LetterProvider>
-          <Route path="/main">
-              <Main />
-          </Route>
+          <TopTagsProvider>
+            <DetailLetterProvider>
+              <Route path="/main">
+                  <Main />
+              </Route>
+            </DetailLetterProvider>
+          </TopTagsProvider>
         </LetterProvider>
         <Route path="/form">
           <LetterForm />
         </Route>
       </LogInContainer>
+      </LoginUserProvider>
     </div>
   );
 }

@@ -55,6 +55,8 @@ const NickNameTitle = styled.h2`
     font-size: 25px;
     line-height: 29px;
     text-align: right;
+    color: blue;
+    text-decoration: underline;
     cursor: pointer;
 `;
 
@@ -89,24 +91,27 @@ const ToggleContainer = styled.div`
 `;
 
 
-function DetailLetter(props) {
+function DetailLetter({ letter }) {
     const openLetterState = useOpenLetterState();
     const openLetterDispatch = useOpenLetterDispatch();
-    console.log(openLetterState)
+    const [toggle, setToggle] = useState(false);
 
     return (
         <NestContainer modal={ openLetterState }>
             <DetailContainer modal={ openLetterState }>
-                <CloseButtonContainer onClick={ () => { openLetterDispatch({ type: 'OPEN' }); console.log("상세페이지닫기") } }>
+                <CloseButtonContainer onClick={ () => { openLetterDispatch({ type: 'OPEN' }) } }>
                     <IconContext.Provider value={{size:60}}>
                         <FaPlus />
                     </IconContext.Provider>
                 </CloseButtonContainer>
-                <NickNameTitle>아무닉네임 님이 끼적인 글</NickNameTitle>
-                <ToggleContainer>
-                    <p>바꾸다</p>
-                    <p>지우다</p>
-                </ToggleContainer>
+                <NickNameTitle onClick={ () => { setToggle(!toggle) } }>{ letter.nickName } 님이 끼적인 글</NickNameTitle>
+                {
+                    toggle &&
+                    <ToggleContainer>
+                        <p>바꾸다</p>
+                        <p>지우다</p>
+                    </ToggleContainer>
+                }
                 <img className="userProfileImage" src="/images/userProfile.png" alt="유저프로필" />
                 <div className="imagesContainer">
                     <img src="/images/left-arrow.png" alt="왼쪽화살표"/>
@@ -114,19 +119,25 @@ function DetailLetter(props) {
                     <img src="/images/right-arrow.png" alt="오른쪽화살표"/>
                 </div>
                 <div className="letterContent">
-                    <b>여기는 제목을 적습니다 최대 20자</b>
-                    <p>여기는 내용이 들어갑니다. 최대 300자 여기는 내용이 들어갑니다. 최대 300자여기는 내용이 들어갑니다. 최대 300자여기는 내용이 들어갑니다. 최대 300자여기는 내용이 들어갑니다. 최대 300자여기는 내용이 들어갑니다. 최대 300자여기는 내용이 들어갑니다. 최대 300자여기는 내용이 들어갑니다. 최대 300자여기는 내용이 들어갑니다. 최대 300자여기는 내용이 들어갑니다. 최대 300자여기는 내용이 들어갑니다. 최대 300자여기는 내용이 들어갑니다. 최대 300자여기는 내용이 들어갑니다. 최대 300자 여기는 내용이 들어갑니</p>
+                    <b>{ letter.letter.title }</b>
+                    <p>{ letter.letter.content }</p>
                 </div>
                 <ul className="tagsContainer">
-                    <li>
-                        <IconContext.Provider value={{size:25, color:"#87E8D6"}}>
-                        <FaSlackHash />
-                        </IconContext.Provider>
-                        <p>아무거나</p>
-                    </li>
+                    {
+                        letter.letter.tag.map((tag) => {
+                            return (
+                                <li>
+                                    <IconContext.Provider value={{size:25, color:"#87E8D6"}}>
+                                    <FaSlackHash />
+                                    </IconContext.Provider>
+                                    <p>{ tag }</p>
+                                </li>
+                            )
+                        })
+                    }
                 </ul>
                 <div className="replyContainer">
-                    <b>댓글 3</b>
+                    <b>댓글 { letter.reply.length }</b>
                     <ul>
                         <li>
                             <img src="/images/userProfile.png" alt="프로필" />

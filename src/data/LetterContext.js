@@ -18,6 +18,18 @@ const initialLetters = [
             likeCount: 0,
             writeDate: "2021-05-19",
         },
+        reply: [
+            {
+                id: 1,
+                userId: "youjeong",
+                content: "안녕?",
+            },
+            {
+                id: 2,
+                userId: "user",
+                content: "응ㅋ",
+            },
+        ],
     },
     {
         id: 2,
@@ -36,6 +48,18 @@ const initialLetters = [
             likeCount: 0,
             writeDate: "2021-05-20",
         },
+        reply: [
+            {
+                id: 1,
+                userId: "user",
+                content: "이야이야호 이야이야호 이야이야호 무야호",
+            },
+            {
+                id: 2,
+                userId: "youjeong",
+                content: "미쳤냐",
+            },
+        ],
     },
     {
         id: 3,
@@ -54,6 +78,58 @@ const initialLetters = [
             likeCount: 1,
             writeDate: "2021-05-21",
         },
+        reply: [
+            {
+                id: 1,
+                userId: "user",
+                content: "이야이야호 이야이야호 이야이야호 무야호",
+            },
+            {
+                id: 2,
+                userId: "user",
+                content: "무이~야호",
+            },
+            {
+                id: 3,
+                userId: "youjeong",
+                content: "님.. 정신 좀 차리세요",
+            },
+        ],
+    },
+    {
+        id: 4,
+        userId: "test",
+        nickName: "테스트닉",
+        attRoot: '/images/attachment/',
+        attName: {
+            main: 'att10.jpg',
+            sub: ['att11.jpg', 'att12.png'],
+        },
+        letter: {
+            title: '데이터 등록하는 것도 일이다',
+            content: "진짜 이렇게 적어도 되는거냐",
+            tag: ["혼란"],
+            viewCount: 1555,
+            likeCount: 211,
+            writeDate: "2021-05-22",
+        },
+        reply: [
+            {
+                id: 1,
+                userId: "user",
+                content: "이야이야호 이야이야호 이야이야호 무야호",
+            },
+            {
+                id: 2,
+                userId: "user",
+                content: "무이~야호",
+            },
+            {
+                id: 3,
+                userId: "youjeong",
+                content: "님.. 정신 좀 차리세요",
+            },
+        ],
     },
 ];
 

@@ -5,7 +5,10 @@ import { connect } from 'react-redux';
 
 import '../scss/UserTag.scss';
 import NestContainer from './NestContainer.js';
+import LogIn, { Input } from './LogIn.js';
 import { useOpenTagDispatch, useOpenTagState } from '../data/ModalContext';
+import { useLoginUserState } from '../data/LoginUserContext';
+import { useUserState } from '../data/UserContext';
 
 
 const InfoContainer = styled.div`
@@ -25,27 +28,7 @@ const InfoContainer = styled.div`
             height: 800px;
         `
     }
-    div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        padding: 50px 0;
-    }
-    .profile {
-        width: 250px;
-        height: 250px;
-        border-radius: 50%;
-    }
     .tagImg {
-        width: 100px;
-        height: 100px;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 5;
-        transform: translateX(-50%);
-        transition: all 0.6s ease-in-out;
         ${props =>
             props.modal &&
             css`
@@ -54,10 +37,6 @@ const InfoContainer = styled.div`
         }
     }
     .buttonContainer {
-        position: absolute;
-        bottom: 100%;
-        transform: translateY(0);
-        transition: all 0.6s ease-in;
         ${props =>
             props.modal &&
             css`
@@ -65,79 +44,8 @@ const InfoContainer = styled.div`
             `
         }
     }
-    .userProfile {
-        position: absolute;
-        padding: 0;
-        bottom: 250px;
-    }
-    .writeBtnContainer {
-        position: absolute;
-        bottom: 30px;
-    }
-    .textBtnContainer {
-        padding: 10px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: absolute;
-        bottom: 0;
-    }
-    table {
-        width: 80%;
-        td {
-            // border: 1px solid red;
-            text-align: center;
-            font-family: Rockwell;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 25px;
-        }
-        tr:nth-of-type(2) {
-            td {
-                text-align: left;
-            }
-        }
-        tr:nth-of-type(3) {
-            td {
-                text-align: left;
-            }
-        }
-        tr:nth-of-type(4) {
-            td {
-                padding-top: 20px;
-                // line-height: 50px;
-                // text-align: left;
-                b {
-                    font-family: Rockwell;
-                    font-style: normal;
-                    font-weight: normal;
-                    font-size: 15px;
-                    width: 100%;
-                    display: inline-block;
-                    padding: 0 20px;
-                    // border: 2px solid red;
-                    text-align: left;
-                }
-                p {
-                    margin: 0;
-                    padding: 10px 0 10px 20px;
-                    font-family: Rockwell;
-                    font-style: normal;
-                    font-weight: normal;
-                    font-size: 25px;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                }
-            }
-        }
-
-        td:nth-of-type(2) {
-            text-align: left;
-        }
-    }
 `;
-        
+   
 
 const Button = styled.button`
     width: 220px;
@@ -215,55 +123,50 @@ const TextButton = styled.button`
 `;
 
 function UserTag(props) {
+    const userState = useUserState();
     const openTagState = useOpenTagState();
     const openTagDispatch = useOpenTagDispatch();
     const [change, setChange] = useState('내 정보 보다')
+    const user = useLoginUserState();
+    const changeInfo = (change) => {
+        switch(change) {
+            case '내 정보 보다':
+                return <MyInformation history={ props.history } />
+            case '대표사진 바꾸다':
+                return <MyInformation history={ props.history } />
+            case '접속번호 바꾸다':
+                return <ChangePwd setChange={ setChange } />
+            case 'EMAIL 바꾸다':
+                return <ChangeEmail setChange={ setChange } />
+            default:
+                throw new Error(`Unhandled change Info: ${ change }`);
+        }
+    }
 
     return (
         <NestContainer modal={ openTagState }>
             <InfoContainer modal={ openTagState }>
-                <div className="buttonContainer">
-                    <Button change={ change } onClick={() => { setChange('내 정보 보다') } }>내 정보 보다</Button>
-                    <Button change={ change } onClick={() => { setChange('대표사진 바꾸다') } }>대표사진 바꾸다</Button>
-                    <Button change={ change } onClick={() => { setChange('접속번호 바꾸다') } }>접속번호 바꾸다</Button>
-                    <Button change={ change } onClick={() => { setChange('EMAIL 바꾸다') } }>EMAIL 바꾸다</Button>
-                </div>
-                <div className="userProfile">
-                    <table>
-                        <colgroup>
-                            <col width="40%"/>
-                            <col width="30%"/>
-                            <col width="30%"/>
-                        </colgroup>
-                        <tr>
-                            <td rowSpan='3'>
-                                <img className="profile" src="/images/attachment/att1.jpg" alt="프로필사진" />
-                            </td>
-                            <td colSpan='2'>#user</td>
-                        </tr>
-                        <tr>
-                            <td colSpan='2'>아무닉네임</td>
-                        </tr>
-                        <tr>
-                            <td colSpan='2'>hyu630115@gmail.com</td>
-                        </tr>
-                        <tr>
-                            <td colSpan='3'>
-                                <b>최근 끼적인 글 제목</b>
-                                <p>잘 모르겠지만, 앞으로도 잘 모르지만, 잘 될거라고 생각? 할까?</p>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div className="writeBtnContainer"><Button onClick={() => {
-                    props.history.push({
-                        pathname: "/form",
-                    })
-                }}>글 끼적이러 가다</Button></div>
-                <div className="textBtnContainer">
-                    <TextButton>영원히안녕</TextButton>
-                    <TextButton>또보자</TextButton>
-                </div>
+                {
+                    user.id !== ''
+                    ?
+                        <>
+                        <div className="buttonContainer">
+                            <Button change={ change } onClick={() => { setChange('내 정보 보다') } }>내 정보 보다</Button>
+                            <Button change={ change } onClick={() => { setChange('대표사진 바꾸다') } }>대표사진 바꾸다</Button>
+                            <Button change={ change } onClick={() => { setChange('접속번호 바꾸다') } }>접속번호 바꾸다</Button>
+                            <Button change={ change } onClick={() => { setChange('EMAIL 바꾸다') } }>EMAIL 바꾸다</Button>
+                        </div>
+                        { changeInfo(change) }
+                        <div className="textBtnContainer">
+                            <TextButton>영원히안녕</TextButton>
+                            <TextButton>또보자</TextButton>
+                        </div>
+                        </>
+                    : 
+                        <div className="loginModal">
+                            <LogIn users={ userState } isMain={true} />
+                        </div>
+                }
                 <img 
                     className="tagImg"
                     src="/images/tag.gif" 
@@ -274,6 +177,107 @@ function UserTag(props) {
             </InfoContainer>
         </NestContainer>
     );
+}
+
+function MyInformation(props) {
+    const user = useLoginUserState();
+
+    return (
+        <>
+        <div className="userProfile">
+            <table>
+                <colgroup>
+                    <col width="40%"/>
+                    <col width="30%"/>
+                    <col width="30%"/>
+                </colgroup>
+                <tr>
+                    <td rowSpan='3'>
+                        <img className="profile" src={ `${ user.attRoot }${ user.attName }` } alt="프로필사진" />
+                        <input className="profileInput" type="file" />
+                    </td>
+                    <td colSpan='2'>#{ user.id }</td>
+                </tr>
+                <tr>
+                    <td colSpan='2'>{ user.nickName }</td>
+                </tr>
+                <tr>
+                    <td colSpan='2'>{ `${ user.email[0] }@${ user.email[1] }` }</td>
+                </tr>
+                <tr>
+                    <td colSpan='3'>
+                        <b>최근 끼적인 글 제목</b>
+                        <p>{  }</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div className="writeBtnContainer"><Button onClick={() => {
+            props.history.push({
+                pathname: "/form",
+            })
+        }}>글 끼적이러 가다</Button></div>
+        </>
+    )
+}
+
+function ChangePwd(props) {
+    const user = useLoginUserState();
+
+    return (
+        <div className="changePwdContainer">
+            <div className="labelContainer">
+                <label>현재 접속번호 적다</label>
+                <Input />
+                <label>비밀번호가 올바르지 않습니다</label>
+            </div>
+            <div className="labelContainer">
+                <label>변경할 접속번호 적다</label>
+                <Input />
+                <label>비밀번호가 올바르지 않습니다</label>
+            </div>
+            <div className="labelContainer">
+                <label>변경할 접속번호 한 번 더 적다</label>
+                <Input />
+                <label>비밀번호가 올바르지 않습니다</label>
+            </div>
+            <div className="changeButtonContainer">
+                <button>바꾸다</button>
+                <button onClick={ () => { props.setChange('내 정보 보다') } }>나가다</button>
+            </div>
+        </div>
+    )
+}
+
+function ChangeEmail(props) {
+    return (
+        <div className="changePwdContainer">
+            <div className="labelContainer">
+                <label>변경할 EMAIL 적다</label>
+                <div className="emailContainer">
+                    <input className="userEmail" />
+                    @
+                    <select className="userEmail">
+                        <option value="">선택하다</option>
+                        <option value="gmail">gmail.com</option>
+                    </select>
+                </div>
+                <button className="sendCertifyBtn">EMAIL 인증정보 보내다</button>
+            </div>
+            <div className="labelContainer">
+                <label>EMAIL 인증하다</label>
+                <div className="emailContainer">
+                    <input className="certifyInfo" />
+                    <button className="certifyBtn">인증</button>
+                </div>
+                <label>인증되었습니다</label>
+            </div>
+            <div className="changeButtonContainer">
+                <button>바꾸다</button>
+                <button onClick={ () => { props.setChange('내 정보 보다') } }>나가다</button>
+            </div>
+        </div>
+    )
 }
 
 

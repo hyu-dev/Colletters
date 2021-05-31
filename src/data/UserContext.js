@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer } from 'react';
 
 const initialUser = [
     {
@@ -15,7 +15,7 @@ const initialUser = [
         nickName: '유정닉네임',
         email: ['hyu630115', 'gmail.com'],
         attRoot: '/images/profile/',
-        attName: 'userProfile.png',
+        attName: 'userProfile2.jpg',
     },
     {
         id: 'test',
@@ -23,7 +23,7 @@ const initialUser = [
         nickName: '테스트닉',
         email: ['test', 'gmail.com'],
         attRoot: '/images/profile/',
-        attName: 'userProfile.png',
+        attName: 'userProfile3.jpg',
     },
 ];
 
@@ -52,4 +52,12 @@ export function UserProvider({ children }) {
             </UserDispatchContext.Provider>
         </UserStateContext.Provider>
     )
+}
+
+export function useUserState() {
+    return useContext(UserStateContext);
+}
+
+export function useUserDispatch() {
+    return useContext(UserDispatchContext);
 }

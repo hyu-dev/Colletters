@@ -1,18 +1,20 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import { Link, withRouter } from 'react-router-dom';
+import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { IconContext } from 'react-icons/lib';
+import { FaSlackHash } from 'react-icons/fa';
+
 import '../scss/Main.scss';
-import letters from '../data/userLetters.js';
-import topTags from '../data/topTagList.js';
 import UserTag from './UserTag.js';
 import Letter from './Letter.js';
 import DetailLetter from './DetailLetter.js';
-import { Link, withRouter } from 'react-router-dom';
-import { FaSlackHash } from 'react-icons/fa';
-import { IconContext } from 'react-icons/lib';
-import { connect } from 'react-redux';
+
 import { useLetterState } from '../data/LetterContext';
-import { OpenLetterProvider, OpenTagProvider, useModalDispatch, useModalState, useOpenLetterDispatch, useOpenTagState } from '../data/ModalContext';
+import { OpenLetterProvider, OpenTagProvider } from '../data/ModalContext';
+import { useDetailLetterState } from '../data/DetailLetterContext';
+import { useTopTagState } from '../data/TopTagsContext';
 
 
 const SearchTagDiv = styled.div`
@@ -39,39 +41,10 @@ const BottomArrow = styled.img`
 
 function Main(props) {
     const letterState = useLetterState();
-    
-    console.log(props)
+    const detailLetterState = useDetailLetterState();
     const [글검색, 글검색표시] = useState(false)
-    const [실시간, 실시간변경] = useState(() => {
-        let arr = []
-        for (var i in topTags) {
-            arr.push(false)
-        }
-        arr[0] = true
-        return arr
-    })
-    let index = 0;
-    let arrCopy = [...실시간]
-    // useEffect(() => {
-    //     let 타이머 = setInterval(() => {
-    //         if (index < topTags.length - 1) {
-    //             console.log("시작" + index, arrCopy)
-    //             arrCopy[index] = false
-    //             arrCopy[index+1] = true
-    //             index += 1
-    //             console.log("끝" + index, arrCopy)
-    //         } else {
-    //             console.log("최대치 시작" + index, arrCopy)
-    //             arrCopy[index] = false
-    //             arrCopy[0] = true
-    //             index = 0
-    //             console.log("최대치 끝" + index, arrCopy)
-    //         }
-    //         실시간변경(arrCopy)
-    //     }, 2000)
-    //     return () => { clearInterval(타이머) }
-    // }, [실시간변경])
     const [iconColor, setIconColor] = useState('#dee2e6')
+    const topTagState = useTopTagState();
 
     return (
         <>
@@ -79,7 +52,7 @@ function Main(props) {
             <UserTag />
         </OpenTagProvider>
         <OpenLetterProvider>
-            <DetailLetter />
+            <DetailLetter letter={ detailLetterState } />
             <div className="mainContainer">
                 <div className="searchContainer">
                     <div className="search">
@@ -124,17 +97,16 @@ function Main(props) {
                         <b>인기꼬리표</b>
                         <ul className="topHashList">
                             {
-                                topTags.map((tag, i) => {
-                                    if (실시간[i]) {
-                                        return(
-                                            <li>
-                                                <TagImg src="/images/hashTag.png" alt="해시" />
-                                                <p>{tag.title}</p>
-                                            </li>
-                                        )
-                                    }
+                                topTagState.map((tag) => {
+                                    return (
+                                        <li>
+                                            <TagImg src="/images/hashTag.png" alt="해시" />
+                                            <p>{ tag.title }</p>
+                                        </li>
+                                    )
                                 })
                             }
+                            
                         </ul>
                         <BottomArrow src="/images/right-arrow.png" alt=""></BottomArrow>
                     </div>
@@ -142,13 +114,8 @@ function Main(props) {
                 <div className="lettersContainer">
                     <div className="letters">
                         {
-                            letters.map((letter, i) => {
-                                return (
-                                    <Letter 
-                                        letter={letter} 
-                                        key={i} 
-                                    />
-                                )
+                            letterState.map((letter) => {
+                                return <Letter letter={letter} key={letter.id} />
                             })
                         }
                     </div>
