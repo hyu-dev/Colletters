@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { withRouter } from 'react-router-dom';
@@ -7,8 +8,10 @@ import '../scss/UserTag.scss';
 import NestContainer from './NestContainer.js';
 import LogIn, { Input } from './LogIn.js';
 import { useOpenTagDispatch, useOpenTagState } from '../data/ModalContext';
-import { useLoginUserState } from '../data/LoginUserContext';
-import { useUserState } from '../data/UserContext';
+import { useLoginUserDispatch, useLoginUserState } from '../data/LoginUserContext';
+import { useUserDispatch, useUserState } from '../data/UserContext';
+import { useLetterState } from '../data/LetterContext';
+import { FaMaxcdn } from 'react-icons/fa';
 
 
 const InfoContainer = styled.div`
@@ -61,7 +64,7 @@ const Button = styled.button`
     color: #7165FF;
     margin: 0 21px;
     position: relative;
-    transition: all 0.3s ease-in;
+    transition: all 0.2s ease-in;
     &:hover {
         background-color: #7165FF;
         color: white;
@@ -122,18 +125,29 @@ const TextButton = styled.button`
     }
 `;
 
+const initialUser = {
+    id: '',
+    pwd: '',
+    nickName: '',
+    email: [],
+    attRoot: '',
+    attName: '',
+}
+
 function UserTag(props) {
-    const userState = useUserState();
+    const usersState = useUserState();
+    const usersDispatch = useUserDispatch();
     const openTagState = useOpenTagState();
     const openTagDispatch = useOpenTagDispatch();
     const [change, setChange] = useState('내 정보 보다')
     const user = useLoginUserState();
+    const setUser = useLoginUserDispatch();
     const changeInfo = (change) => {
         switch(change) {
             case '내 정보 보다':
-                return <MyInformation history={ props.history } />
+                return <MyInformation history={ props.history } open={ false } />
             case '대표사진 바꾸다':
-                return <MyInformation history={ props.history } />
+                return <MyInformation history={ props.history } open={ true } />
             case '접속번호 바꾸다':
                 return <ChangePwd setChange={ setChange } />
             case 'EMAIL 바꾸다':
@@ -142,6 +156,7 @@ function UserTag(props) {
                 throw new Error(`Unhandled change Info: ${ change }`);
         }
     }
+
 
     return (
         <NestContainer modal={ openTagState }>
@@ -158,13 +173,22 @@ function UserTag(props) {
                         </div>
                         { changeInfo(change) }
                         <div className="textBtnContainer">
-                            <TextButton>영원히안녕</TextButton>
-                            <TextButton>또보자</TextButton>
+                            <TextButton onClick={ () => {
+                                if (confirm("탈퇴하시겠습니까?")) {
+                                    usersDispatch({ type: 'REMOVE', id: user.id})
+                                    setUser({ type: 'UPDATE', user: initialUser })
+                                }
+                            }}>잘 가</TextButton>
+                            <TextButton onClick={ () => {
+                                if (confirm("로그아웃하시겠습니까?")) {
+                                    setUser({ type: 'UPDATE', user: initialUser })
+                                }
+                            } }>또 봐</TextButton>
                         </div>
                         </>
                     : 
                         <div className="loginModal">
-                            <LogIn users={ userState } isMain={true} />
+                            <LogIn users={ usersState } isMain={true} />
                         </div>
                 }
                 <img 
@@ -181,9 +205,27 @@ function UserTag(props) {
 
 function MyInformation(props) {
     const user = useLoginUserState();
+    const letters = useLetterState();
+    const lastLetterTitle = letters.find((letter, index) => {
+        let i = 0;
+        if (letter.userId == user.id) {
+            if (index > i) {
+                i = index;
+                return letter
+            }
+        }
+    })
+    const openFile = () => {
+        document.getElementById("fileInput").click()
+    }
+    if (props.open) {
+        openFile();
+    }
+
 
     return (
         <>
+        <input type='file' style={{ display: "none" }} id="fileInput"/>
         <div className="userProfile">
             <table>
                 <colgroup>
@@ -207,7 +249,7 @@ function MyInformation(props) {
                 <tr>
                     <td colSpan='3'>
                         <b>최근 끼적인 글 제목</b>
-                        <p>{  }</p>
+                        <p>{ lastLetterTitle.letter.title != null ? lastLetterTitle.letter.title : "" }</p>
                     </td>
                 </tr>
             </table>

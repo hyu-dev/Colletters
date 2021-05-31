@@ -44,29 +44,29 @@ function App() {
     <div className="App">
       <Title>COLLETTERS</Title>
       <LoginUserProvider>
-      <LogInContainer>
-        <Route exact path="/">
-          <LogIn users={ userState } isMain={false} />
-        </Route>
-        <Route path="/join">
-          <Join />
-        </Route>
-        <Route path="/welcome">
-          <Welcome />
-        </Route>
-        <LetterProvider>
-          <TopTagsProvider>
-            <DetailLetterProvider>
-              <Route path="/main">
-                  <Main />
-              </Route>
-            </DetailLetterProvider>
-          </TopTagsProvider>
-        </LetterProvider>
-        <Route path="/form">
-          <LetterForm />
-        </Route>
-      </LogInContainer>
+        <LogInContainer>
+          <Route exact path="/">
+            <LogIn users={ userState } isMain={false} />
+          </Route>
+          <Route path="/join">
+            <Join />
+          </Route>
+          <Route path="/welcome">
+            <Welcome />
+          </Route>
+          <LetterProvider>
+            <TopTagsProvider>
+              <DetailLetterProvider>
+                <Route path="/main">
+                    <Main />
+                </Route>
+                <Route path="/form">
+                  <LetterForm />
+                </Route>
+              </DetailLetterProvider>
+            </TopTagsProvider>
+          </LetterProvider>
+        </LogInContainer>
       </LoginUserProvider>
     </div>
   );
