@@ -1,0 +1,57 @@
+@import './reset.scss';
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .imageContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 800px;
+        height: 600px;
+        img {
+            width: 450px;
+            height: 450px;
+        }
+        p {
+            margin: 50px;
+            box-sizing: border-box;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 25px;
+            line-height: 29px;
+        }
+    }
+    .homeBtnContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        button {
+            width: 400px;
+            height: 70px;
+            background: $backColor;
+            border: 3px solid $login;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 25px;
+            letter-spacing: 1px;
+            color: $login;
+            padding: 0 10px;
+            outline: none;
+            position: relative;
+            margin-top: 10px;
+            &:hover {
+                background: $login;
+                color: $backColor;
+                transition: all 0.3s;
+            }
+            &:active {
+                top: 3px;
+            }
+        }
+    }
+}

@@ -218,10 +218,11 @@ function MyInformation(props) {
     const openFile = () => {
         document.getElementById("fileInput").click()
     }
-    if (props.open) {
-        openFile();
-    }
-
+    useEffect(() => {
+        if (props.open) {
+            openFile();
+        }
+    }, [props.open])
 
     return (
         <>
@@ -249,7 +250,7 @@ function MyInformation(props) {
                 <tr>
                     <td colSpan='3'>
                         <b>최근 끼적인 글 제목</b>
-                        <p>{ lastLetterTitle.letter.title != null ? lastLetterTitle.letter.title : "" }</p>
+                        <p>{ lastLetterTitle != null ? lastLetterTitle.letter.title : "" }</p>
                     </td>
                 </tr>
             </table>
