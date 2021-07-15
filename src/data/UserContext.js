@@ -31,8 +31,12 @@ function userReducer(state, action) {
     switch (action.type) {
         case 'CREATE':
             return state.concat(action.user);
-        case 'UPDATE':
-            return state;
+        case 'UPDATE_PWD':
+            const userInfo = state.filter(user => user.id === action.payload.id)
+            userInfo[0].pwd = action.payload.pwd
+            return state.filter(user => user.id !== action.payload.id).concat(userInfo)
+        case 'UPDATE_FILE':
+            return state.filter(user => user.id !== action.payload.id).concat(action.payload)
         case 'REMOVE':
             return state.filter(user => user.id !== action.id)
         default:

@@ -1,8 +1,7 @@
 /* eslint-disable */
-import React, { useEffect, useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import React, { useState } from 'react';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
 import { IconContext } from 'react-icons/lib';
 import { FaSlackHash } from 'react-icons/fa';
 

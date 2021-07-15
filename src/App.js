@@ -14,6 +14,8 @@ import { DetailLetterProvider } from './data/DetailLetterContext';
 import { UserProvider, useUserState } from './data/UserContext';
 import { LoginUserProvider } from './data/LoginUserContext';
 import { TopTagsProvider } from './data/TopTagsContext';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 let Title = styled.h1`
   margin: 0;
@@ -38,15 +40,13 @@ let LogInContainer = styled.div`
 
 
 function App() {
-  const userState = useUserState();
-
   return (
     <div className="App">
       <Title>COLLETTERS</Title>
       <LoginUserProvider>
         <LogInContainer>
           <Route exact path="/">
-            <LogIn users={ userState } isMain={false} />
+            <LogIn isMain={false} />
           </Route>
           <Route path="/join">
             <Join />

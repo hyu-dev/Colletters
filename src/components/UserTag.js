@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
 
 import '../scss/UserTag.scss';
 import NestContainer from './NestContainer.js';
@@ -12,6 +11,8 @@ import { useLoginUserDispatch, useLoginUserState } from '../data/LoginUserContex
 import { useUserDispatch, useUserState } from '../data/UserContext';
 import { useLetterState } from '../data/LetterContext';
 import { FaMaxcdn } from 'react-icons/fa';
+import { useRef } from 'react';
+import axios from 'axios';
 
 
 const InfoContainer = styled.div`
@@ -147,11 +148,11 @@ function UserTag(props) {
             case '내 정보 보다':
                 return <MyInformation history={ props.history } open={ false } />
             case '대표사진 바꾸다':
-                return <MyInformation history={ props.history } open={ true } />
-            case '접속번호 바꾸다':
-                return <ChangePwd setChange={ setChange } />
+                return <MyInformation history={ props.history } open={ true } setChange={setChange}/>
+            case '비밀번호 바꾸다':
+                return <ChangePwd history={ props.history } setChange={ setChange } />
             case 'EMAIL 바꾸다':
-                return <ChangeEmail setChange={ setChange } />
+                return <ChangeEmail history={ props.history } setChange={ setChange } />
             default:
                 throw new Error(`Unhandled change Info: ${ change }`);
         }
@@ -168,7 +169,7 @@ function UserTag(props) {
                         <div className="buttonContainer">
                             <Button change={ change } onClick={() => { setChange('내 정보 보다') } }>내 정보 보다</Button>
                             <Button change={ change } onClick={() => { setChange('대표사진 바꾸다') } }>대표사진 바꾸다</Button>
-                            <Button change={ change } onClick={() => { setChange('접속번호 바꾸다') } }>접속번호 바꾸다</Button>
+                            <Button change={ change } onClick={() => { setChange('비밀번호 바꾸다') } }>비밀번호 바꾸다</Button>
                             <Button change={ change } onClick={() => { setChange('EMAIL 바꾸다') } }>EMAIL 바꾸다</Button>
                         </div>
                         { changeInfo(change) }
@@ -204,11 +205,15 @@ function UserTag(props) {
 }
 
 function MyInformation(props) {
-    const user = useLoginUserState();
+    const loginUser = useLoginUserState();
+    const loginUserDispatch = useLoginUserDispatch();
+    const userDispatch = useUserDispatch();
     const letters = useLetterState();
+    const fileRef = useRef();
+    const fileReader = useRef();
     const lastLetterTitle = letters.find((letter, index) => {
         let i = 0;
-        if (letter.userId == user.id) {
+        if (letter.userId == loginUser.id) {
             if (index > i) {
                 i = index;
                 return letter
@@ -216,8 +221,34 @@ function MyInformation(props) {
         }
     })
     const openFile = () => {
-        document.getElementById("fileInput").click()
+        fileRef.current.click()
     }
+    const onChangeFile = async (e) => {
+        const file = e.target.files[0];
+        let formData = new FormData();
+        formData.append('userfile', file);
+        await axios.post('/api/upload', formData)
+        .then(res => {
+            if (res.data.state) {
+                const userInfo = {
+                    id: loginUser.id,
+                    pwd: loginUser.pwd,
+                    nickName: loginUser.nickName,
+                    email: [loginUser.email[0], loginUser.email[1]],
+                    attRoot: '/uploads/',
+                    attName: res.data.filename,
+                }
+                loginUserDispatch({ type: 'UPDATE_FILE', payload: userInfo})
+                userDispatch({ type: 'UPDATE_FILE', payload: userInfo})
+            }
+        })
+        .catch(err => {
+            return alert('사진을 업로드하지 못했습니다:\n', err)
+        })
+        props.setChange('내 정보 보다');
+    }
+
+
     useEffect(() => {
         if (props.open) {
             openFile();
@@ -226,7 +257,7 @@ function MyInformation(props) {
 
     return (
         <>
-        <input type='file' style={{ display: "none" }} id="fileInput"/>
+        <input type='file' style={{ display: "none" }} ref={fileRef} onChange={onChangeFile} />
         <div className="userProfile">
             <table>
                 <colgroup>
@@ -234,18 +265,18 @@ function MyInformation(props) {
                     <col width="30%"/>
                     <col width="30%"/>
                 </colgroup>
+                <tbody>
                 <tr>
                     <td rowSpan='3'>
-                        <img className="profile" src={ `${ user.attRoot }${ user.attName }` } alt="프로필사진" />
-                        <input className="profileInput" type="file" />
+                        <img className="profile" src={ `${ loginUser.attRoot }${ loginUser.attName }` } alt="프로필사진" ref={fileReader} />
                     </td>
-                    <td colSpan='2'>#{ user.id }</td>
+                    <td colSpan='2'>#{ loginUser.id }</td>
                 </tr>
                 <tr>
-                    <td colSpan='2'>{ user.nickName }</td>
+                    <td colSpan='2'>{ loginUser.nickName }</td>
                 </tr>
                 <tr>
-                    <td colSpan='2'>{ `${ user.email[0] }@${ user.email[1] }` }</td>
+                    <td colSpan='2'>{ `${ loginUser.email[0] }@${ loginUser.email[1] }` }</td>
                 </tr>
                 <tr>
                     <td colSpan='3'>
@@ -253,6 +284,7 @@ function MyInformation(props) {
                         <p>{ lastLetterTitle != null ? lastLetterTitle.letter.title : "" }</p>
                     </td>
                 </tr>
+                </tbody>
             </table>
         </div>
         <div className="writeBtnContainer"><Button onClick={() => {
@@ -265,27 +297,102 @@ function MyInformation(props) {
 }
 
 function ChangePwd(props) {
-    const user = useLoginUserState();
+    const loginUser = useLoginUserState();
+    const userDispatch = useUserDispatch();
+    const loginUserDispatch = useLoginUserDispatch();
+    const [CurrentPwd, setCurrentPwd] = useState('');
+    const [ChangePwd, setChangePwd] = useState('');
+    const [CheckChangePwd, setCheckChangePwd] = useState('');
+    const [label, setLabel] = useState(['', '', '']);
+
+    function guide_func(value, setValue, index) {
+        onChangeInputHandler(value, setValue)
+        guideHandler(value, index)
+    }
+    const onChangeInputHandler = (value, setValue) => {
+        setValue(value)
+    }
+
+    const guideHandler = (value, index) => {
+        const array = [...label];
+        if (index === 0) {
+            if (value === '') {
+                array[index] = [false, ''];
+            } else if (value !== loginUser.pwd) {
+                array[index] = [false, '현재 비밀번호와 일치하지 않습니다'];
+            } else {
+                array[index] = [true, '비밀번호 확인'];
+            }
+        } else if (index === 1) {
+            if (value === '') {
+                array[index] = [false, '']
+            } else if (onValidatePwd(value)) {
+                array[index] = [true, '사용 가능한 비밀번호 입니다']
+            } else {
+                array[index] = [false, '영문 소문자, 대문자, 숫자 포함 4~12자']
+            }
+        } else {
+            if (value === '') {
+                array[index] = [false, '']
+            } else if (value === ChangePwd) {
+                array[index] = [true, '비밀번호 확인 완료']
+            } else {
+                array[index] = [false, '입력하신 비밀번호와 다릅니다']
+            }
+        }
+        setLabel(array)
+    }
+
+    const onValidatePwd = (value) => {
+        const regPwd = /^(?=.*[a-zA-Z])(?=.*[0-9]).{4,16}$/;
+        return regPwd.test(value)
+    }
+
+    const onChangePwdHandler = () => {
+        for (let i = 0; i < label.length; i++) {
+            if (label[i][0] === false) {
+                return alert('비밀번호가 일치하지 않습니다\n다시 입력하세요')
+            }
+        }
+        const userInfo = {
+            id: loginUser.id,
+            pwd: ChangePwd,
+        }
+
+        const initialState = {
+            id: '',
+            pwd: '',
+            nickName: '',
+            email: [],
+            attRoot: '',
+            attName: '',
+        }
+        userDispatch({ type: 'UPDATE_PWD', payload: userInfo })
+        loginUserDispatch({ type: 'UPDATE_PWD', payload: initialState })
+        alert('비밀번호가 성공적으로 변경되었습니다\n변경된 비밀번호로 로그인해주세요')
+        props.history.push("/")
+    }
+    
 
     return (
         <div className="changePwdContainer">
             <div className="labelContainer">
-                <label>현재 접속번호 적다</label>
-                <Input />
-                <label>비밀번호가 올바르지 않습니다</label>
+                <label>현재 비밀번호</label>
+                <Input type="password" value={CurrentPwd} onChange={(e) => {guide_func(e.currentTarget.value, setCurrentPwd, 0)}} />
+                <label className="guide" style={label[0][0] ? {color: '#69db7c'} : {color: '#ff8787'}}>{label[0][1]}</label>
             </div>
             <div className="labelContainer">
-                <label>변경할 접속번호 적다</label>
-                <Input />
-                <label>비밀번호가 올바르지 않습니다</label>
+                <label>비밀번호 변경</label>
+                <Input type="password" value={ChangePwd} onChange={(e) => {guide_func(e.currentTarget.value, setChangePwd, 1)}} />
+                <label className="guide" style={label[1][0] ? {color: '#69db7c'} : {color: '#ff8787'}}>{label[1][1]}</label>
             </div>
             <div className="labelContainer">
-                <label>변경할 접속번호 한 번 더 적다</label>
-                <Input />
-                <label>비밀번호가 올바르지 않습니다</label>
+                <label>비밀번호 변경 확인</label>
+                <Input type="password" value={CheckChangePwd} onChange={(e) => {guide_func(e.currentTarget.value, setCheckChangePwd, 2)}} />
+                <label className="guide" style={label[2][0] ? {color: '#69db7c'} : {color: '#ff8787'}}>{label[2][1]}</label>
             </div>
             <div className="changeButtonContainer">
-                <button>바꾸다</button>
+                <button onClick={onChangePwdHandler}>바꾸다</button>
                 <button onClick={ () => { props.setChange('내 정보 보다') } }>나가다</button>
             </div>
         </div>
@@ -296,7 +403,7 @@ function ChangeEmail(props) {
     return (
         <div className="changePwdContainer">
             <div className="labelContainer">
-                <label>변경할 EMAIL 적다</label>
+                <label>변경할 이메일</label>
                 <div className="emailContainer">
                     <input className="userEmail" />
                     @
@@ -305,15 +412,15 @@ function ChangeEmail(props) {
                         <option value="gmail">gmail.com</option>
                     </select>
                 </div>
-                <button className="sendCertifyBtn">EMAIL 인증정보 보내다</button>
+                <button className="sendCertifyBtn">이메일 인증 발송</button>
             </div>
             <div className="labelContainer">
-                <label>EMAIL 인증하다</label>
+                <label>이메일 인증</label>
                 <div className="emailContainer">
                     <input className="certifyInfo" />
                     <button className="certifyBtn">인증</button>
                 </div>
-                <label>인증되었습니다</label>
+                <label className="guide">인증되었습니다</label>
             </div>
             <div className="changeButtonContainer">
                 <button>바꾸다</button>

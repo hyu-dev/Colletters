@@ -13,6 +13,10 @@ function userReducer(state, action) {
     switch(action.type) {
         case 'UPDATE':
             return action.user
+        case 'UPDATE_PWD':
+            return action.payload
+        case 'UPDATE_FILE':
+            return action.payload
         default:
             throw new Error(`Unhandled action type: ${ action.type }`);
     }

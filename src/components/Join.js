@@ -29,11 +29,21 @@ function Join(props) {
     const usersDispatch = useUserDispatch();
     const regId = /^(?=.*?[a-z0-9]).{4,8}$/;
     const regPwd = /^(?=.*?[a-z])(?=.*?[0-9]).{4,12}$/;
+
+    useEffect(() => {
+        console.log("또가입")
+        initialUser.id = ''
+        initialUser.pwd = ''
+        initialUser.nickName = ''
+        initialUser.email = []
+    }, [])
     
     const checkId = (e) => {
         initialUser.id = e.target.value;
+        console.log(!initialUser.id)
         initialInspect.id = false;
         const duplicateId = users.find((user) => {
+            // 다시 가입할 떄 아이디 중복부분에서 계속 걸리는 이유부터 찾기
             return user.id === initialUser.id
         });
         document.getElementsByClassName("label")[0].style.color = "red";
@@ -112,7 +122,7 @@ function Join(props) {
         <form className="joinContainer">
             <div className="labelContainer">
                 <label>가입할 식별문자</label>
-                <Input onChange={ checkId } />
+                <Input type="text" onChange={ checkId } />
                 <label className="label"></label>
             </div>
             <div className="labelContainer">

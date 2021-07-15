@@ -5,6 +5,7 @@ import '../scss/LogIn.scss'
 import { Link, withRouter } from 'react-router-dom';
 import Main from './Main.js';
 import { useLoginUserDispatch } from '../data/LoginUserContext';
+import { useUserState } from '../data/UserContext';
 
 export const Input = styled.input`
     width: 400px;
@@ -24,13 +25,14 @@ export const Input = styled.input`
 function LogIn(props) {
     const [userId, setUserId] = useState('')
     const [userPwd, setUserPwd] = useState('')
+    const users = useUserState();
     const loginUserDispatch = useLoginUserDispatch();
-    const userInfo = props.users.find((user) => {
+    const userInfo = users.find((user) => {
         if (user.id === userId && user.pwd === userPwd) {
             return true
         }
     })
-    const login = (props, userInfo) => {
+    const onLoginHandler = (props, userInfo) => {
         props.history.push({ pathname: '/main' });
         loginUserDispatch({ type: 'UPDATE', user: userInfo })
     }
@@ -51,7 +53,7 @@ function LogIn(props) {
                 <label>그럼 이제</label>
                 <button className="loginBtn" onClick={() => {
                     userInfo != null
-                    ? login(props, userInfo)
+                    ? onLoginHandler(props, userInfo)
                     : alert('식별문자와 접속번호를 정확히 기입하세요');
                 }}>접속하다</button>
             </div>
