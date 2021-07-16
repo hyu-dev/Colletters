@@ -42,38 +42,38 @@ function LogIn(props) {
     return(
         <div className="loginContainer">
             <div className="labelContainer">
-                <label>당신의 식별문자</label>
+                <label>아이디</label>
                 <Input onChange={ (e) => { setUserId(e.target.value)} }/>
             </div>
             <div className="labelContainer">
-                <label>당신의 식별문자 접속번호</label>
+                <label>비밀번호</label>
                 <Input type="password" onChange={ (e) => { setUserPwd(e.target.value)} }/>
             </div>
             <div className="labelContainer">
-                <label>그럼 이제</label>
+                <label>바로</label>
                 <button className="loginBtn" onClick={() => {
                     userInfo != null
                     ? onLoginHandler(props, userInfo)
-                    : alert('식별문자와 접속번호를 정확히 기입하세요');
+                    : alert('아이디, 비밀번호를 정확히 입력하세요');
                 }}>접속하다</button>
             </div>
             <div className="labelContainer">
-                <label>식별문자가 없네</label>
+                <label>지금</label>
                 <Link to="/join">
                     <button className="joinBtn">가입하다</button>
                 </Link>
             </div>
             <div className="labelContainer">
-                <label>기억이 안나네</label>
+                <label>뭐지</label>
                 <div className="searchContianer">
-                    <button className="searchId" onClick={ () => { setFindUserId(true) } }>식별문자가</button>
-                    <button className="searchPwd" onClick={ () => { setFindUserPwd(true) } }>접속번호가</button>
+                    <button className="searchId" onClick={ () => { setFindUserId(true) } }>아이디가</button>
+                    <button className="searchPwd" onClick={ () => { setFindUserPwd(true) } }>비밀번호가</button>
                 </div>
             </div>
             {
                 !props.isMain &&
                 <div className="labelContainer">
-                    <label>가입없이</label>
+                    <label>그냥</label>
                     <Link to="/main">
                         <button className="notLoginView">염탐하다</button>
                     </Link>

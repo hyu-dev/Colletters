@@ -4,7 +4,7 @@ const initialUser = {
     id: '',
     pwd: '',
     nickName: '',
-    email: [],
+    email: '',
     attRoot: '',
     attName: '',
 }
@@ -15,6 +15,10 @@ function userReducer(state, action) {
             return action.user
         case 'UPDATE_PWD':
             return action.payload
+        case 'UPDATE_EMAIL':
+            const userInfo = {...state};
+            userInfo['email'] = action.payload.email;
+            return userInfo
         case 'UPDATE_FILE':
             return action.payload
         default:

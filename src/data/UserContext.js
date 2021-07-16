@@ -5,7 +5,7 @@ const initialUser = [
         id: 'user',
         pwd: '1234',
         nickName: '아무닉네임',
-        email: ['user', 'gmail.com'],
+        email: 'user@gmail.com',
         attRoot: '/images/profile/',
         attName: 'userProfile.png',
     },
@@ -13,7 +13,7 @@ const initialUser = [
         id: 'youjeong',
         pwd: '1234',
         nickName: '유정닉네임',
-        email: ['hyu630115', 'gmail.com'],
+        email: 'hyu630115@gmail.com',
         attRoot: '/images/profile/',
         attName: 'userProfile2.jpg',
     },
@@ -21,20 +21,25 @@ const initialUser = [
         id: 'test',
         pwd: '1234',
         nickName: '테스트닉',
-        email: ['test', 'gmail.com'],
+        email: 'test@gmail.com',
         attRoot: '/images/profile/',
         attName: 'userProfile3.jpg',
     },
 ];
 
 function userReducer(state, action) {
+    let userInfo;
     switch (action.type) {
         case 'CREATE':
             return state.concat(action.user);
         case 'UPDATE_PWD':
-            const userInfo = state.filter(user => user.id === action.payload.id)
-            userInfo[0].pwd = action.payload.pwd
-            return state.filter(user => user.id !== action.payload.id).concat(userInfo)
+            userInfo = state.filter(user => user.id === action.payload.id);
+            userInfo[0].pwd = action.payload.pwd;
+            return state.filter(user => user.id !== action.payload.id).concat(userInfo);
+        case 'UPDATE_EMAIL':
+            userInfo = state.filter(user => user.id === action.payload.id)
+            userInfo[0].email = action.payload.email;
+            return state.filter(user => user.id !== action.payload.id).concat(userInfo);
         case 'UPDATE_FILE':
             return state.filter(user => user.id !== action.payload.id).concat(action.payload)
         case 'REMOVE':

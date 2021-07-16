@@ -186,7 +186,7 @@ table {
     flex-direction: row;
     justify-content: space-between;
     .userEmail {
-        width: 180px;
+        width: 300px;
         height: 70px;
         border: 2px solid $cancel;
         border-radius: 10px;
@@ -196,7 +196,7 @@ table {
         padding: 0 10px;
         outline: none;
         &:focus {
-            border-color: $login;
+            border-color: $certify;
         }
         option {
             font-size: 15px;
@@ -207,7 +207,7 @@ table {
         @extend .userEmail;
         width: 300px;
         &:focus {
-            border-color: $login;
+            border-color: $certify;
         }
     }
 

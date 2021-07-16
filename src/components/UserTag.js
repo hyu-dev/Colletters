@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import { withRouter } from 'react-router-dom';
 
@@ -10,9 +10,9 @@ import { useOpenTagDispatch, useOpenTagState } from '../data/ModalContext';
 import { useLoginUserDispatch, useLoginUserState } from '../data/LoginUserContext';
 import { useUserDispatch, useUserState } from '../data/UserContext';
 import { useLetterState } from '../data/LetterContext';
-import { FaMaxcdn } from 'react-icons/fa';
-import { useRef } from 'react';
 import axios from 'axios';
+import emailjs from 'emailjs-com';
+import { USER_ID } from '../config';
 
 
 const InfoContainer = styled.div`
@@ -234,7 +234,7 @@ function MyInformation(props) {
                     id: loginUser.id,
                     pwd: loginUser.pwd,
                     nickName: loginUser.nickName,
-                    email: [loginUser.email[0], loginUser.email[1]],
+                    email: loginUser.email,
                     attRoot: '/uploads/',
                     attName: res.data.filename,
                 }
@@ -276,7 +276,7 @@ function MyInformation(props) {
                     <td colSpan='2'>{ loginUser.nickName }</td>
                 </tr>
                 <tr>
-                    <td colSpan='2'>{ `${ loginUser.email[0] }@${ loginUser.email[1] }` }</td>
+                    <td colSpan='2'>{ loginUser.email }</td>
                 </tr>
                 <tr>
                     <td colSpan='3'>
@@ -363,7 +363,7 @@ function ChangePwd(props) {
             id: '',
             pwd: '',
             nickName: '',
-            email: [],
+            email: '',
             attRoot: '',
             attName: '',
         }
@@ -400,30 +400,127 @@ function ChangePwd(props) {
 }
 
 function ChangeEmail(props) {
+    const loginUser = useLoginUserState();
+    const loginUserDispatch = useLoginUserDispatch();
+    const userDispatch = useUserDispatch();
+    const [Email, setEmail] = useState('');
+    const [CertifyNum, setCertifyNum] = useState('');
+    const [label, setLabel] = useState(['', '']);
+    const [random, setRandom] = useState(null);
+
+    function guide_func(value, setValue, index) {
+        onChangeInputHandler(value, setValue)
+        guideHandler(value, index)
+    }
+    const onChangeInputHandler = (value, setValue) => {
+        setValue(value)
+    }
+
+    const guideHandler = (value, index) => {
+        const array = [...label];
+        if (index === 0) {
+            if (value === '') {
+                array[index] = [false, ''];
+            } else if (onValidateEmail(value)) {
+                array[index] = [true, ''];
+            } else {
+                array[index] = [false, '이메일 유효성에 맞지 않습니다'];
+            }
+        }
+        setLabel(array)
+    }
+
+    const onCheckCertify = (value, index) => {
+        const array = [...label];
+        if (value === '') {
+            array[index] = [false, '']
+        } else if (value !== random) {
+            array[index] = [false, '인증번호가 올바르지 않습니다']
+        } else {
+            array[index] = [true, '인증확인']
+        }
+        setLabel(array)
+    }
+
+    const onValidateEmail = (value) => {
+        var regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+        return regEmail.test(value)
+    }
+
+    const makeRandomNumber = () => {
+        const test = new Array(6).fill().map(() => {
+            return String.fromCharCode(Math.floor((Math.random() * 58) + 65))
+        }).join("")
+        setRandom(test)
+        return test
+    }
+
+    const sendEmail = async () => {
+        const data = {
+            user_email: Email,
+            name: loginUser.name,
+            message: makeRandomNumber()
+        }
+        emailjs.send('service_youjeong', 'template_youjeong', data, USER_ID)
+        .then((result) => {
+            console.log(result.text);
+        }, (error) => {
+            console.log(error.text);
+        });
+    }
+
+    const onChangeEmailHandler = () => {
+        for (let i = 0; i < label.length; i++) {
+            if (label[i][0] === false) {
+                return alert('인증되지 않았습니다\n다시 입력하세요')
+            }
+        }
+        const userInfo = {
+            id: loginUser.id,
+            email: Email,
+        }
+
+        userDispatch({ type: 'UPDATE_EMAIL', payload: userInfo })
+        loginUserDispatch({ type: 'UPDATE_EMAIL', payload: userInfo })
+        alert('성공적으로 변경되었습니다')
+        props.setChange('내 정보 보다');
+    }
+    
+     
     return (
         <div className="changePwdContainer">
             <div className="labelContainer">
                 <label>변경할 이메일</label>
                 <div className="emailContainer">
-                    <input className="userEmail" />
-                    @
-                    <select className="userEmail">
-                        <option value="">선택하다</option>
-                        <option value="gmail">gmail.com</option>
-                    </select>
+                    <input
+                        className="certifyInfo"
+                        value={Email}
+                        onChange={(e) => {guide_func(e.currentTarget.value, setEmail, 0)}}
+                    />
+                    <button 
+                        className="certifyBtn"
+                        onClick={sendEmail}
+                    >발송</button>
                 </div>
-                <button className="sendCertifyBtn">이메일 인증 발송</button>
+                <label className="guide" style={label[0][0] ? {color: '#69db7c'} : {color: '#ff8787'}}>{label[0][1]}</label>
             </div>
             <div className="labelContainer">
                 <label>이메일 인증</label>
                 <div className="emailContainer">
-                    <input className="certifyInfo" />
-                    <button className="certifyBtn">인증</button>
+                    <input
+                        className="certifyInfo"
+                        value={CertifyNum}
+                        onChange={(e) => {guide_func(e.currentTarget.value, setCertifyNum, 1)}}
+                    />
+                    <button
+                        className="certifyBtn"
+                        onClick={() => onCheckCertify(CertifyNum, 1)}
+                    >인증</button>
                 </div>
-                <label className="guide">인증되었습니다</label>
+                <label className="guide" style={label[1][0] ? {color: '#69db7c'} : {color: '#ff8787'}}>{label[1][1]}</label>
             </div>
             <div className="changeButtonContainer">
-                <button>바꾸다</button>
+                <button onClick={onChangeEmailHandler}>바꾸다</button>
                 <button onClick={ () => { props.setChange('내 정보 보다') } }>나가다</button>
             </div>
         </div>
