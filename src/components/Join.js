@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import '../scss/Join.scss';
-import { Input } from './LogIn';
+import { Input } from './components';
 import { useUserDispatch, useUserState } from '../data/UserContext';
 import emailjs from 'emailjs-com';
 import { USER_ID } from '../config';
@@ -76,10 +76,10 @@ function Join(props) {
             case 4:
                 if (value === '') {
                     array[index] = [false, ''];
-                } else if (regEmail.test(value)) {
+                } else if (regEmail.test(value) && checkEmail(value)) {
                     array[index] = [true, ''];
                 } else {
-                    array[index] = [false, '이메일 유효성에 맞지 않습니다'];
+                    array[index] = [false, '이메일 유효성 불일치 또는 이메일 중복'];
                 }
                 break;
             default:
@@ -90,7 +90,15 @@ function Join(props) {
 
     const checkId = (value) => {
         const user = users.find(user => user.id === value)
-        console.log(user)
+        if (user) {
+            return false
+        } else {
+            return true
+        }
+    }
+
+    const checkEmail = (value) => {
+        const user = users.find(user => user.email === value)
         if (user) {
             return false
         } else {
@@ -107,21 +115,25 @@ function Join(props) {
     }
 
     const sendEmail = () => {
-        const data = {
-            user_email: Email,
-            name: NickName,
-            message: makeRandomNumber()
+        if (label[4][0]) {
+            const data = {
+                user_email: Email,
+                name: NickName,
+                message: makeRandomNumber()
+            }
+            emailjs.send('service_youjeong', 'template_youjeong', data, USER_ID)
+            .then((result) => {
+                const array = [...label];
+                array[4] = [true, '발송완료'];
+                setLabel(array)
+            }, (error) => {
+                const array = [...label];
+                array[4] = [false, '발송실패'];
+                setLabel(array)
+            });
+        } else {
+            alert('이메일을 확인하세요')
         }
-        emailjs.send('service_youjeong', 'template_youjeong', data, USER_ID)
-        .then((result) => {
-            const array = [...label];
-            array[4] = [true, '발송완료'];
-            setLabel(array)
-        }, (error) => {
-            const array = [...label];
-            array[4] = [false, '발송실패'];
-            setLabel(array)
-        });
     }
 
     const onCheckCertify = (value, index) => {

@@ -5,7 +5,8 @@ import { withRouter } from 'react-router-dom';
 
 import '../scss/UserTag.scss';
 import NestContainer from './NestContainer.js';
-import LogIn, { Input } from './LogIn.js';
+import LogIn from './LogIn.js';
+import { Input } from './components'
 import { useOpenTagDispatch, useOpenTagState } from '../data/ModalContext';
 import { useLoginUserDispatch, useLoginUserState } from '../data/LoginUserContext';
 import { useUserDispatch, useUserState } from '../data/UserContext';
@@ -402,11 +403,14 @@ function ChangePwd(props) {
 function ChangeEmail(props) {
     const loginUser = useLoginUserState();
     const loginUserDispatch = useLoginUserDispatch();
+    const users = useUserState();
     const userDispatch = useUserDispatch();
     const [Email, setEmail] = useState('');
     const [CertifyNum, setCertifyNum] = useState('');
     const [label, setLabel] = useState(['', '']);
     const [random, setRandom] = useState(null);
+
+    const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
     function guide_func(value, setValue, index) {
         onChangeInputHandler(value, setValue)
@@ -421,10 +425,10 @@ function ChangeEmail(props) {
         if (index === 0) {
             if (value === '') {
                 array[index] = [false, ''];
-            } else if (onValidateEmail(value)) {
+            } else if (regEmail.test(value) && checkEmail(value)) {
                 array[index] = [true, ''];
             } else {
-                array[index] = [false, '이메일 유효성에 맞지 않습니다'];
+                array[index] = [false, '이메일 유효성 불일치 또는 이메일 중복'];
             }
         }
         setLabel(array)
@@ -442,9 +446,13 @@ function ChangeEmail(props) {
         setLabel(array)
     }
 
-    const onValidateEmail = (value) => {
-        let regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-        return regEmail.test(value)
+    const checkEmail = (value) => {
+        const user = users.find(user => user.email === value)
+        if (user) {
+            return false
+        } else {
+            return true
+        }
     }
 
     const makeRandomNumber = () => {
@@ -455,18 +463,28 @@ function ChangeEmail(props) {
         return test
     }
 
-    const sendEmail = async () => {
-        const data = {
-            user_email: Email,
-            name: loginUser.nickName,
-            message: makeRandomNumber()
+
+    const sendEmail = () => {
+        if (label[0][0]) {
+            const data = {
+                user_email: Email,
+                name: loginUser.nickName,
+                message: makeRandomNumber()
+            }
+            emailjs.send('service_youjeong', 'template_youjeong', data, USER_ID)
+            .then((result) => {
+                const array = [...label];
+                array[0] = [true, '발송완료'];
+                setLabel(array)
+            }, (error) => {
+                const array = [...label];
+                array[0] = [false, '발송실패'];
+                setLabel(array)
+            });
+        } else {
+            alert('이메일을 확인하세요')
         }
-        emailjs.send('service_youjeong', 'template_youjeong', data, USER_ID)
-        .then((result) => {
-            console.log(result.text);
-        }, (error) => {
-            console.log(error.text);
-        });
+        
     }
 
     const onChangeEmailHandler = () => {

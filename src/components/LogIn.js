@@ -1,26 +1,12 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import '../scss/LogIn.scss'
 import { Link, withRouter } from 'react-router-dom';
-import Main from './Main.js';
 import { useLoginUserDispatch } from '../data/LoginUserContext';
 import { useUserState } from '../data/UserContext';
-
-export const Input = styled.input`
-    width: 400px;
-    height: 70px;
-    background: #fff;
-    border: 2px solid #000;
-    border-radius: 10px;
-    box-sizing: border-box;
-    font-size: 20px;
-    padding: 0 10px;
-    outline: none;
-    &:focus {
-        border: 2px solid #ff6b6b;
-    }
-`;
+import { FaPlus } from 'react-icons/fa';
+import { IconContainer, Input } from './components';
+import SearchAccount from './SearchAccount';
 
 function LogIn(props) {
     const [userId, setUserId] = useState('')
@@ -36,8 +22,13 @@ function LogIn(props) {
         props.history.push({ pathname: '/main' });
         loginUserDispatch({ type: 'UPDATE', user: userInfo })
     }
-    const [findUserId, setFindUserId] = useState(false);
-    const [findUserPwd, setFindUserPwd] = useState(false);
+    const [findAccount, setFindAccount] = useState(false);
+    const [type, setType] = useState('');
+
+    const openSearchAccountModule = (type) => {
+        setFindAccount(true)
+        setType(type);
+    }
 
     return(
         <div className="loginContainer">
@@ -66,8 +57,8 @@ function LogIn(props) {
             <div className="labelContainer">
                 <label>뭐지</label>
                 <div className="searchContianer">
-                    <button className="searchId" onClick={ () => { setFindUserId(true) } }>아이디가</button>
-                    <button className="searchPwd" onClick={ () => { setFindUserPwd(true) } }>비밀번호가</button>
+                    <button onClick={ () => {openSearchAccountModule('id')} }>아이디가</button>
+                    <button onClick={ () => {openSearchAccountModule('pwd')} }>비밀번호가</button>
                 </div>
             </div>
             {
@@ -80,59 +71,8 @@ function LogIn(props) {
                 </div>
             }
             {
-                findUserId && <SearchId setFindUserId={setFindUserId}/>
+                findAccount && <SearchAccount setFindAccount={setFindAccount} type={type}/>
             }
-            {
-                findUserPwd && <SearchPwd setFindUserPwd={setFindUserPwd}/>
-            }
-        </div>
-    )
-}
-
-function SearchId(props) {
-    return(
-        <div className="searchBackground">
-            <div className="search">
-                <label>식별번호 찾아보다</label>
-                <div className="emailContainer">
-                    <input className="userEmail" />
-                    @
-                    <select className="userEmail">
-                        <option value="">선택하다</option>
-                        <option value="gmail">gmail.com</option>
-                    </select>
-                </div>
-                <div>
-                    <button className="searchBtn">찾다</button>
-                    <button className="closeBtn" onClick={() => { props.setFindUserId(false)}}>닫다</button>
-                </div>
-            </div>
-        </div>
-    )
-}
-
-function SearchPwd(props) {
-    return(
-        <div className="searchBackground">
-            <div className="search">
-                <label>접속번호 찾아보다</label>
-                <div>
-                    <label>식별번호</label>
-                    <input type="text" />
-                </div>
-                <div className="emailContainer">
-                    <input className="userEmail" />
-                    @
-                    <select className="userEmail">
-                        <option value="">선택하다</option>
-                        <option value="gmail">gmail.com</option>
-                    </select>
-                </div>
-                <div>
-                    <button className="searchBtn">찾다</button>
-                    <button className="closeBtn" onClick={() => { props.setFindUserPwd(false)}}>닫다</button>
-                </div>
-            </div>
         </div>
     )
 }
