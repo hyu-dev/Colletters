@@ -1,5 +1,27 @@
 import styled, { css } from "styled-components";
 
+export const BackgroundBlur = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0);
+    z-index: 2;
+    ${props => 
+        props.modal === 'true'
+        && css`
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+        `
+    }
+`;
+
+
 export const IconContainer = styled.div`
     width: auto;
     height: auto;
@@ -8,8 +30,15 @@ export const IconContainer = styled.div`
     ${props => props.type === 'back' && css`
         position: absolute;
         top: 0;
-        right: 0;
-        transform: translate(40%, -40%) rotate(45deg);
+        left: 0;
+        transform: translate(-50%, -40%) rotate(45deg);
+        z-index: 6;
+    `}
+    ${props => props.type === 'bigHash' && css`
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        left: 10px;
     `}
 `;
 

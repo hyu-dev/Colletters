@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { IconContext } from 'react-icons/lib';
 import { FaSlackHash } from 'react-icons/fa';
+import { IoIosArrowDown } from 'react-icons/io'
 
 import '../scss/Main.scss';
 import UserTag from './UserTag.js';
@@ -14,34 +14,13 @@ import { useLetterState } from '../data/LetterContext';
 import { OpenLetterProvider, OpenTagProvider } from '../data/ModalContext';
 import { useDetailLetterState } from '../data/DetailLetterContext';
 import { useTopTagState } from '../data/TopTagsContext';
-
-
-const SearchTagDiv = styled.div`
-    width: 100px;
-    height: 100px;
-    position: absolute;
-    left: 10px;
-
-`;
-
-const TagImg = styled.img`
-    width: 20px;
-    height: 20px;
-`;
-
-
-const BottomArrow = styled.img`
-    width: 25px;
-    height: 25px;
-    transform: rotate(90deg);
-    cursor: pointer;
-`;
+import { IconContainer } from './components';
 
 
 function Main(props) {
     const letterState = useLetterState();
     const detailLetterState = useDetailLetterState();
-    const [글검색, 글검색표시] = useState(false)
+    const [search, openSearch] = useState(false)
     const [iconColor, setIconColor] = useState('#dee2e6')
     const topTagState = useTopTagState();
 
@@ -55,14 +34,12 @@ function Main(props) {
             <div className="mainContainer">
                 <div className="searchContainer">
                     <div className="search">
-                        <IconContext.Provider value={{size: 90, color: iconColor}}>
-                            <SearchTagDiv>
-                                <FaSlackHash />
-                            </SearchTagDiv>
-                        </IconContext.Provider>
+                        <IconContainer size="90px" color={iconColor} type="bigHash">
+                            <FaSlackHash />
+                        </IconContainer>
                         <input 
                             className="searchInput"
-                            placeholder="꼬리표를 검색하다"
+                            placeholder="해시태그 검색"
                             onFocus={()=> {setIconColor('#87E8D6')}}
                             onBlur={() => {setIconColor('#dee2e6')}}
                         />
@@ -70,36 +47,38 @@ function Main(props) {
                     </div>
                 </div>
                 <div className="selectionContainer">
-                    <div>
+                    <aside>
                         <select className="selectLetters" onChange={(e) => {
-                            if (e.target.value == '누군가의 글을 엿보다') {
-                                글검색표시(true)
+                            if (e.target.value == 'search') {
+                                openSearch(true)
                             } else {
-                                글검색표시(false)
+                                openSearch(false)
                             }
                         }}>
-                            <option>모든 글을 모아보다</option>
-                            <option>내 글만 모아보다</option>
-                            <option>누군가의 글을 엿보다</option>
+                            <option value="posts">모든 글 모아보기</option>
+                            <option value="myPost">내 글 모아보기</option>
+                            <option value="search">다른 글 엿보기</option>
                         </select>
-                    </div>
-                    <div>
+                    </aside>
+                    <aside>
                     {
-                        글검색 &&
+                        search &&
                         <>
                             <input className="searchAnotherLetters" placeholder="닉네임을 입력하세요" autoFocus/>
                             <button>검색</button>
                         </>
                     }
-                    </div>
-                    <div>
-                        <b>인기꼬리표</b>
+                    </aside>
+                    <aside style={{ cursor: 'pointer' }}>
+                        <b>인기태그</b>
                         <ul className="topHashList">
                             {
                                 topTagState.map((tag) => {
                                     return (
-                                        <li>
-                                            <TagImg src="/images/hashTag.png" alt="해시" />
+                                        <li key={tag.id}>
+                                            <IconContainer size="20px" color="black">
+                                                <FaSlackHash />
+                                            </IconContainer>
                                             <p>{ tag.title }</p>
                                         </li>
                                     )
@@ -107,8 +86,10 @@ function Main(props) {
                             }
                             
                         </ul>
-                        <BottomArrow src="/images/right-arrow.png" alt=""></BottomArrow>
-                    </div>
+                        <IconContainer size="25px" color="black">
+                            <IoIosArrowDown />
+                        </IconContainer>
+                    </aside>
                 </div>
                 <div className="lettersContainer">
                     <div className="letters">
@@ -118,9 +99,6 @@ function Main(props) {
                             })
                         }
                     </div>
-                </div>
-                <div className="btnContainer">
-                    <button className="moreBtn" onClick={() => {}}>더보다</button>
                 </div>
             </div>
         </OpenLetterProvider>

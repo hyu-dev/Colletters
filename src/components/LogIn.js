@@ -4,8 +4,7 @@ import '../scss/LogIn.scss'
 import { Link, withRouter } from 'react-router-dom';
 import { useLoginUserDispatch } from '../data/LoginUserContext';
 import { useUserState } from '../data/UserContext';
-import { FaPlus } from 'react-icons/fa';
-import { IconContainer, Input } from './components';
+import { Input } from './components';
 import SearchAccount from './SearchAccount';
 
 function LogIn(props) {

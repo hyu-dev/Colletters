@@ -13,7 +13,6 @@ function SearchAccount(props) {
 
     const onClick = () => {
         const user = checkUserEmail(Email);
-        console.log(user)
         if (!user) {
             return alert('존재하는 이메일이 없습니다')
         } else {
@@ -38,7 +37,6 @@ function SearchAccount(props) {
     }
 
     const checkUserEmail = (value) => {
-        console.log(value)
         return users.find(user => user.email === value)
     }
 

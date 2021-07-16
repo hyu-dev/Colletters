@@ -4,9 +4,8 @@ import styled, { css } from 'styled-components';
 import { withRouter } from 'react-router-dom';
 
 import '../scss/UserTag.scss';
-import NestContainer from './NestContainer.js';
 import LogIn from './LogIn.js';
-import { Input } from './components'
+import { BackgroundBlur, Input } from './components'
 import { useOpenTagDispatch, useOpenTagState } from '../data/ModalContext';
 import { useLoginUserDispatch, useLoginUserState } from '../data/LoginUserContext';
 import { useUserDispatch, useUserState } from '../data/UserContext';
@@ -28,14 +27,14 @@ const InfoContainer = styled.div`
     z-index: 5;
     transition: all 0.6s ease-in-out;
     ${props =>
-        props.modal &&
+        props.modal === 'true' &&
         css`
             height: 800px;
         `
     }
     .tagImg {
         ${props =>
-            props.modal &&
+            props.modal === 'true' &&
             css`
                 top: 805px;
             `
@@ -43,7 +42,7 @@ const InfoContainer = styled.div`
     }
     .buttonContainer {
         ${props =>
-            props.modal &&
+            props.modal === 'true' &&
             css`
             transform: translateY(100%);
             `
@@ -152,7 +151,7 @@ function UserTag(props) {
                 return <MyInformation history={ props.history } open={ true } setChange={setChange}/>
             case '비밀번호 바꾸다':
                 return <ChangePwd history={ props.history } setChange={ setChange } />
-            case 'EMAIL 바꾸다':
+            case '이메일 바꾸다':
                 return <ChangeEmail history={ props.history } setChange={ setChange } />
             default:
                 throw new Error(`Unhandled change Info: ${ change }`);
@@ -161,8 +160,8 @@ function UserTag(props) {
 
 
     return (
-        <NestContainer modal={ openTagState }>
-            <InfoContainer modal={ openTagState }>
+        <BackgroundBlur modal={ openTagState.toString() }>
+            <InfoContainer modal={ openTagState.toString() }>
                 {
                     user.id !== ''
                     ?
@@ -171,7 +170,7 @@ function UserTag(props) {
                             <Button change={ change } onClick={() => { setChange('내 정보 보다') } }>내 정보 보다</Button>
                             <Button change={ change } onClick={() => { setChange('대표사진 바꾸다') } }>대표사진 바꾸다</Button>
                             <Button change={ change } onClick={() => { setChange('비밀번호 바꾸다') } }>비밀번호 바꾸다</Button>
-                            <Button change={ change } onClick={() => { setChange('EMAIL 바꾸다') } }>EMAIL 바꾸다</Button>
+                            <Button change={ change } onClick={() => { setChange('이메일 바꾸다') } }>이메일 바꾸다</Button>
                         </div>
                         { changeInfo(change) }
                         <div className="textBtnContainer">
@@ -197,11 +196,11 @@ function UserTag(props) {
                     className="tagImg"
                     src="/images/tag.gif" 
                     alt="태그" 
-                    modal={ openTagState } 
+                    modal={ openTagState.toString() } 
                     onClick={ () => { openTagDispatch({ type: 'TAGOPEN' }) } }
                 />
             </InfoContainer>
-        </NestContainer>
+        </BackgroundBlur>
     );
 }
 
@@ -304,7 +303,7 @@ function ChangePwd(props) {
     const [CurrentPwd, setCurrentPwd] = useState('');
     const [ChangePwd, setChangePwd] = useState('');
     const [CheckChangePwd, setCheckChangePwd] = useState('');
-    const [label, setLabel] = useState(['', '', '']);
+    const [label, setLabel] = useState(new Array(3).fill().map(() => [false, '']));
 
     function guide_func(value, setValue, index) {
         onChangeInputHandler(value, setValue)
@@ -352,7 +351,7 @@ function ChangePwd(props) {
     const onChangePwdHandler = () => {
         for (let i = 0; i < label.length; i++) {
             if (label[i][0] === false) {
-                return alert('비밀번호가 일치하지 않습니다\n다시 입력하세요')
+                return alert('비밀번호를 확인하세요')
             }
         }
         const userInfo = {

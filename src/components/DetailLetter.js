@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
-import { IconContext } from 'react-icons';
-import { connect } from 'react-redux';
 
 import { FaSlackHash } from 'react-icons/fa';
 import { FaPlus } from 'react-icons/fa';
 
-import NestContainer from './NestContainer.js';
 import '../scss/DetailLetter.scss';
 import { useOpenLetterDispatch, useOpenLetterState } from '../data/ModalContext.js';
+import { BackgroundBlur, IconContainer } from './components.jsx';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 const DetailContainer = styled.div`
     width: 1100px;
@@ -23,42 +22,14 @@ const DetailContainer = styled.div`
     align-items: center;
     z-index: 5;
     ${ props =>
-        props.modal &&
+        props.modal === 'true'
+        && 
         css`
             display: flex;
         `
     }
 `;
 
-const CloseButtonContainer = styled.div`
-    width: 60px;
-    height: 60px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translate(-40%, -40%) rotate(45deg);
-    cursor: pointer;
-    z-index: 6;
-`;
-
-const NickNameTitle = styled.h2`
-    margin: 0;
-    padding: 5px 85px;
-    width: 100%;
-    height: 35px;
-    position: absolute;
-    top: 0;
-    box-sizing: border-box;
-    font-family: Rockwell;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 25px;
-    line-height: 29px;
-    text-align: right;
-    color: blue;
-    text-decoration: underline;
-    cursor: pointer;
-`;
 
 const ToggleContainer = styled.div`
     width: 85px;
@@ -97,14 +68,15 @@ function DetailLetter({ letter }) {
     const [toggle, setToggle] = useState(false);
 
     return (
-        <NestContainer modal={ openLetterState }>
-            <DetailContainer modal={ openLetterState }>
-                <CloseButtonContainer onClick={ () => { openLetterDispatch({ type: 'OPEN' }) } }>
-                    <IconContext.Provider value={{size:60}}>
-                        <FaPlus />
-                    </IconContext.Provider>
-                </CloseButtonContainer>
-                <NickNameTitle onClick={ () => { setToggle(!toggle) } }>{ letter.nickName } 님이 끼적인 글</NickNameTitle>
+        <BackgroundBlur modal={openLetterState.toString()}>
+            <DetailContainer modal={openLetterState.toString()}>
+                <IconContainer size="60px" color="black" type="back" style={{ cursor: 'pointer' }}>
+                    <FaPlus onClick={() => { openLetterDispatch({ type: 'OPEN' }) }}/>
+                </IconContainer>
+                <h2 
+                    className="nickNameTitle"
+                    onClick={ () => { setToggle(!toggle) } }
+                >{ letter.nickName } 님이 끼적인 글</h2>
                 {
                     toggle &&
                     <ToggleContainer>
@@ -114,9 +86,13 @@ function DetailLetter({ letter }) {
                 }
                 <img className="userProfileImage" src="/images/userProfile.png" alt="유저프로필" />
                 <div className="imagesContainer">
-                    <img src="/images/left-arrow.png" alt="왼쪽화살표"/>
+                    <IconContainer size="50px" color="black" style={{ cursor: 'pointer' }}>
+                        <IoIosArrowBack />
+                    </IconContainer>
                     <img src="/images/attachment/att1.jpg" alt="사진"/>
-                    <img src="/images/right-arrow.png" alt="오른쪽화살표"/>
+                    <IconContainer size="50px" color="black" style={{ cursor: 'pointer' }}>
+                        <IoIosArrowForward />
+                    </IconContainer>
                 </div>
                 <div className="letterContent">
                     <b>{ letter.letter.title }</b>
@@ -124,12 +100,12 @@ function DetailLetter({ letter }) {
                 </div>
                 <ul className="tagsContainer">
                     {
-                        letter.letter.tag.map((tag) => {
+                        letter.letter.tag.map((tag, i) => {
                             return (
-                                <li>
-                                    <IconContext.Provider value={{size:25, color:"#87E8D6"}}>
-                                    <FaSlackHash />
-                                    </IconContext.Provider>
+                                <li key={i}>
+                                    <IconContainer size="25px" color="#87E8D6">
+                                        <FaSlackHash />
+                                    </IconContainer>
                                     <p>{ tag }</p>
                                 </li>
                             )
@@ -151,7 +127,7 @@ function DetailLetter({ letter }) {
                     </div>
                 </div>
             </DetailContainer>
-        </NestContainer>
+        </BackgroundBlur>
     );
 }
 

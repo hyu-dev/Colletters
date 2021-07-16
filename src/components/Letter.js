@@ -1,26 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
+import { FaSlackHash } from 'react-icons/fa';
 import { useDetailLetterDispatch } from '../data/DetailLetterContext';
 import { useOpenLetterDispatch } from '../data/ModalContext';
-import '../scss/Main.scss';
-
-let TagImgInLetter = styled.img`
-    width: 15px;
-    height: 15px;
-`;
-
-let LetterImg = styled.img`
-    width: 250px;
-    height: 250px;
-    box-shadow: 0px 2px 5px #a9a9db;
-    box-sizing: border-box;
-`;
-
-let CountImg = styled.img`
-    width: 30px;
-    height: 30px;
-`;
-
+import '../scss/Letter.scss';
+import { IconContainer } from './components';
 
 
 function Letter({ letter }) {
@@ -39,14 +22,16 @@ function Letter({ letter }) {
         >
             <img className="userProfile" src="/images/userProfile.png" alt="" />
             <p className="userNickName">{ letter.nickName }</p>
-            <LetterImg src={ `${ letter.attRoot }${ letter.attName.main }` } alt="이미지" />
+            <img className="letterImg" src={ `${ letter.attRoot }${ letter.attName.main }` } alt="이미지" />
             <p className="letterTitle">{ letter.letter.title }</p>
             <ul className="tags">
                 {
-                    letter.letter.tag.map((tag) => {
+                    letter.letter.tag.map((tag, i) => {
                         return (
-                            <li>
-                                <TagImgInLetter src="/images/hashTag.png" alt="태그" />
+                            <li key={i}>
+                                <IconContainer size="15px" color="black">
+                                    <FaSlackHash />
+                                </IconContainer>
                                 <p>{tag}</p>
                             </li>
                         )
@@ -55,11 +40,11 @@ function Letter({ letter }) {
             </ul>
             <div className="countContainer">
                 <div className="count viewCount">
-                    <CountImg src="/images/eyes.png" alt="조회수" />
+                    <img className="countImg" src="/images/eyes.png" alt="조회수" />
                     <p>{ letter.letter.viewCount }</p>
                 </div>
                 <div className="count likeCount">
-                    <CountImg src="/images/like_none.png" alt="좋아요" />
+                    <img className="countImg" src="/images/like_none.png" alt="좋아요" />
                     <p>{ letter.letter.likeCount }</p>
                 </div>
             </div>
