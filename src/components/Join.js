@@ -1,10 +1,11 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
 import '../scss/Join.scss';
 import { Input } from './LogIn';
 import { useUserDispatch, useUserState } from '../data/UserContext';
+import emailjs from 'emailjs-com';
+import { USER_ID } from '../config';
 
 const initialUser = {
     id: '',
@@ -15,170 +16,223 @@ const initialUser = {
     attName: 'basic.png',
 }
 
-const initialInspect = {
-    id: false,
-    pwd: false,
-    checkpwd: false,
-    nickName: false,
-    email: false,
-}
-
 function Join(props) {
-    const [number, setNumber] = useState(0)
     const users = useUserState();
     const usersDispatch = useUserDispatch();
+
+    const [Id, setId] = useState('');
+    const [Password, setPassword] = useState('');
+    const [checkPassword, setCheckPassword] = useState('');
+    const [NickName, setNickName] = useState('');
+    const [Email, setEmail] = useState('');
+    const [CertifyNum, setCertifyNum] = useState('');
+    const [random, setRandom] = useState('');
+    const [label, setLabel] = useState(new Array(6).fill().map(() => [false, '']))
+    
     const regId = /^(?=.*?[a-z0-9]).{4,8}$/;
     const regPwd = /^(?=.*?[a-z])(?=.*?[0-9]).{4,12}$/;
-
-    useEffect(() => {
-        console.log("또가입")
-        initialUser.id = ''
-        initialUser.pwd = ''
-        initialUser.nickName = ''
-        initialUser.email = []
-    }, [])
+    const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
     
-    const checkId = (e) => {
-        initialUser.id = e.target.value;
-        console.log(!initialUser.id)
-        initialInspect.id = false;
-        const duplicateId = users.find((user) => {
-            // 다시 가입할 떄 아이디 중복부분에서 계속 걸리는 이유부터 찾기
-            return user.id === initialUser.id
+    const guide_func = (value, setValue, index) => {
+        onChangeInputHandler(value, setValue)
+        guideHandler(value, index)
+    }
+    const onChangeInputHandler = (value, setValue) => {
+        setValue(value)
+    }
+    const guideHandler = (value, index) => {
+        const array = [...label];
+        switch (index) {
+            case 0:
+                if (value === '') {
+                    array[index] = [false, '']
+                } else if (regId.test(value) && checkId(value)) {
+                    array[index] = [true, '사용 가능한 아이디입니다']
+                } else {
+                    array[index] = [false, '영문 소문자 및 숫자 조합 4~8자 또는 아이디 중복']
+                }
+                break;
+            case 1:
+                if (value === '') {
+                    array[index] = [false, '']
+                } else if (regPwd.test(value)) {
+                    array[index] = [true, '사용 가능한 비밀번호 입니다']
+                } else {
+                    array[index] = [false, '영문 소문자, 숫자 포함 4~8자']
+                }
+                break;
+            case 2:
+                if (value === '') {
+                    array[index] = [false, '']
+                } else if (value === Password) {
+                    array[index] = [true, '비밀번호 확인 완료']
+                } else {
+                    array[index] = [false, '입력하신 비밀번호와 일치하지 않습니다']
+                }
+                break;
+            case 3:
+                array[index] = [true, ''];
+                break;
+            case 4:
+                if (value === '') {
+                    array[index] = [false, ''];
+                } else if (regEmail.test(value)) {
+                    array[index] = [true, ''];
+                } else {
+                    array[index] = [false, '이메일 유효성에 맞지 않습니다'];
+                }
+                break;
+            default:
+                break;
+        }
+        setLabel(array)
+    }
+
+    const checkId = (value) => {
+        const user = users.find(user => user.id === value)
+        console.log(user)
+        if (user) {
+            return false
+        } else {
+            return true
+        }
+    }
+
+    const makeRandomNumber = () => {
+        const test = new Array(6).fill().map(() => {
+            return String.fromCharCode(Math.floor((Math.random() * 58) + 65))
+        }).join("")
+        setRandom(test)
+        return test
+    }
+
+    const sendEmail = () => {
+        const data = {
+            user_email: Email,
+            name: NickName,
+            message: makeRandomNumber()
+        }
+        emailjs.send('service_youjeong', 'template_youjeong', data, USER_ID)
+        .then((result) => {
+            const array = [...label];
+            array[4] = [true, '발송완료'];
+            setLabel(array)
+        }, (error) => {
+            const array = [...label];
+            array[4] = [false, '발송실패'];
+            setLabel(array)
         });
-        document.getElementsByClassName("label")[0].style.color = "red";
-        if (duplicateId) {
-            document.getElementsByClassName("label")[0].innerHTML = "이미 사용중인 식별문자입니다"
-        } else {
-            if (!initialUser.id) {
-                document.getElementsByClassName("label")[0].innerHTML = ""
-            } else if (!regId.test(initialUser.id)) {
-                document.getElementsByClassName("label")[0].innerHTML = "영문 소문자 또는 숫자 4자 이상, 8자 이하 입력"
-            } else {
-                document.getElementsByClassName("label")[0].innerHTML = "사용가능한 식별문자입니다"
-                document.getElementsByClassName("label")[0].style.color = "green";
-                initialInspect.id = true;
-            }
-        }
     }
 
-    const checkPwd = (e) => {
-        initialUser.pwd = e.target.value;
-        initialInspect.pwd = false;
-        document.getElementsByClassName("label")[1].style.color = "red";
-        if (!initialUser.pwd) {
-            document.getElementsByClassName("label")[1].innerHTML = ""
-        } else if (!regPwd.test(initialUser.pwd)) {
-            document.getElementsByClassName("label")[1].innerHTML = "영문 소문자와 숫자 조합하여 4자 이상, 12자 이하 입력"
+    const onCheckCertify = (value, index) => {
+        const array = [...label];
+        if (value === '') {
+            array[index] = [false, '']
+        } else if (value !== random) {
+            array[index] = [false, '인증번호가 올바르지 않습니다']
         } else {
-            document.getElementsByClassName("label")[1].innerHTML = "사용가능한 접속번호입니다"
-            document.getElementsByClassName("label")[1].style.color = "green";
-            initialInspect.pwd = true;
+            array[index] = [true, '인증확인']
         }
-    }
-
-    const crossCheckPwd = (e) => {
-        initialInspect.checkpwd = false;
-        document.getElementsByClassName("label")[2].style.color = "red";
-        if (!e.target.value) {
-            document.getElementsByClassName("label")[2].innerHTML = ""
-        } else if (initialUser.pwd !== e.target.value) {
-            document.getElementsByClassName("label")[2].innerHTML = "접속번호가 일치하지 않습니다"
-        } else {
-            document.getElementsByClassName("label")[2].innerHTML = "접속번호가 일치합니다"
-            document.getElementsByClassName("label")[2].style.color = "green";
-            initialInspect.checkpwd = true;
-        }
-    }
-
-    const checkNickName = (e) => {
-        initialUser.nickName = e.target.value
-        if (initialUser.nickName) {
-            initialInspect.nickName = true
-        } else {
-            initialInspect.nickName = false
-        }
+        setLabel(array)
     }
 
     const onSubmit = (e) => {
         e.preventDefault()
-        if (!initialInspect.id) {
-            return alert(`식별문자를 확인하세요`);
-        } else if (!initialInspect.pwd) {
-            return alert(`접속번호를 확인하세요`);
-        } else if (!initialInspect.checkpwd) {
-            return alert(`접속번호가 일치하지 않습니다`);
-        } else if (!initialInspect.nickName) {
-            return alert(`활동 별명을 입력하세요`)
-        } else if (!initialInspect.email) {
-            return alert(`EMAIL 인증하세요`)
-        } else {
-            usersDispatch({ type: 'CREATE', user: initialUser })
-            props.history.push({ pathname: '/welcome' })
+        for (let i = 0; i < label.length; i++) {
+            if (label[i][0] === false) {
+                switch (i) {
+                    case 0: return alert('아이디를 확인하세요')
+                    case 1: return alert('비밀번호 유효성을 확인하세요')
+                    case 2: return alert('비밀번호가 일치하지 않습니다')
+                    case 4: return alert('이메일 유효성을 확인하세요')
+                    case 5: return alert('이메일이 인증되지 않았습니다.')
+                }
+            }
         }
+        const userInfo = {
+            ...initialUser,
+            id: Id,
+            pwd: Password,
+            nickName: NickName,
+            email: Email
+        }
+        usersDispatch({ type: 'CREATE', user: userInfo })
+        props.history.push({ pathname: '/welcome' })
     }
 
     return (
-        <form className="joinContainer">
+        <form className="joinContainer" onSubmit={onSubmit}>
             <div className="labelContainer">
-                <label>가입할 식별문자</label>
-                <Input type="text" onChange={ checkId } />
-                <label className="label"></label>
+                <label>아이디</label>
+                <Input 
+                    type="text"
+                    value={Id}
+                    onChange={(e) => guide_func(e.currentTarget.value, setId, 0)}
+                />
+                <label className="guide" style={label[0][0] ? {color: '#69db7c'} : {color: '#ff8787'}}>{label[0][1]}</label>
             </div>
             <div className="labelContainer">
-                <label>식별문자 접속번호</label>
-                <Input type="password" onChange={ checkPwd } />
-                <label className="label"></label>
+                <label>비밀번호</label>
+                <Input
+                    type="password"
+                    value={Password}
+                    onChange={(e) => guide_func(e.currentTarget.value, setPassword, 1)}
+                />
+                 <label className="guide" style={label[1][0] ? {color: '#69db7c'} : {color: '#ff8787'}}>{label[1][1]}</label>
             </div>
             <div className="labelContainer">
-                <label>식별문자 접속번호 확인</label>
-                <Input type="password" onChange={ crossCheckPwd } />
-                <label className="label"></label>
+                <label>비밀번호 확인</label>
+                <Input
+                    type="password"
+                    value={checkPassword}
+                    onChange={(e) => guide_func(e.currentTarget.value, setCheckPassword, 2)}
+                />
+                <label className="guide" style={label[2][0] ? {color: '#69db7c'} : {color: '#ff8787'}}>{label[2][1]}</label>
             </div>
             <div className="labelContainer">
-                <label>당신이 활동할 별명</label>
-                <Input onChange={ checkNickName } />
+                <label>사용할 별명</label>
+                <Input 
+                    type="text"
+                    maxLength="10"
+                    value={NickName}
+                    onChange={(e) => guide_func(e.currentTarget.value, setNickName, 3)}
+                />
             </div>
             <div className="labelContainer">
-                <label>EMAIL</label>
+                <label>이메일 인증</label>
                 <div className="emailContainer">
-                    <input className="userEmail" onChange={(e) => { initialUser.email[0] = e.target.value }}/>
-                    @
-                    <select className="userEmail" onChange={(e) => { initialUser.email[1] = e.target.value }}>
-                        <option value="">선택하다</option>
-                        <option value="gmail.com">gmail.com</option>
-                    </select>
+                    <input
+                        className="certifyInfo"
+                        value={Email}
+                        onChange={(e) => guide_func(e.currentTarget.value, setEmail, 4)}
+                    />
+                    <button
+                        type="button"
+                        className="certifyBtn"
+                        onClick={sendEmail}
+                    >발송</button>
                 </div>
-                <button className="sendCertifyBtn" type="button" onClick={() => {
-                    if (!initialUser.email[0] || !initialUser.email[1]) {
-                        alert(`이메일을 입력하세요`)
-                    } else {
-                        alert(`${ initialUser.email[0] }@${ initialUser.email[1] }로 메일을 보냈다치고,\n인증번호: 123456`)
-                    }
-                }}>EMAIL 인증정보 보내다</button>
+                <label className="guide" style={label[4][0] ? {color: '#69db7c'} : {color: '#ff8787'}}>{label[4][1]}</label>
             </div>
             <div className="labelContainer">
-                <label>EMAIL 인증</label>
+                <label>이메일 인증 확인</label>
                 <div className="emailContainer">
-                    <input className="certifyInfo" onChange={(e) => {
-                        setNumber(e.target.value)
-                    }} />
-                    <button className="certifyBtn" type="button" onClick={() => {
-                        initialInspect.email = false
-                        if (!number) {
-                            alert(`인증번호를 입력하세요`)
-                        } else if (number == 123456) {
-                            alert(`인증되었습니다`)
-                            initialInspect.email = true
-                        } else {
-                            alert(`인증되지 않았습니다. 번호를 다시 확인하세요`)
-                        }
-                    }}>인증</button>
+                    <input
+                        className="certifyInfo"
+                        value={CertifyNum}
+                        onChange={(e) => guide_func(e.currentTarget.value, setCertifyNum, 5)}
+                    />
+                    <button
+                        type="button"
+                        className="certifyBtn"
+                        onClick={() => {onCheckCertify(CertifyNum, 5)}}
+                    >인증</button>
                 </div>
+                <label className="guide" style={label[5][0] ? {color: '#69db7c'} : {color: '#ff8787'}}>{label[5][1]}</label>
             </div>
             <div className="labelContainer">
                 <div className="btnContainer">
-                    <button className="joinBtn" onClick={ onSubmit }>가입하다</button>
+                    <button type="submit" className="joinBtn">가입하다</button>
                     <Link to="/">
                         <button type="button" className="backBtn">돌아가다</button>
                     </Link>

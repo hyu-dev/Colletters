@@ -16,10 +16,9 @@
         label {
             font-size: 25px;
         }
-        .label {
-            font-weight: 200;
+        .guide {
             font-size: 15px;
-            color: red;
+            align-self: flex-start;
         }
         .btnContainer {
             display: flex;
@@ -94,7 +93,7 @@
                 padding: 0 10px;
                 outline: none;
                 &:focus {
-                    border-color: $login;
+                    border-color: #ff6b6b;
                 }
                 option {
                     font-size: 15px;
@@ -105,7 +104,7 @@
                 @extend .userEmail;
                 width: 300px;
                 &:focus {
-                    border-color: $login;
+                    border-color: #ff6b6b;
                 }
             }
 

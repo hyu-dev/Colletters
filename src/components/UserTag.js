@@ -329,7 +329,7 @@ function ChangePwd(props) {
             } else if (onValidatePwd(value)) {
                 array[index] = [true, '사용 가능한 비밀번호 입니다']
             } else {
-                array[index] = [false, '영문 소문자, 대문자, 숫자 포함 4~12자']
+                array[index] = [false, '영문 소문자, 숫자 포함 4~8자']
             }
         } else {
             if (value === '') {
@@ -344,7 +344,7 @@ function ChangePwd(props) {
     }
 
     const onValidatePwd = (value) => {
-        const regPwd = /^(?=.*[a-zA-Z])(?=.*[0-9]).{4,16}$/;
+        const regPwd = /^(?=.*?[a-z])(?=.*?[0-9]).{4,12}$/;
         return regPwd.test(value)
     }
 
@@ -443,7 +443,7 @@ function ChangeEmail(props) {
     }
 
     const onValidateEmail = (value) => {
-        var regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+        let regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         return regEmail.test(value)
     }
 
@@ -458,7 +458,7 @@ function ChangeEmail(props) {
     const sendEmail = async () => {
         const data = {
             user_email: Email,
-            name: loginUser.name,
+            name: loginUser.nickName,
             message: makeRandomNumber()
         }
         emailjs.send('service_youjeong', 'template_youjeong', data, USER_ID)
