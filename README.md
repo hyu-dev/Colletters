@@ -19,7 +19,7 @@
 - react-router-dom : 화면 전환
 - styled-components, node-sass, react-icons : 화면 꾸미기
 - emailjs-com : 회원가입, 회원이메일수정, 계정찾기 시 인증번호발송에 사용
-- express(multer) : 회원 프로필 사진 변경, 게시글 사진첨부에 사용
+- express, multer : 회원 프로필 사진, 게시글 사진 업로드에 사용
 - contextAPI : 데이터 조회, 수정, 삭제, 생성 등 작업
 - proxy : server.js 와 react project 의 cors 에러 해결을 위해 사용 (로컬 path 연결)
 
