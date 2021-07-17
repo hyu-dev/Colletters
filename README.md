@@ -22,6 +22,7 @@
 - express, multer : 회원 프로필 사진, 게시글 사진 업로드에 사용
 - contextAPI : 데이터 조회, 수정, 삭제, 생성 등 작업
 - proxy : server.js 와 react project 의 cors 에러 해결을 위해 사용 (로컬 path 연결)
+- axios : 서버로 사진 데이터 전송을 위해 사용
 
 ## src 폴더구조
 
