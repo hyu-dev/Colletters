@@ -24,7 +24,7 @@ const InfoContainer = styled.div`
     position: fixed;
     top: 0;
     background: white;
-    z-index: 5;
+    z-index: 6;
     transition: all 0.6s ease-in-out;
     ${props =>
         props.modal === 'true' &&

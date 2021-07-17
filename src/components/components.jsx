@@ -11,7 +11,7 @@ export const BackgroundBlur = styled.div`
     top: 0;
     left: 0;
     background-color: rgba(255, 255, 255, 0);
-    z-index: 2;
+    z-index: 5;
     ${props => 
         props.modal === 'true'
         && css`
@@ -27,6 +27,9 @@ export const IconContainer = styled.div`
     height: auto;
     font-size: ${props => props.size ? props.size : '20px'};
     color: ${props => props.color ? props.color : 'black'};
+    display: flex;
+    justify-content: center;
+    align-items: center;
     transition: all 0.3s;
     ${props => props.type === 'back' && css`
         position: absolute;

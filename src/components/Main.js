@@ -100,11 +100,17 @@ function Main(props) {
     const searchLetterByNickName = () => {
         if (searchNick === '') {
             searchLetterDispatch({ type: 'SEARCH_NICKNAME', payload: letterState })
+            setSearchNick('')
         } else {
             const data = letterState.filter(letter => {
                 return letter.nickName === searchNick
             })
-            searchLetterDispatch({ type: 'SEARCH_NICKNAME', payload: data })
+            if (data.length > 0) {
+                searchLetterDispatch({ type: 'SEARCH_NICKNAME', payload: data })
+            } else {
+                alert('검색한 닉네임이 없습니다')
+            }
+            setSearchNick('')
         }
     }
 
@@ -197,7 +203,7 @@ function Main(props) {
                     <ul className="topHashList" style={{ cursor: 'pointer' }} onClick={() => {setOpenTags(!openTags)}}>
                         {
                             openTags
-                            ? topTagState.map((tag, i) => <Tags tags={tag} idx={i} />)
+                            ? topTagState.map((tag, i) => <Tags tags={tag} idx={i} key={tag.id} />)
                             : <Tags tags={topTagState} idx={idx} />
                         }
                     </ul>
@@ -220,7 +226,7 @@ function Main(props) {
 function Tags({ tags, idx }) {
     if (tags.length) {
         return (
-            <li key={tags[idx].id}>
+            <li>
                 <IconContainer size="23px" color="#87E8D6" style={{ width: '30px', height: '100%' }}>
                     <FaSlackHash />
                 </IconContainer>
@@ -229,7 +235,7 @@ function Tags({ tags, idx }) {
         )
     } else {
         return (
-            <li key={tags.id}>
+            <li>
                 <IconContainer size="23px" color="#87E8D6" style={{ width: '30px', height: '100%' }}>
                     <FaSlackHash />
                 </IconContainer>
