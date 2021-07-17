@@ -59,6 +59,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        position: relative;
         // border: 2px solid red;
         aside {
             flex: 1;
@@ -101,14 +102,33 @@
                 font-size: 13px;
             }
         }
+        b {
+            font-family: 'Yoon Minguk';
+            font-size: 15px;
+            position: absolute;
+            top: 50%;
+            left: 70px;
+            transform: translateY(-50%);
+        }
         .topHashList {
             list-style-type: none;
             margin: 0;
             padding: 0;
             overflow: hidden;
             height: auto;
+            max-height: 225px;
             box-sizing: border-box;
             // border: 1px solid red;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position: absolute;
+            top: 53px;
+            right: 60px;
+            z-index: 4;
+            background-color: white;
+            border-radius: 20px;
             li {
                 width: 150px;
                 height: auto;
@@ -124,6 +144,8 @@
                     padding: 0;
                     width: 100px;
                     height: 45px;
+                    font-family: 'Yoon Minguk';
+                    font-size: 15px;
                     overflow: hidden;
                     white-space: nowrap;
                     text-overflow: ellipsis;

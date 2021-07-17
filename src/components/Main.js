@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { FaSlackHash } from 'react-icons/fa';
 import { AiOutlineFileSearch } from 'react-icons/ai';
-import { IoIosArrowDown } from 'react-icons/io'
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 
 import '../scss/Main.scss';
 import UserTag from './UserTag.js';
@@ -34,6 +34,7 @@ function Main(props) {
     const searchTagInput = useRef();
     const time = useRef();
     const [idx, setIdx] = useState(0);
+    const [openTags, setOpenTags] = useState(false);
 
     useEffect(() => {
         topTagDispatch({ type: 'SORT' })
@@ -134,10 +135,6 @@ function Main(props) {
         setIconColor(array);
     }
 
-    const openTags = () => {
-        // 클릭시 모든 태그가 화면에 표시되도록 (최대 5개)
-    }
-
     return (
         <>
         <OpenTagProvider>
@@ -191,15 +188,19 @@ function Main(props) {
                         </>
                     }
                     </aside>
-                    <aside style={{ cursor: 'pointer' }} onClick={openTags}>
-                        <b>인기태그</b>
-                        <ul className="topHashList">
-                            <Tags tags={topTagState} idx={idx} />
-                        </ul>
-                        <IconContainer size="25px" color="black">
-                            <IoIosArrowDown />
+                    <aside>
+                        <b>인기검색태그</b>
+                        <IconContainer size="25px" color="black" type="tag" transform={openTags ? 'true' : 'false'}>
+                            <IoIosArrowDown onClick={() => {setOpenTags(!openTags)}}/>
                         </IconContainer>
                     </aside>
+                    <ul className="topHashList" style={{ cursor: 'pointer' }} onClick={() => {setOpenTags(!openTags)}}>
+                        {
+                            openTags
+                            ? topTagState.map((tag, i) => <Tags tags={tag} idx={i} />)
+                            : <Tags tags={topTagState} idx={idx} />
+                        }
+                    </ul>
                 </div>
                 <div className="lettersContainer">
                     <div className="letters">
@@ -217,14 +218,26 @@ function Main(props) {
 }
 
 function Tags({ tags, idx }) {
-    return (
-        <li key={tags[idx].id}>
-            <IconContainer size="23px" color="#87E8D6" style={{ width: '30px', height: '100%' }}>
-                <FaSlackHash />
-            </IconContainer>
-            <p>{(idx + 1) + ".  " + tags[idx].title}</p>
-        </li>
-    )
+    if (tags.length) {
+        return (
+            <li key={tags[idx].id}>
+                <IconContainer size="23px" color="#87E8D6" style={{ width: '30px', height: '100%' }}>
+                    <FaSlackHash />
+                </IconContainer>
+                <p>{(idx + 1) + ".  " + tags[idx].title}</p>
+            </li>
+        )
+    } else {
+        return (
+            <li key={tags.id}>
+                <IconContainer size="23px" color="#87E8D6" style={{ width: '30px', height: '100%' }}>
+                    <FaSlackHash />
+                </IconContainer>
+                <p>{(idx + 1) + ".  " + tags.title}</p>
+            </li>
+        )
+    }
+    
 }
 
 

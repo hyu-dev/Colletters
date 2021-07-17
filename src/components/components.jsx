@@ -27,12 +27,24 @@ export const IconContainer = styled.div`
     height: auto;
     font-size: ${props => props.size ? props.size : '20px'};
     color: ${props => props.color ? props.color : 'black'};
+    transition: all 0.3s;
     ${props => props.type === 'back' && css`
         position: absolute;
         top: 0;
         left: 0;
         transform: translate(-50%, -40%) rotate(45deg);
         z-index: 6;
+    `}
+    ${props => props.type === 'tag' && css`
+        position: absolute;
+        top: 60px;
+        right: 30px;
+        /* transform: translateY(-50%); */
+        cursor: pointer;
+    `}
+    ${props => props.transform === 'true' && css`
+        top: 55px;
+        transform: rotate(180deg);
     `}
     ${props => props.type === 'bigHash' && css`
         width: 100px;

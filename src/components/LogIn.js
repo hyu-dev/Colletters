@@ -76,4 +76,4 @@ function LogIn(props) {
     )
 }
 
-export default withRouter(LogIn);
+export default withRouter(React.memo(LogIn));
