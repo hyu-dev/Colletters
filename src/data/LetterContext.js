@@ -149,8 +149,10 @@ function letterReducer(state, action) {
 function searchLetterReducer(state, action) {
     switch (action.type) {
         case 'SEARCH_HASH':
-            return action.payload
+            return action.payload;
         case 'SEARCH_NICKNAME':
+            return action.payload;
+        case 'SEARCH_MYLETTER':
             return action.payload;
         default:
             throw new Error(`Unhandled action type: ${action.type}`)

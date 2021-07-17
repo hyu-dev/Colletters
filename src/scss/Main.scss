@@ -37,7 +37,7 @@
                 font-family: NanumGothic;
                 font-style: normal;
                 font-weight: normal;
-                font-size: 58px;
+                font-size: 50px;
                 text-align: left;
                 outline: none;
                 color: #343a40;
@@ -49,6 +49,7 @@
             .searchInput::placeholder {
                 color: #ced4da;
                 text-align: center;
+                font-size: 23px;
             }
         }
     }
@@ -79,6 +80,26 @@
             font-style: normal;
             font-weight: normal;
             font-size: 16px;
+        }
+        .searchAnotherLetters {
+            width: 200px;
+            height: 30px;
+            border: none;
+            border-bottom: 2px solid #dee2e6;
+            outline: none;
+            padding: 0 10px;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            &:focus {
+                border-bottom: 2px solid #87E8D6;
+            }
+            &::placeholder {
+                color: #ced4da;
+                text-align: center;
+                font-size: 13px;
+            }
         }
         .topHashList {
             list-style-type: none;
