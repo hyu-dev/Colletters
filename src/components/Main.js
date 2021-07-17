@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { FaSlackHash } from 'react-icons/fa';
 import { AiOutlineFileSearch } from 'react-icons/ai';
@@ -13,9 +12,10 @@ import DetailLetter from './DetailLetter.js';
 import { useLetterState, useSearchLetterDispatch, useSearchLetterState } from '../data/LetterContext';
 import { OpenLetterProvider, OpenTagProvider } from '../data/ModalContext';
 import { useDetailLetterState } from '../data/DetailLetterContext';
-import { useTopTagState } from '../data/TopTagsContext';
+import { useTopTagDispatch, useTopTagNextId, useTopTagState } from '../data/TopTagsContext';
 import { IconContainer } from './components';
 import { useLoginUserState } from '../data/LoginUserContext';
+import { useEffect } from 'react';
 
 
 function Main(props) {
@@ -25,10 +25,27 @@ function Main(props) {
     const searchLetterDispatch = useSearchLetterDispatch();
     const detailLetterState = useDetailLetterState();
     const topTagState = useTopTagState();
+    const topTagDispatch = useTopTagDispatch();
+    const nextId = useTopTagNextId();
     const [search, openSearch] = useState(false)
     const [iconColor, setIconColor] = useState(new Array(2).fill().map(() => '#dee2e6'));
     const [searchTag, setSearchTag] = useState('');
     const [searchNick, setSearchNick] = useState('');
+    const searchTagInput = useRef();
+    const time = useRef();
+    const [idx, setIdx] = useState(0);
+
+    useEffect(() => {
+        topTagDispatch({ type: 'SORT' })
+        time.current = setInterval(() => {
+            if (idx >= topTagState.length - 1) {
+                setIdx(0);
+            } else {
+                setIdx(idx + 1);
+            }
+        }, 3000)
+        return () => {clearInterval(time.current)}
+    }, [topTagDispatch, topTagState.length, idx])
 
     const searchLetterByTag = (e) => {
         if (e.key === 'Enter') {
@@ -40,8 +57,35 @@ function Main(props) {
                     if (letters.length > 0) {
                         return letters
                     }
-                 })
-                 searchLetterDispatch({ type: 'SEARCH_HASH', payload: data })
+                })
+                if (data.length > 0) {
+                    searchLetterDispatch({ type: 'SEARCH_HASH', payload: data })
+                } else {
+                    alert('검색 목록이 없습니다');
+                    setSearchTag('');
+                    return searchTagInput.current.focus()
+                }
+
+                const tags = topTagState.find(tag => {
+                    return tag.title === searchTag
+                })
+                if (!tags) {
+                    const tag = {
+                        id: nextId.current,
+                        title: searchTag,
+                        searchCount: 0,
+                    }
+                    topTagDispatch({ type: 'CREATE', payload: tag })
+                    nextId.current += 1;
+                } else {
+                    const tag = {
+                        id: tags.id,
+                        title: tags.title,
+                        searchCount: tags.searchCount + 1,
+                    }
+                    topTagDispatch({ type: 'UPDATE', payload: tag })
+                }
+                topTagDispatch({ type: 'SORT' })
             }
         }
     }
@@ -65,7 +109,7 @@ function Main(props) {
 
     const onChangeOption = (e) => {
         const option = e.target.value;
-        if (option == 'search') {
+        if (option === 'search') {
             openSearch(true)
         } else if (option === 'myPost') {
             openSearch(false)
@@ -90,6 +134,10 @@ function Main(props) {
         setIconColor(array);
     }
 
+    const openTags = () => {
+        // 클릭시 모든 태그가 화면에 표시되도록 (최대 5개)
+    }
+
     return (
         <>
         <OpenTagProvider>
@@ -111,6 +159,7 @@ function Main(props) {
                             value={searchTag}
                             onChange={(e) => {setSearchTag(e.currentTarget.value)}}
                             onKeyPress={searchLetterByTag}
+                            ref={searchTagInput}
                         />
                     </div>
                 </div>
@@ -142,22 +191,10 @@ function Main(props) {
                         </>
                     }
                     </aside>
-                    <aside style={{ cursor: 'pointer' }}>
+                    <aside style={{ cursor: 'pointer' }} onClick={openTags}>
                         <b>인기태그</b>
                         <ul className="topHashList">
-                            {
-                                topTagState.map((tag) => {
-                                    return (
-                                        <li key={tag.id}>
-                                            <IconContainer size="20px" color="black">
-                                                <FaSlackHash />
-                                            </IconContainer>
-                                            <p>{ tag.title }</p>
-                                        </li>
-                                    )
-                                })
-                            }
-                            
+                            <Tags tags={topTagState} idx={idx} />
                         </ul>
                         <IconContainer size="25px" color="black">
                             <IoIosArrowDown />
@@ -179,5 +216,16 @@ function Main(props) {
     );
 }
 
+function Tags({ tags, idx }) {
+    return (
+        <li key={tags[idx].id}>
+            <IconContainer size="23px" color="#87E8D6" style={{ width: '30px', height: '100%' }}>
+                <FaSlackHash />
+            </IconContainer>
+            <p>{(idx + 1) + ".  " + tags[idx].title}</p>
+        </li>
+    )
+}
 
-export default withRouter(Main);
+
+export default withRouter(React.memo(Main));

@@ -52,4 +52,4 @@ function Letter({ letter }) {
     );
 }
 
-export default Letter;
+export default React.memo(Letter);

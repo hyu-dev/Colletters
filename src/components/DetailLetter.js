@@ -30,38 +30,6 @@ const DetailContainer = styled.div`
     }
 `;
 
-
-const ToggleContainer = styled.div`
-    width: 85px;
-    height: 67px;
-    background: #FFFFFF;
-    border: 1px solid #000000;
-    box-sizing: border-box;
-    border-radius: 10px 0px 10px 10px;
-    position: absolute;
-    top: 18px;
-    right: 390px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    z-index: 8;
-    p {
-        margin: 0;
-        padding: 0;
-        font-family: Roboto;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 15px;
-        line-height: 18px;
-        cursor: pointer;
-        &:hover {
-            color: #FF9BD1;
-        }
-    }
-`;
-
-
 function DetailLetter({ letter }) {
     const openLetterState = useOpenLetterState();
     const openLetterDispatch = useOpenLetterDispatch();
@@ -79,10 +47,10 @@ function DetailLetter({ letter }) {
                 >{ letter.nickName } 님이 끼적인 글</h2>
                 {
                     toggle &&
-                    <ToggleContainer>
+                    <div className="toggleContainer">
                         <p>바꾸다</p>
                         <p>지우다</p>
-                    </ToggleContainer>
+                    </div>
                 }
                 <img className="userProfileImage" src="/images/userProfile.png" alt="유저프로필" />
                 <div className="imagesContainer">
@@ -131,4 +99,4 @@ function DetailLetter({ letter }) {
     );
 }
 
-export default DetailLetter;
+export default React.memo(DetailLetter);

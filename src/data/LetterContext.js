@@ -108,7 +108,7 @@ const initialLetters = [
         letter: {
             title: '데이터 등록하는 것도 일이다',
             content: "진짜 이렇게 적어도 되는거냐",
-            tag: ["혼란"],
+            tag: ["혼란", "등산", "맛집"],
             viewCount: 1555,
             likeCount: 211,
             writeDate: "2021-05-22",

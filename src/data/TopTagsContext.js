@@ -14,16 +14,20 @@ const initialTopTags = [
     {
         id: 3,
         title: '맛집',
-        searchCount: 0
+        searchCount: 3
     },
 ];
 
 function tagReducer(state, action) {
     switch (action.type) {
         case 'CREATE':
-            break;
+            return state.concat(action.payload)
         case 'UPDATE':
-            return state
+            return state.filter(tag => tag.id !== action.payload.id).concat(action.payload)
+        case 'SORT':
+            const array = [...state];
+            array.sort((a, b) => b.searchCount - a.searchCount)
+            return array
         default:
             throw new Error(`Unhandled action type: ${ action.type }`);
     }
@@ -53,7 +57,7 @@ export function useTopTagState() {
 }
 
 export function useTopTagDispatch() {
-    return useContext(topTagsStateContext);
+    return useContext(topTagsDispatchContext);
 }
 
 export function useTopTagNextId() {

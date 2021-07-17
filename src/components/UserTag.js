@@ -101,31 +101,6 @@ const Button = styled.button`
     }
 `;
 
-const TextButton = styled.button`
-    width: auto;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 35px;
-    line-height: 41px;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    letter-spacing: 0.1em;
-    color: #000000;
-    background: none;
-    outline: none;
-    border: none;
-    position: relative;
-    text-shadow: 0px 1px 5px rgba(0, 0, 0, 0.40);
-    &:hover {
-        color: #7165FF;
-    }
-    &:active {
-        top: 5px;
-    }
-`;
-
 const initialUser = {
     id: '',
     pwd: '',
@@ -174,17 +149,17 @@ function UserTag(props) {
                         </div>
                         { changeInfo(change) }
                         <div className="textBtnContainer">
-                            <TextButton onClick={ () => {
+                            <button className="textButton" onClick={ () => {
                                 if (confirm("탈퇴하시겠습니까?")) {
                                     usersDispatch({ type: 'REMOVE', id: user.id})
                                     setUser({ type: 'UPDATE', user: initialUser })
                                 }
-                            }}>잘 가</TextButton>
-                            <TextButton onClick={ () => {
+                            }}>잘 가</button>
+                            <button className="textButton" onClick={ () => {
                                 if (confirm("로그아웃하시겠습니까?")) {
                                     setUser({ type: 'UPDATE', user: initialUser })
                                 }
-                            } }>또 봐</TextButton>
+                            } }>또 봐</button>
                         </div>
                         </>
                     : 
@@ -204,7 +179,7 @@ function UserTag(props) {
     );
 }
 
-function MyInformation(props) {
+const MyInformation = React.memo((props) => {
     const loginUser = useLoginUserState();
     const loginUserDispatch = useLoginUserDispatch();
     const userDispatch = useUserDispatch();
@@ -294,9 +269,9 @@ function MyInformation(props) {
         }}>글 끼적이러 가다</Button></div>
         </>
     )
-}
+})
 
-function ChangePwd(props) {
+const ChangePwd = React.memo((props) => {
     const loginUser = useLoginUserState();
     const userDispatch = useUserDispatch();
     const loginUserDispatch = useLoginUserDispatch();
@@ -397,9 +372,9 @@ function ChangePwd(props) {
             </div>
         </div>
     )
-}
+})
 
-function ChangeEmail(props) {
+const ChangeEmail = React.memo((props) => {
     const loginUser = useLoginUserState();
     const loginUserDispatch = useLoginUserDispatch();
     const users = useUserState();
@@ -542,7 +517,7 @@ function ChangeEmail(props) {
             </div>
         </div>
     )
-}
+})
 
 
-export default withRouter(UserTag);
+export default withRouter(React.memo(UserTag));
