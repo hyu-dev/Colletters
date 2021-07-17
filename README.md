@@ -23,6 +23,34 @@
 - contextAPI : 데이터 조회, 수정, 삭제, 생성 등 작업
 - proxy : server.js 와 react project 의 cors 에러 해결을 위해 사용 (로컬 path 연결)
 
+## src 폴더구조
+
+> components : 화면
+
+- components.jsx : 자주 사용하는 컴포넌트 모음
+- DetailLetter.js : 게시글 상세보기 페이지
+- Join.js : 회원가입 페이지
+- Letter.js : 게시글 리스트 페이지의 게시글 컴포넌트
+- LetterForm.js : 게시글 작성, 수정 페이지
+- Login.js : 로그인 페이지
+- Main.js : 게시글 리스트 페이지
+- SearchAccount.jsx : 아이디, 비밀번호 찾기 페이지
+- UserTag.js : 회원정보 페이지
+- Welcome.js : 회원가입 후 환영합니다 페이지
+
+> data : 데이터
+
+- DetailLetterContext.js : 상세페이지 데이터 (상세페이지 조회 및 댓글 생성, 수정, 삭제, 조회)
+- LetterContext.js : 전체 게시글 데이터 (생성, 수정, 삭제, 조회, 검색)
+- LoginUserContext.js : 로그인 유저 데이터 (로그인 여부 확인)
+- ModalContext.js : 숨겨진 모달창 열고닫기용
+- TopTagsContext.js : 인기 해시태그 데이터 (생성, 조회, 수정)
+- UserContext.js : 전체 유저 데이터 (수정, 삭제, 조회)
+
+> scss : 꾸미기
+
+- 각 화면별 파일 생성함 (reset.scss : 기본 set)
+
 ## 작업기간
 
 2021/05/21 ~ 2021/06/01 : 화면UI 구현
