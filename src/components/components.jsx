@@ -40,13 +40,13 @@ export const IconContainer = styled.div`
     `}
     ${props => props.type === 'tag' && css`
         position: absolute;
-        top: 60px;
+        top: 63px;
         right: 30px;
         /* transform: translateY(-50%); */
         cursor: pointer;
     `}
     ${props => props.transform === 'true' && css`
-        top: 55px;
+        top: 60px;
         transform: rotate(180deg);
     `}
     ${props => props.type === 'bigHash' && css`
