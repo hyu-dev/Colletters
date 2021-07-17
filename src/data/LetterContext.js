@@ -133,12 +133,12 @@ const initialLetters = [
     },
 ];
 
+const searchLetters = [...initialLetters];
+
 function letterReducer(state, action) {
     switch (action.type) {
         case 'CREATE':
             return state.concat(action.letter);
-        case 'UPDATE':
-            return state
         case 'REMOVE':
             return state.filter(letter => letter.id !== action.id);
         default:
@@ -146,19 +146,38 @@ function letterReducer(state, action) {
     }
 }
 
+function searchLetterReducer(state, action) {
+    switch (action.type) {
+        case 'SEARCH_HASH':
+            return action.payload
+        case 'SEARCH_NICKNAME':
+            return action.payload;
+        default:
+            throw new Error(`Unhandled action type: ${action.type}`)
+    }
+}
+
 const LetterStateContext = createContext();
 const LetterDispatchContext = createContext();
 const LetterNextIdContext = createContext();
+const SearchLetterStateContext = createContext();
+const SearchLetterDispatchContext = createContext();
+
 
 export function LetterProvider({ children }) {
     const [state, dispatch] = useReducer(letterReducer, initialLetters);
+    const [state1, dispatch1] = useReducer(searchLetterReducer, searchLetters)
     const nextId = useRef(4)
     return (
         <LetterStateContext.Provider value={state}>
             <LetterDispatchContext.Provider value={dispatch}>
+                <SearchLetterStateContext.Provider value={state1}>
+                <SearchLetterDispatchContext.Provider value={dispatch1}>
                 <LetterNextIdContext.Provider value={nextId}>
                     { children }
                 </LetterNextIdContext.Provider>
+                </SearchLetterDispatchContext.Provider>
+                </SearchLetterStateContext.Provider>
             </LetterDispatchContext.Provider>
         </LetterStateContext.Provider>
     );
@@ -189,4 +208,12 @@ export function useLetterNextId() {
     }
     
     return context;
+}
+
+export function useSearchLetterState() {
+    return useContext(SearchLetterStateContext);
+}
+
+export function useSearchLetterDispatch() {
+    return useContext(SearchLetterDispatchContext);
 }
