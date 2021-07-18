@@ -48,47 +48,52 @@ function Main(props) {
         return () => {clearInterval(time.current)}
     }, [topTagDispatch, topTagState.length, idx])
 
-    const searchLetterByTag = (e) => {
+    const onKeyPressByTag = (e) => {
         if (e.key === 'Enter') {
             if (searchTag === '') {
                 searchLetterDispatch({ type: 'SEARCH_HASH', payload: letterState })
             } else {
-                const data = letterState.filter(letter => {
-                    const letters = letter.letter.tag.filter(tag => tag === searchTag)
-                    if (letters.length > 0) {
-                        return letters
-                    }
-                })
-                if (data.length > 0) {
-                    searchLetterDispatch({ type: 'SEARCH_HASH', payload: data })
-                } else {
-                    alert('검색 목록이 없습니다');
-                    setSearchTag('');
-                    return searchTagInput.current.focus()
-                }
-
-                const tags = topTagState.find(tag => {
-                    return tag.title === searchTag
-                })
-                if (!tags) {
-                    const tag = {
-                        id: nextId.current,
-                        title: searchTag,
-                        searchCount: 0,
-                    }
-                    topTagDispatch({ type: 'CREATE', payload: tag })
-                    nextId.current += 1;
-                } else {
-                    const tag = {
-                        id: tags.id,
-                        title: tags.title,
-                        searchCount: tags.searchCount + 1,
-                    }
-                    topTagDispatch({ type: 'UPDATE', payload: tag })
-                }
-                topTagDispatch({ type: 'SORT' })
+                searchLetterByTag(searchTag)
             }
         }
+    }
+
+    const searchLetterByTag = (value) => {
+        const data = letterState.filter(letter => {
+            const letters = letter.letter.tag.filter(tag => tag === value)
+            if (letters.length > 0) {
+                return letters
+            }
+        })
+        if (data.length > 0) {
+            searchLetterDispatch({ type: 'SEARCH_HASH', payload: data })
+        } else {
+            alert('검색 목록이 없습니다');
+            setSearchTag('');
+            return searchTagInput.current.focus()
+        }
+
+        const tags = topTagState.find(tag => {
+            return tag.title === value
+        })
+        if (!tags) {
+            const tag = {
+                id: nextId.current,
+                title: value,
+                searchCount: 0,
+            }
+            topTagDispatch({ type: 'CREATE', payload: tag })
+            nextId.current += 1;
+        } else {
+            const tag = {
+                id: tags.id,
+                title: tags.title,
+                searchCount: tags.searchCount + 1,
+            }
+            topTagDispatch({ type: 'UPDATE', payload: tag })
+        }
+        topTagDispatch({ type: 'SORT' })
+        setSearchTag(value)
     }
 
     const onKeyPressByNickName = (e) => {
@@ -161,7 +166,7 @@ function Main(props) {
                             onBlur={() => {onChangeColor('#dee2e6', 0)}}
                             value={searchTag}
                             onChange={(e) => {setSearchTag(e.currentTarget.value)}}
-                            onKeyPress={searchLetterByTag}
+                            onKeyPress={onKeyPressByTag}
                             ref={searchTagInput}
                         />
                     </div>
@@ -203,7 +208,7 @@ function Main(props) {
                     <ul className="topHashList" style={{ cursor: 'pointer' }} onClick={() => {setOpenTags(!openTags)}}>
                         {
                             openTags
-                            ? topTagState.map((tag, i) => <Tags tags={tag} idx={i} key={tag.id} />)
+                            ? topTagState.map((tag, i) => <Tags tags={tag} idx={i} key={tag.id} onClick={searchLetterByTag} />)
                             : <Tags tags={topTagState} idx={idx} />
                         }
                     </ul>
@@ -223,7 +228,7 @@ function Main(props) {
     );
 }
 
-function Tags({ tags, idx }) {
+function Tags({ tags, idx, onClick }) {
     if (tags.length) {
         return (
             <li>
@@ -235,7 +240,7 @@ function Tags({ tags, idx }) {
         )
     } else {
         return (
-            <li>
+            <li onClick={() => {onClick(tags.title)}}>
                 <IconContainer size="23px" color="#87E8D6" style={{ width: '30px', height: '100%' }}>
                     <FaSlackHash />
                 </IconContainer>

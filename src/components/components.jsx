@@ -55,6 +55,14 @@ export const IconContainer = styled.div`
         position: absolute;
         left: 10px;
     `}
+    ${props => props.type === 'trash' && css`
+        position: absolute;
+        right: 5px;
+        &:hover {
+            color: #ff6b6b;
+            cursor: pointer;
+        }
+    `}
 `;
 
 export const Input = styled.input`
