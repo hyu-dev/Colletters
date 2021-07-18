@@ -1,7 +1,6 @@
 import React from 'react';
 import { FaSlackHash } from 'react-icons/fa';
 import { useDetailLetterDispatch } from '../data/DetailLetterContext';
-import { useLetterState } from '../data/LetterContext';
 import { useOpenLetterDispatch } from '../data/ModalContext';
 import '../scss/Letter.scss';
 import { IconContainer } from './components';

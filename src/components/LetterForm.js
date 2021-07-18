@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { FaSlackHash, FaTrash } from 'react-icons/fa';
 import { FcRemoveImage } from 'react-icons/fc';
 import { OpenTagProvider } from '../data/ModalContext';
@@ -8,7 +8,7 @@ import UserTag from './UserTag';
 import { withRouter } from 'react-router';
 import { IconContainer } from './components';
 import { useEffect } from 'react';
-import { useLetterDispatch, useLetterNextId, useLetterState, useSearchLetterDispatch } from '../data/LetterContext';
+import { useLetterDispatch, useLetterNextId } from '../data/LetterContext';
 import { useLoginUserState } from '../data/LoginUserContext';
 import axios from 'axios';
 

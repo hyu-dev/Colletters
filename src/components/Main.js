@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { FaSlackHash } from 'react-icons/fa';
 import { AiOutlineFileSearch } from 'react-icons/ai';
-import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
+import { IoIosArrowDown } from 'react-icons/io'
 
 import '../scss/Main.scss';
 import UserTag from './UserTag.js';
@@ -38,10 +38,10 @@ function Main(props) {
 
     useEffect(() => {
         searchLetterDispatch({ type: 'COPY', payload: letterState })
+    /* eslint-disable-next-line */
     }, [])
 
     useEffect(() => {
-        // searchLetterDispatch({ type: 'COPY', payload: letterState })
         topTagDispatch({ type: 'SORT' })
         time.current = setInterval(() => {
             if (idx >= topTagState.length - 1) {
@@ -64,11 +64,12 @@ function Main(props) {
     }
 
     const searchLetterByTag = (value) => {
-        const data = letterState.filter(letter => {
+        const data = letterState.filter((letter) => {
             const letters = letter.letter.tag.filter(tag => tag === value)
             if (letters.length > 0) {
                 return letters
             }
+            return []
         })
         if (data.length > 0) {
             searchLetterDispatch({ type: 'SEARCH_HASH', payload: data })
