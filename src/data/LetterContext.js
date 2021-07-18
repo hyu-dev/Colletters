@@ -10,6 +10,7 @@ const initialLetters = [
             main: 'att4.jpg',
             sub: ['att1.jpg', 'att2.jpg'],
         },
+        isBlind: 'N',
         letter: {
             title: '제목 아무거나 적어봅니다 ㅎ',
             content: "내용도 아무거나 적어봅니다 300자이내로 적어야하는데 그정도로 ..?",
@@ -40,6 +41,7 @@ const initialLetters = [
             main: 'att5.jpg',
             sub: ['att6.jpg', 'att7.jpg'],
         },
+        isBlind: 'N',
         letter: {
             title: '이번에도 제목은 아무거나 적어봅니다 ㅎㅎ',
             content: "내용도 아무거나 적어봅니다 300자이내로 적어야하는데 그정도로 ..?",
@@ -70,6 +72,7 @@ const initialLetters = [
             main: 'att8.jpg',
             sub: ['att9.jpg'],
         },
+        isBlind: 'N',
         letter: {
             title: '이번에는 어떤 제목을 적어볼까요?',
             content: "무엇을 적어볼까요?",
@@ -105,6 +108,7 @@ const initialLetters = [
             main: 'att10.jpg',
             sub: ['att11.jpg', 'att12.png'],
         },
+        isBlind: 'N',
         letter: {
             title: '데이터 등록하는 것도 일이다',
             content: "진짜 이렇게 적어도 되는거냐",
