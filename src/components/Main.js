@@ -27,6 +27,7 @@ function Main(props) {
     const topTagState = useTopTagState();
     const topTagDispatch = useTopTagDispatch();
     const nextId = useTopTagNextId();
+
     const [search, openSearch] = useState(false)
     const [iconColor, setIconColor] = useState(new Array(2).fill().map(() => '#dee2e6'));
     const [searchTag, setSearchTag] = useState('');
@@ -39,7 +40,7 @@ function Main(props) {
     useEffect(() => {
         searchLetterDispatch({ type: 'COPY', payload: letterState })
     /* eslint-disable-next-line */
-    }, [])
+    }, [loginUser])
 
     useEffect(() => {
         topTagDispatch({ type: 'SORT' })
@@ -180,7 +181,7 @@ function Main(props) {
                 <div className="selectionContainer">
                     <aside>
                         <select className="selectLetters" onChange={onChangeOption}>
-                            <option value="posts">모든 글 모아보기</option>
+                            <option value="posts" selected>모든 글 모아보기</option>
                             <option value="myPost">내 글 모아보기</option>
                             <option value="search">다른 글 구경하기</option>
                         </select>
@@ -223,7 +224,10 @@ function Main(props) {
                     <div className="letters">
                         {
                             searchLetterState.map((letter) => {
-                                return <Letter letter={letter} key={letter.id} />
+                                if (letter.isBlind === 'N' || loginUser.id === letter.userId) {
+                                    return <Letter letter={letter} key={letter.id} />
+                                }
+                                return null
                             })
                         }
                     </div>

@@ -98,7 +98,7 @@ function LetterForm(props) {
 
     
     
-    const keydown = (e) => {
+    const onKeyDown = (e) => {
         if (e.code === 'Backspace') {
             // console.log('백스페이스 누름')
             if (e.target.innerText === '') {
@@ -106,9 +106,11 @@ function LetterForm(props) {
                 EditableRef.current.contentEditable = false
                 e.target.innerHTML = '<p data-placeholder="내용 (300자 이내)"></p>'
             }
-        } else {
-            setContent(e.target.innerText)
         }
+    }
+
+    const onKeyUp = (e) => {
+        setContent(e.target.innerText)
     }
     const onFocus = (e) => {
         EditableRef.current.contentEditable = true
@@ -189,7 +191,7 @@ function LetterForm(props) {
                             className="title"
                             placeholder="제목 (20자 이내)"
                         />
-                        <div className="content" contentEditable="true" onKeyDown={keydown} onClick={onFocus} ref={EditableRef}>
+                        <div className="content" contentEditable="true" onKeyDown={onKeyDown} onKeyUp={onKeyUp} onClick={onFocus} ref={EditableRef}>
                             <p data-placeholder="내용 (300자 이내)" ></p>
                         </div>
                         <div
