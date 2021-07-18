@@ -173,6 +173,7 @@ function UserTag(props) {
                     alt="태그" 
                     modal={ openTagState.toString() } 
                     onClick={ () => { openTagDispatch({ type: 'TAGOPEN' }) } }
+                    draggable="false"
                 />
             </InfoContainer>
         </BackgroundBlur>

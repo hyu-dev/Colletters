@@ -37,6 +37,11 @@ function Main(props) {
     const [openTags, setOpenTags] = useState(false);
 
     useEffect(() => {
+        searchLetterDispatch({ type: 'COPY', payload: letterState })
+    }, [])
+
+    useEffect(() => {
+        // searchLetterDispatch({ type: 'COPY', payload: letterState })
         topTagDispatch({ type: 'SORT' })
         time.current = setInterval(() => {
             if (idx >= topTagState.length - 1) {

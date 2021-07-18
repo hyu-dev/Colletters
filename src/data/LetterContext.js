@@ -6,10 +6,7 @@ const initialLetters = [
         userId: "user",
         nickName: "아무닉네임",
         attRoot: '/images/attachment/',
-        attName: {
-            main: 'att4.jpg',
-            sub: ['att1.jpg', 'att2.jpg'],
-        },
+        attName: ['att4.jpg', 'att1.jpg', 'att2.jpg'],
         isBlind: 'N',
         letter: {
             title: '제목 아무거나 적어봅니다 ㅎ',
@@ -37,10 +34,7 @@ const initialLetters = [
         userId: "youjeong",
         nickName: "유정닉네임",
         attRoot: '/images/attachment/',
-        attName: {
-            main: 'att5.jpg',
-            sub: ['att6.jpg', 'att7.jpg'],
-        },
+        attName: ['att5.jpg', 'att6.jpg', 'att7.jpg'],
         isBlind: 'N',
         letter: {
             title: '이번에도 제목은 아무거나 적어봅니다 ㅎㅎ',
@@ -68,10 +62,7 @@ const initialLetters = [
         userId: "user",
         nickName: "아무닉네임",
         attRoot: '/images/attachment/',
-        attName: {
-            main: 'att8.jpg',
-            sub: ['att9.jpg'],
-        },
+        attName: ['att8.jpg', 'att9.jpg'],
         isBlind: 'N',
         letter: {
             title: '이번에는 어떤 제목을 적어볼까요?',
@@ -104,10 +95,7 @@ const initialLetters = [
         userId: "test",
         nickName: "테스트닉",
         attRoot: '/images/attachment/',
-        attName: {
-            main: 'att10.jpg',
-            sub: ['att11.jpg', 'att12.png'],
-        },
+        attName: ['att10.jpg', 'att11.jpg', 'att12.png'],
         isBlind: 'N',
         letter: {
             title: '데이터 등록하는 것도 일이다',
@@ -152,6 +140,8 @@ function letterReducer(state, action) {
 
 function searchLetterReducer(state, action) {
     switch (action.type) {
+        case 'COPY':
+            return action.payload;
         case 'SEARCH_HASH':
             return action.payload;
         case 'SEARCH_NICKNAME':
@@ -173,7 +163,7 @@ const SearchLetterDispatchContext = createContext();
 export function LetterProvider({ children }) {
     const [state, dispatch] = useReducer(letterReducer, initialLetters);
     const [state1, dispatch1] = useReducer(searchLetterReducer, searchLetters)
-    const nextId = useRef(4)
+    const nextId = useRef(5)
     return (
         <LetterStateContext.Provider value={state}>
             <LetterDispatchContext.Provider value={dispatch}>

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { FaSlackHash, FaTrash } from 'react-icons/fa';
@@ -9,14 +8,27 @@ import UserTag from './UserTag';
 import { withRouter } from 'react-router';
 import { IconContainer } from './components';
 import { useEffect } from 'react';
+import { useLetterDispatch, useLetterNextId, useLetterState, useSearchLetterDispatch } from '../data/LetterContext';
+import { useLoginUserState } from '../data/LoginUserContext';
+import axios from 'axios';
+
 
 function LetterForm(props) {
+    const nextId = useLetterNextId();
+    const letterDispatch = useLetterDispatch();
+    const loginUser = useLoginUserState();
+    
     const [iconColor, setIconColor] = useState(['#dee2e6', '#dee2e6'])
-    const [Title, setTitle] = useState('');
     const [tagInput, setTagInput] = useState('');
     const [TagList, setTagList] = useState([]);
+    
+    const [Title, setTitle] = useState('');
+    const [Content, setContent] = useState('');
     const [Images, setImages] = useState([]);
-    const testRef2 = useRef();
+    const ImageWrapperRef = useRef();
+    const SelectRef = useRef();
+    const EditableRef = useRef();
+
 
     const createTags = (value) => {
         if (TagList.length >= 5) {
@@ -68,29 +80,108 @@ function LetterForm(props) {
         }
     }
 
-    const testDragEnter = (e) => {
+    const onImageDragOver = (e) => {
         e.preventDefault();     
-        testRef2.current.style.border = '5px dashed black';
+        ImageWrapperRef.current.style.border = '5px dashed black';
     }
 
-    const testDrop = (e) => {
-        e.preventDefault();    
-        
-        // console.log(e.dataTransfer)
-        // console.log("드래그 드롭 ", e.dataTransfer.files[0])
-        createImages(e.dataTransfer.files[0])
-        testRef2.current.style.border = 'none';
+    const onImageDragLeave = (e) => {
+        e.preventDefault();
+        ImageWrapperRef.current.style.border = 'none';
     }
+
+    const onImageDrop = (e) => {
+        e.preventDefault();    
+        createImages(e.dataTransfer.files[0])
+        ImageWrapperRef.current.style.border = 'none';
+    }
+
+    
+    
+    const keydown = (e) => {
+        if (e.code === 'Backspace') {
+            // console.log('백스페이스 누름')
+            if (e.target.innerText === '') {
+                // console.log('비어있음')
+                EditableRef.current.contentEditable = false
+                e.target.innerHTML = '<p data-placeholder="내용 (300자 이내)"></p>'
+            }
+        } else {
+            setContent(e.target.innerText)
+        }
+    }
+    const onFocus = (e) => {
+        EditableRef.current.contentEditable = true
+    }
+
+    const onBackHistory = () => {
+        /* eslint-disable-next-line */
+        if (confirm('현재 페이지에서 나가시겠습니까?\n확인시 입력하신 데이터가 삭제됩니다')) {
+            props.history.push({ pathname: '/main' })
+        }
+    }
+
+    const onSubmitImages = async () => {
+        const imageFileName = []
+        for (let img of Images) {
+            let formData = new FormData();
+            formData.append('userfile', img);
+            await axios.post('/api/upload', formData)
+            .then(res => {
+                imageFileName.push(res.data.filename)
+            })
+            .catch(err => {
+                return alert('사진을 업로드하지 못했습니다:\n', err)
+            })
+        }
+        return imageFileName
+    }
+    
+    const onSubmitHandler = () => {
+        if (Title === '') {
+            return alert('제목을 입력하세요')
+        } else if (Content === ''){
+            return alert('내용을 입력하세요')
+        } else if (TagList.length < 1) {
+            return alert('최소 1개이상의 태그를 입력하세요')
+        } else if (Images.length < 1) {
+            return alert('최소 1개이상의 사진을 등록하세요')
+        }
+        onSubmitImages().then(res => {
+            const letters = {
+                id: nextId.current,
+                userId: loginUser.id,
+                nickName: loginUser.nickName,
+                attRoot: '/uploads/',
+                attName: [...res],
+                isBlind: SelectRef.current.value,
+                letter: {
+                    title: Title,
+                    content: Content,
+                    tag: [...TagList],
+                    viewCount: 0,
+                    likeCount: 0,
+                    writeDate: new Date(),
+                },
+                reply: [],
+            }
+            nextId.current += 1;
+            letterDispatch({ type: 'CREATE', letter: letters })
+            alert('게시글이 정상적으로 등록되었습니다')
+            props.history.push({ pathname: "/main" })
+        })
+    }
+    
 
     return (
         <>
         <OpenTagProvider>
-            <UserTag />
+            <UserTag/>
         </OpenTagProvider>
         <div className="formContainer">
             <section className="formMiddleContainer">
-                <div className="contentsWrapper">
-                    <div className="contentContainer">
+                <div className="contentsWrapper" draggable="false">
+                    <div className="contentContainer" draggable="false">
                         <input
                             type="text"
                             value={Title}
@@ -98,21 +189,24 @@ function LetterForm(props) {
                             className="title"
                             placeholder="제목 (20자 이내)"
                         />
+                        <div className="content" contentEditable="true" onKeyDown={keydown} onClick={onFocus} ref={EditableRef}>
+                            <p data-placeholder="내용 (300자 이내)" ></p>
+                        </div>
                         <div
-                            className="content"
-                            contentEditable="true"
-                            data-gramm="false"
-                            data-placeholder="내용 (300자 이내)"
-                            maxLength="10"
-                        />
-                        <div className="attachmentContainer" onDragOver={testDragEnter} onDrop={testDrop} ref={testRef2}>
+                            draggable="false"
+                            className="attachmentContainer"
+                            onDragOver={onImageDragOver}
+                            onDragLeave={onImageDragLeave}
+                            onDrop={onImageDrop}
+                            ref={ImageWrapperRef}
+                        >
                             {
                                 Images.length > 0 
                                 && Images.map(image => <Attachment key={image.name} img={image} onDelete={deleteImages} />)
                             }
                         </div>
                     </div>
-                    <aside className="tagContainer">
+                    <aside className="tagContainer" draggable="false">
                         <div className="inputTagContainer">
                             <div>
                                 <IconContainer size="35px" color={iconColor[0]}>
@@ -131,17 +225,17 @@ function LetterForm(props) {
                             />
                         </div>
                         <ul>
-                            {TagList.map(tag => <Tags key={tag.id} value={tag} onDelete={deleteTags}/>)}
+                            {TagList.map((tag, i) => <Tags key={i} value={tag} onDelete={deleteTags}/>)}
                         </ul>
-                        <select>
-                            <option>모두 보다</option>
-                            <option>나만 보다</option>
+                        <select ref={SelectRef}>
+                            <option value="N">모두 보다</option>
+                            <option value="Y">나만 보다</option>
                         </select>
                     </aside>
                 </div>
                 <div className="LetterbuttonContainer">
-                    <button className="writeBtn">끼적이다</button>
-                    <button className="backBtn" onClick={ () => { props.history.push({ pathname: '/main' }) } }>나가다</button>
+                    <button className="writeBtn" onClick={onSubmitHandler}>끼적이다</button>
+                    <button className="backBtn" onClick={onBackHistory}>나가다</button>
                 </div>
             </section>
         </div>

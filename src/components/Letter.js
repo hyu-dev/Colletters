@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaSlackHash } from 'react-icons/fa';
 import { useDetailLetterDispatch } from '../data/DetailLetterContext';
+import { useLetterState } from '../data/LetterContext';
 import { useOpenLetterDispatch } from '../data/ModalContext';
 import '../scss/Letter.scss';
 import { IconContainer } from './components';
@@ -22,7 +23,7 @@ function Letter({ letter }) {
         >
             <img className="userProfile" src="/images/userProfile.png" alt="" />
             <p className="userNickName">{ letter.nickName }</p>
-            <img className="letterImg" src={ `${ letter.attRoot }${ letter.attName.main }` } alt="이미지" />
+            <img className="letterImg" src={ `${ letter.attRoot }${ letter.attName[0] }` } alt="이미지" />
             <p className="letterTitle">{ letter.letter.title }</p>
             <ul className="tags">
                 {

@@ -9,6 +9,7 @@ const initailLetter = {
         main: '',
         sub: [''],
     },
+    isBlind: '',
     letter: {
         title: '',
         content: '',
