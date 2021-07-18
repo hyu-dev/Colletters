@@ -70,7 +70,6 @@ function Main(props) {
             if (letters.length > 0) {
                 return letters
             }
-            return []
         })
         if (data.length > 0) {
             searchLetterDispatch({ type: 'SEARCH_HASH', payload: data })
