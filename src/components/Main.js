@@ -44,6 +44,7 @@ function Main(props) {
 
     useEffect(() => {
         topTagDispatch({ type: 'SORT' })
+        searchLetterDispatch({ type: 'SORT' })
         time.current = setInterval(() => {
             if (idx >= topTagState.length - 1) {
                 setIdx(0);
@@ -52,7 +53,7 @@ function Main(props) {
             }
         }, 3000)
         return () => {clearInterval(time.current)}
-    }, [topTagDispatch, topTagState.length, idx])
+    }, [topTagDispatch, topTagState.length, idx, searchLetterDispatch])
 
     const onKeyPressByTag = (e) => {
         if (e.key === 'Enter') {

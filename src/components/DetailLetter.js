@@ -13,6 +13,7 @@ import { useUserState } from '../data/UserContext';
 import { withRouter } from 'react-router-dom';
 import { useLetterDispatch, useLetterState, useSearchLetterDispatch } from '../data/LetterContext';
 import { useLoginUserState } from '../data/LoginUserContext';
+import { initialLetter, useDetailLetterDispatch } from '../data/DetailLetterContext';
 
 const DetailContainer = styled.div`
     width: 1100px;
@@ -42,15 +43,18 @@ function DetailLetter({ letter, history }) {
     const letterState = useLetterState();
     const letterDispatch = useLetterDispatch();
     const searchLetterDispatch = useSearchLetterDispatch();
+    const detailLetterDispatch = useDetailLetterDispatch();
     const openLetterState = useOpenLetterState();
     const openLetterDispatch = useOpenLetterDispatch();
     const [toggle, setToggle] = useState(false);
     const [idx, setIdx] = useState(0);
+    const InputComment = useRef();
+    const replyRef = useRef();
+    const nextId = useRef(letter.reply.length + 1);
 
     const [userProfile, setUserProfile] = useState(['', '']);
 
     useEffect(() => {
-        console.log(letter)
         const userInfo = users.find(user => user.id === letter.userId)
         if (userInfo) setUserProfile([userInfo.attRoot, userInfo.attName])
     }, [users, letter.userId])
@@ -83,6 +87,7 @@ function DetailLetter({ letter, history }) {
     const onBackHistory = () => {
         openLetterDispatch({ type: 'OPEN' })
         setToggle(false)
+        setIdx(0)
     }
 
     const onChangeImages = (type) => {
@@ -95,6 +100,25 @@ function DetailLetter({ letter, history }) {
                 else setIdx(idx + 1)
             }
         }
+    }
+
+    const onSubmitComment = () => {
+        if (InputComment.current.value === '') {
+            return alert('댓글을 입력하세요')
+        }
+        const comment = {
+            id: nextId.current,
+            userId: loginUser.id,
+            content: InputComment.current.value
+        }
+        nextId.current += 1
+        const Info = {
+            ...letter,
+            reply: [...letter.reply, comment]
+        }
+        letterDispatch({ type: 'UPDATE_REPLY', letter: Info })
+        detailLetterDispatch({ type: 'UPDATE', letter: Info })
+        InputComment.current.value = ''
     }
 
     return (
@@ -122,7 +146,7 @@ function DetailLetter({ letter, history }) {
                     {   
                         letter && 
                         letter.attName.map((name, i) => {
-                            if (i === idx) return <img src={`${letter.attRoot}${name}`} alt="사진"/>
+                            if (i === idx) return <img key={i} src={`${letter.attRoot}${name}`} alt="사진"/>
                         }) 
                     }
                     <IconContainer size="50px" color="black" style={{ cursor: 'pointer' }}>
@@ -149,15 +173,15 @@ function DetailLetter({ letter, history }) {
                 </ul>
                 <div className="replyContainer">
                     <b>댓글 { letter.reply.length }</b>
-                    <ul>
-                        { letter.reply.map(reply => <CommentList comment={reply} />) }
+                    <ul ref={replyRef}>
+                        { letter.reply.map(reply => <CommentList key={reply.id} comment={reply} letter={letter}/>) }
                     </ul>
                     <div className="sendReplyContainer">
                         { loginUser.id !== ''
                         ? <>
                             <img src={`${loginUser.attRoot}${loginUser.attName}`} alt="작성자"/>
-                            <textarea type="text"></textarea>
-                            <img src="/images/send.png" alt="보내기"/>
+                            <textarea type="text" ref={InputComment}></textarea>
+                            <img src="/images/send.png" alt="보내기" onClick={onSubmitComment} style={{ cursor: 'pointer' }} />
                         </>
                         : <>
                           <textarea
@@ -171,7 +195,8 @@ function DetailLetter({ letter, history }) {
                                 height: '30px'
                             }}
                             disabled
-                          >로그인 후 이용해주세요</textarea>
+                            defaultValue="로그인 후 이용해주세요"
+                          ></textarea>
                           <IconContainer size="40px" color="#ffe066" type="trash">
                               <IoArrowRedo onClick={onMoveLoginPage}/>
                           </IconContainer>
@@ -184,8 +209,11 @@ function DetailLetter({ letter, history }) {
     );
 }
 
-const CommentList = ({ comment }) => {
+const CommentList = React.memo(({ comment, letter }) => {
     const users = useUserState();
+    const loginUser = useLoginUserState();
+    const letterDispatch = useLetterDispatch();
+    const detailLetterDispatch = useDetailLetterDispatch();
     const [userProfile, setUserProfile] = useState(['', '']);
 
     useEffect(() => {
@@ -193,12 +221,22 @@ const CommentList = ({ comment }) => {
         if (userInfo) setUserProfile([userInfo.attRoot, userInfo.attName])
     }, [users, comment.userId])
 
+    const onDeleteComment = () => {
+        if (loginUser.id === comment.userId) {
+            /* eslint-disable-next-line */
+            if (confirm('작성하신 댓글을 삭제하시겠습니까?')) {
+                detailLetterDispatch({ type: 'REMOVE_REPLY', id: comment.id })
+                letterDispatch({ type: 'REMOVE_REPLY', letterId: letter.id, commentId: comment.id })
+            }
+        }
+    }
+
     return (
-        <li>
+        <li style={ loginUser.id === comment.userId ? { flexDirection: 'row-reverse', cursor: 'help' } : null }>
             <img src={`${userProfile[0]}${userProfile[1]}`} alt="프로필" />
-            <p>{ comment.content }</p>
+            <p onClick={onDeleteComment}>{ comment.content }</p>
         </li>
     )
-}
+})
 
 export default withRouter(React.memo(DetailLetter));

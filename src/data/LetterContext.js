@@ -14,7 +14,7 @@ const initialLetters = [
             tag: ["맛집", "여행", "이거", "저거"],
             viewCount: 0,
             likeCount: 0,
-            writeDate: "2021-05-19",
+            writeDate: new Date("2021-06-19"),
         },
         reply: [
             {
@@ -42,7 +42,7 @@ const initialLetters = [
             tag: ["자아성찰", "독서", "명상"],
             viewCount: 0,
             likeCount: 0,
-            writeDate: "2021-05-20",
+            writeDate: new Date("2021-05-20"),
         },
         reply: [
             {
@@ -70,7 +70,7 @@ const initialLetters = [
             tag: ["혼란"],
             viewCount: 20,
             likeCount: 1,
-            writeDate: "2021-05-21",
+            writeDate: new Date("2021-05-21"),
         },
         reply: [
             {
@@ -103,7 +103,7 @@ const initialLetters = [
             tag: ["혼란", "등산", "맛집"],
             viewCount: 1555,
             likeCount: 211,
-            writeDate: "2021-05-22",
+            writeDate: new Date("2021-05-22"),
         },
         reply: [
             {
@@ -131,8 +131,19 @@ function letterReducer(state, action) {
     switch (action.type) {
         case 'CREATE':
             return state.concat(action.letter);
+        case 'UPDATE':
+            return state.filter(letter => letter.id !== action.letter.id).concat(action.letter)
+        case 'UPDATE_REPLY':
+            return state.map(letter => {
+                return letter.id === action.letter.id ? action.letter : letter
+            })
         case 'REMOVE':
             return state.filter(letter => letter.id !== action.id);
+        case 'REMOVE_REPLY':
+            const reply = state.find(letter => letter.id === action.letterId).reply.filter(reply => reply.id !== action.commentId)
+            const letter = state.find(letter => letter.id === action.letterId)
+            letter.reply = reply
+            return state.filter(letter => letter.id !== action.letterId).concat(letter)
         default:
             throw new Error(`Unhandled action type: ${action.type}`);
     }
@@ -140,6 +151,10 @@ function letterReducer(state, action) {
 
 function searchLetterReducer(state, action) {
     switch (action.type) {
+        case 'SORT':
+            const array = [...state];
+            array.sort((a, b) => b.letter.writeDate - a.letter.writeDate)
+            return array
         case 'COPY':
             return action.payload;
         case 'SEARCH_HASH':
