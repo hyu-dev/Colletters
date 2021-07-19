@@ -139,6 +139,8 @@ function letterReducer(state, action) {
             })
         case 'REMOVE':
             return state.filter(letter => letter.id !== action.id);
+        case 'REMOVE_USER':
+            return state.filter(letter => letter.userId !== action.id)
         case 'REMOVE_REPLY':
             const reply = state.find(letter => letter.id === action.letterId).reply.filter(reply => reply.id !== action.commentId)
             const letter = state.find(letter => letter.id === action.letterId)
@@ -157,6 +159,8 @@ function searchLetterReducer(state, action) {
             return array
         case 'COPY':
             return action.payload;
+        case 'REMOVE_USER':
+            return state.filter(letter => letter.userId !== action.id)
         case 'SEARCH_HASH':
             return action.payload;
         case 'SEARCH_NICKNAME':

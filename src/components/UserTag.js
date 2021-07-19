@@ -9,7 +9,7 @@ import { BackgroundBlur, Input } from './components'
 import { useOpenTagDispatch, useOpenTagState } from '../data/ModalContext';
 import { useLoginUserDispatch, useLoginUserState } from '../data/LoginUserContext';
 import { useUserDispatch, useUserState } from '../data/UserContext';
-import { useLetterState } from '../data/LetterContext';
+import { useLetterDispatch, useLetterState, useSearchLetterDispatch } from '../data/LetterContext';
 import axios from 'axios';
 import emailjs from 'emailjs-com';
 import { USER_ID } from '../config';
@@ -113,6 +113,8 @@ const initialUser = {
 function UserTag(props) {
     const usersState = useUserState();
     const usersDispatch = useUserDispatch();
+    const letterDispatch = useLetterDispatch();
+    const searchLetterDispatch = useSearchLetterDispatch();
     const openTagState = useOpenTagState();
     const openTagDispatch = useOpenTagDispatch();
     const [change, setChange] = useState('내 정보 보다')
@@ -152,6 +154,8 @@ function UserTag(props) {
                             <button className="textButton" onClick={ () => {
                                 if (confirm("탈퇴하시겠습니까?")) {
                                     usersDispatch({ type: 'REMOVE', id: user.id})
+                                    letterDispatch({ type: 'REMOVE_USER', id: user.id })
+                                    searchLetterDispatch({ type: 'REMOVE_USER', id: user.id })
                                     setUser({ type: 'UPDATE', user: initialUser })
                                 }
                             }}>잘 가</button>
