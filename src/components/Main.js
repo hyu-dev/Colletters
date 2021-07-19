@@ -40,7 +40,7 @@ function Main(props) {
     useEffect(() => {
         searchLetterDispatch({ type: 'COPY', payload: letterState })
     /* eslint-disable-next-line */
-    }, [loginUser])
+    }, [loginUser, letterState])
 
     useEffect(() => {
         topTagDispatch({ type: 'SORT' })
@@ -179,8 +179,8 @@ function Main(props) {
                 </div>
                 <div className="selectionContainer">
                     <aside>
-                        <select className="selectLetters" onChange={onChangeOption}>
-                            <option value="posts" selected>모든 글 모아보기</option>
+                        <select className="selectLetters" onChange={onChangeOption} defaultValue="posts">
+                            <option value="posts">모든 글 모아보기</option>
                             <option value="myPost">내 글 모아보기</option>
                             <option value="search">다른 글 구경하기</option>
                         </select>

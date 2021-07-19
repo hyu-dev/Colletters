@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaSlackHash } from 'react-icons/fa';
 import { useDetailLetterDispatch } from '../data/DetailLetterContext';
 import { useOpenLetterDispatch } from '../data/ModalContext';
+import { useUserState } from '../data/UserContext';
 import '../scss/Letter.scss';
 import { IconContainer } from './components';
 
 
 function Letter({ letter }) {
+    const users = useUserState();
     const openLetterDispatch = useOpenLetterDispatch();
     const detailLetterDispatch = useDetailLetterDispatch();
+
+    const [userProfile, setUserProfile] = useState(['', '']);
+
+    useEffect(() => {
+        const userInfo = users.find(user => user.id === letter.userId)
+        setUserProfile([userInfo.attRoot, userInfo.attName])
+    }, [users, letter.userId])
 
     return(
         <div 
@@ -20,7 +29,7 @@ function Letter({ letter }) {
                 } 
             }
         >
-            <img className="userProfile" src="/images/userProfile.png" alt="" />
+            <img className="userProfile" src={`${userProfile[0]}${userProfile[1]}`} alt="" />
             <p className="userNickName">{ letter.nickName }</p>
             <img className="letterImg" src={ `${ letter.attRoot }${ letter.attName[0] }` } alt="이미지" />
             <p className="letterTitle">{ letter.letter.title }</p>
@@ -29,7 +38,7 @@ function Letter({ letter }) {
                     letter.letter.tag.map((tag, i) => {
                         return (
                             <li key={i}>
-                                <IconContainer size="15px" color="black">
+                                <IconContainer size="20px" color="#87E8D6">
                                     <FaSlackHash />
                                 </IconContainer>
                                 <p>{tag}</p>

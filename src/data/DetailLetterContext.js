@@ -1,14 +1,11 @@
 import React, { createContext, useContext, useReducer } from 'react';
 
-const initailLetter = {
+export const initailLetter = {
     id: '',
     userId: '',
     nickName: '',
     attRoot: '',
-    attName: {
-        main: '',
-        sub: [''],
-    },
+    attName: [],
     isBlind: '',
     letter: {
         title: '',
