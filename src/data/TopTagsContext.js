@@ -3,17 +3,17 @@ import React, { createContext, useContext, useReducer, useRef } from 'react';
 const initialTopTags = [
     {
         id: 1,
-        title: '자아성찰',
-        searchCount: 1
-    },
-    {
-        id: 2,
-        title: '등산',
+        title: '태그1',
         searchCount: 2
     },
     {
+        id: 2,
+        title: '태그2',
+        searchCount: 1
+    },
+    {
         id: 3,
-        title: '맛집',
+        title: '태그3',
         searchCount: 3
     },
 ];

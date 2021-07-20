@@ -45,6 +45,7 @@ function Main(props) {
     const testFunc = useCallback(() => {
         const scrollHeight = document.documentElement.scrollHeight;
         const clientHeight = document.documentElement.clientHeight + Math.ceil(document.documentElement.scrollTop)
+        /* eslint-disable-next-line */
         const length = letterState.filter(letter => {
             if (letter.isBlind === 'N' || letter.userId === loginUser.id) {
                 return letter
@@ -70,7 +71,11 @@ function Main(props) {
         letterStyle.current = 970;
         setStyle(letterStyle.current)
         count.current = 1;
-        window.scrollTo(0, 0)
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        })
         body.addEventListener("scroll", testFunc)
         searchLetterDispatch({ type: 'COPY', payload: letterState })
         return () => {
@@ -78,9 +83,6 @@ function Main(props) {
         }
     /* eslint-disable-next-line */
     }, [loginUser, letterState])
-
-    
-    
 
     useEffect(() => {
         topTagDispatch({ type: 'SORT' })
@@ -106,6 +108,7 @@ function Main(props) {
     }
 
     const searchLetterByTag = (value) => {
+        /* eslint-disable-next-line */
         const data = letterState.filter((letter) => {
             const letters = letter.letter.tag.filter(tag => tag === value)
             if (letters.length > 0) {
@@ -178,8 +181,13 @@ function Main(props) {
                 })
                 searchLetterDispatch({ type: 'SEARCH_MYLETTER', payload: data })
             } else {
-                alert('로그인을 해주세요')
-                props.history.push('/')
+                /* eslint-disable-next-line */
+                if (confirm('로그인이 필요합니다\n로그인 페이지로 이동하시겠습니까?'))
+                    props.history.push('/')
+                else {
+                    e.target.value = 'posts';
+                    onChangeOption(e)
+                }
             }
         } else {
             openSearch(false)
