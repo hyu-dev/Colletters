@@ -16,7 +16,9 @@ import { useTopTagDispatch, useTopTagNextId, useTopTagState } from '../data/TopT
 import { IconContainer } from './components';
 import { useLoginUserState } from '../data/LoginUserContext';
 import { useEffect } from 'react';
+import { useCallback } from 'react';
 
+const body = document;
 
 function Main(props) {
     const loginUser = useLoginUserState();
@@ -36,11 +38,49 @@ function Main(props) {
     const time = useRef();
     const [idx, setIdx] = useState(0);
     const [openTags, setOpenTags] = useState(false);
+    const letterStyle = useRef(970)
+    const [style, setStyle] = useState(letterStyle)
+    const count = useRef(1);
 
+    const testFunc = useCallback(() => {
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight + Math.ceil(document.documentElement.scrollTop)
+        const length = letterState.filter(letter => {
+            if (letter.isBlind === 'N' || letter.userId === loginUser.id) {
+                return letter
+            }
+        }).length
+        if (scrollHeight <= clientHeight) {
+            if (length > 6 * count.current) {
+                setTimeout(() => {
+                    letterStyle.current += 500;
+                    setStyle(letterStyle.current)
+                    count.current += 0.5;
+                    window.scrollTo({
+                        top: Math.ceil(document.documentElement.scrollTop) + 499,
+                        left: 0,
+                        behavior: 'smooth'
+                    })
+                }, 400)
+            }
+        } 
+    }, [letterState, letterStyle, loginUser.id])
+    
     useEffect(() => {
+        letterStyle.current = 970;
+        setStyle(letterStyle.current)
+        count.current = 1;
+        window.scrollTo(0, 0)
+        body.addEventListener("scroll", testFunc)
         searchLetterDispatch({ type: 'COPY', payload: letterState })
+        return () => {
+            body.removeEventListener("scroll", testFunc)
+        }
     /* eslint-disable-next-line */
     }, [loginUser, letterState])
+
+    
+    
 
     useEffect(() => {
         topTagDispatch({ type: 'SORT' })
@@ -54,6 +94,7 @@ function Main(props) {
         return () => {clearInterval(time.current)}
     }, [topTagDispatch, topTagState.length, idx, searchLetterDispatch])
 
+    
     const onKeyPressByTag = (e) => {
         if (e.key === 'Enter') {
             if (searchTag === '') {
@@ -220,7 +261,7 @@ function Main(props) {
                     </ul>
                 </div>
                 <div className="lettersContainer">
-                    <div className="letters">
+                    <div className="letters" style={{ height: `${style}px`}}>
                         {
                             searchLetterState.map((letter) => {
                                 if (letter.isBlind === 'N' || loginUser.id === letter.userId) {

@@ -4,7 +4,7 @@ const initialLetters = [
     {
         id: 1,
         userId: "user",
-        nickName: "아무닉네임",
+        nickName: "유저일번",
         attRoot: '/images/attachment/',
         attName: ['att4.jpg', 'att1.jpg', 'att2.jpg'],
         isBlind: 'N',
@@ -32,7 +32,7 @@ const initialLetters = [
     {
         id: 2,
         userId: "youjeong",
-        nickName: "유정닉네임",
+        nickName: "유정쓰",
         attRoot: '/images/attachment/',
         attName: ['att5.jpg', 'att6.jpg', 'att7.jpg'],
         isBlind: 'N',
@@ -60,7 +60,7 @@ const initialLetters = [
     {
         id: 3,
         userId: "user",
-        nickName: "아무닉네임",
+        nickName: "유저일번",
         attRoot: '/images/attachment/',
         attName: ['att8.jpg', 'att9.jpg'],
         isBlind: 'N',
@@ -93,7 +93,7 @@ const initialLetters = [
     {
         id: 4,
         userId: "test",
-        nickName: "테스트닉",
+        nickName: "임시유저임",
         attRoot: '/images/attachment/',
         attName: ['att10.jpg', 'att11.jpg', 'att12.png'],
         isBlind: 'N',
@@ -120,6 +120,52 @@ const initialLetters = [
                 id: 3,
                 userId: "youjeong",
                 content: "님.. 정신 좀 차리세요",
+            },
+        ],
+    },
+    {
+        id: 5,
+        userId: "user",
+        nickName: "유저일번",
+        attRoot: '/images/attachment/',
+        attName: ['att12.png'],
+        isBlind: 'Y',
+        letter: {
+            title: '리덕스 언제하냐',
+            content: "리액트부터 막히네 ㅠㅠ",
+            tag: ["이거말고", "할거 더 많은데"],
+            viewCount: 0,
+            likeCount: 0,
+            writeDate: new Date("2021-07-18"),
+        },
+        reply: [
+            {
+                id: 1,
+                userId: "user",
+                content: "진짜 개어려움",
+            },
+        ],
+    },
+    {
+        id: 6,
+        userId: "test",
+        nickName: "임시유저임",
+        attRoot: '/images/attachment/',
+        attName: ['att11.jpg', 'att12.png'],
+        isBlind: 'N',
+        letter: {
+            title: '리액트',
+            content: "너무 어려워",
+            tag: ["리액트", "프론트"],
+            viewCount: 0,
+            likeCount: 0,
+            writeDate: new Date("2021-07-20"),
+        },
+        reply: [
+            {
+                id: 1,
+                userId: "user",
+                content: "진짜 개어려움",
             },
         ],
     },
@@ -198,7 +244,7 @@ const SearchLetterDispatchContext = createContext();
 export function LetterProvider({ children }) {
     const [state, dispatch] = useReducer(letterReducer, initialLetters);
     const [state1, dispatch1] = useReducer(searchLetterReducer, searchLetters)
-    const nextId = useRef(5)
+    const nextId = useRef(7)
     return (
         <LetterStateContext.Provider value={state}>
             <LetterDispatchContext.Provider value={dispatch}>

@@ -4,7 +4,7 @@ const initialUser = [
     {
         id: 'user',
         pwd: '1234',
-        nickName: '아무닉네임',
+        nickName: '유저일번',
         email: 'user@gmail.com',
         attRoot: '/images/profile/',
         attName: 'userProfile.png',
@@ -12,7 +12,7 @@ const initialUser = [
     {
         id: 'youjeong',
         pwd: '1234',
-        nickName: '유정닉네임',
+        nickName: '유정쓰',
         email: 'hyu630115@gmail.com',
         attRoot: '/images/profile/',
         attName: 'userProfile2.jpg',
@@ -20,7 +20,7 @@ const initialUser = [
     {
         id: 'test',
         pwd: '1234',
-        nickName: '테스트닉',
+        nickName: '임시유저임',
         email: 'test@gmail.com',
         attRoot: '/images/profile/',
         attName: 'userProfile3.jpg',

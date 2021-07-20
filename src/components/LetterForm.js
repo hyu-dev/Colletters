@@ -145,28 +145,34 @@ function LetterForm(props) {
 
     const onSubmitImages = async () => {
         const imageFileName = []
-        for (let img of Images) {
-            let formData = new FormData();
-            formData.append('userfile', img);
-            await axios.post('/api/upload', formData)
-            .then(res => {
-                imageFileName.push(res.data.filename)
-            })
-            .catch(err => {
-                return alert('사진을 업로드하지 못했습니다:\n', err)
-            })
+        if (Images.length > 0) {
+            for (let img of Images) {
+                let formData = new FormData();
+                formData.append('userfile', img);
+                await axios.post('/api/upload', formData)
+                .then(res => {
+                    imageFileName.push(res.data.filename)
+                })
+                .catch(err => {
+                    return alert('사진을 업로드하지 못했습니다:\n', err)
+                })
+            }
         }
         return imageFileName
     }
     
     const onSubmitHandler = (e) => {
+        let length = 0
+        if (updateLetter) length = Images.length + imageAttName.length
+        else length = Images.length
+
         if (Title === '') {
             return alert('제목을 입력하세요')
         } else if (Content === ''){
             return alert('내용을 입력하세요')
         } else if (TagList.length < 1) {
             return alert('최소 1개이상의 태그를 입력하세요')
-        } else if (Images.length < 1) {
+        } else if (length < 1) {
             return alert('최소 1개이상의 사진을 등록하세요')
         }
         const typeName = e.target.textContent;

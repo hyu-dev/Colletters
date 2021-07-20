@@ -51,8 +51,8 @@ function DetailLetter({ letter, history }) {
     const InputComment = useRef();
     const replyRef = useRef();
     const nextId = useRef(letter.reply.length + 1);
-
     const [userProfile, setUserProfile] = useState(['', '']);
+    const height = useRef(500)
 
     useEffect(() => {
         const userInfo = users.find(user => user.id === letter.userId)
@@ -119,6 +119,12 @@ function DetailLetter({ letter, history }) {
         letterDispatch({ type: 'UPDATE_REPLY', letter: Info })
         detailLetterDispatch({ type: 'UPDATE', letter: Info })
         InputComment.current.value = ''
+        replyRef.current.scrollTo({
+            top: height.current,
+            left: 0,
+            behavior: 'smooth'
+        })
+        height.current += 500
     }
 
     return (

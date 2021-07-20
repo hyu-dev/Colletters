@@ -191,15 +191,7 @@ const MyInformation = React.memo((props) => {
     const letters = useLetterState();
     const fileRef = useRef();
     const fileReader = useRef();
-    const lastLetterTitle = letters.find((letter, index) => {
-        let i = 0;
-        if (letter.userId == loginUser.id) {
-            if (index > i) {
-                i = index;
-                return letter
-            }
-        }
-    })
+    const lastLetterTitle = letters.find(letter => letter.userId === loginUser.id)
     const openFile = () => {
         fileRef.current.click()
     }
@@ -261,7 +253,7 @@ const MyInformation = React.memo((props) => {
                 <tr>
                     <td colSpan='3'>
                         <b>최근 끼적인 글 제목</b>
-                        <p>{ lastLetterTitle != null ? lastLetterTitle.letter.title : "" }</p>
+                        <p>{ lastLetterTitle ? lastLetterTitle.letter.title : "" }</p>
                     </td>
                 </tr>
                 </tbody>
