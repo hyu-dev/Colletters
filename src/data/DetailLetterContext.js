@@ -27,6 +27,21 @@ function letterReducer(state, action) {
                 ...state,
                 reply: state.reply.filter(reply => reply.id !== action.id)
             };
+        case 'LIKE':
+            return {
+                ...state,
+                likeCount: state.likeCount + 1
+            }
+        case 'LIKED':
+            return {
+                ...state,
+                likeCount: state.likeCount - 1
+            }
+        case 'VIEWCOUNT':
+            return {
+                ...state,
+                viewCount: state.viewCount + 1
+            }
         default:
             throw new Error(`Unhandled action type: ${ action.type }`);
     }

@@ -9,10 +9,10 @@ import { useOpenLetterDispatch, useOpenLetterState } from '../data/ModalContext.
 import { BackgroundBlur, IconContainer } from './components.jsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { IoArrowRedo } from 'react-icons/io5'
-import { useUserState } from '../data/UserContext';
+import { useUserDispatch, useUserState } from '../data/UserContext';
 import { withRouter } from 'react-router-dom';
 import { useLetterDispatch, useLetterState, useSearchLetterDispatch } from '../data/LetterContext';
-import { useLoginUserState } from '../data/LoginUserContext';
+import { useLoginUserDispatch, useLoginUserState } from '../data/LoginUserContext';
 import { useDetailLetterDispatch } from '../data/DetailLetterContext';
 
 const DetailContainer = styled.div`
@@ -39,7 +39,9 @@ const DetailContainer = styled.div`
 
 function DetailLetter({ letter, history }) {
     const users = useUserState();
+    const usersDispatch = useUserDispatch();
     const loginUser = useLoginUserState();
+    const loginUserDispatch = useLoginUserDispatch();
     const letterState = useLetterState();
     const letterDispatch = useLetterDispatch();
     const searchLetterDispatch = useSearchLetterDispatch();
@@ -127,6 +129,34 @@ function DetailLetter({ letter, history }) {
         height.current += 500
     }
 
+    const onClickLikeButton = () => {
+        console.log("클릭전", letter.letter.likeCount)
+        if (loginUser.id === '') {
+            /* eslint-disable-next-line */
+            if (confirm('로그인 정보가 필요합니다\n로그인페이지로 이동하시겠습니까?')) {
+                onMoveLoginPage()
+            }
+        } else {
+            if (loginUser.id !== letter.userId) {
+                const letterId = loginUser.like.find(like => like === letter.id)
+                if (letterId) {
+                    usersDispatch({ type: 'LIKED', userId: loginUser.id, letterId: letter.id })
+                    loginUserDispatch({ type: 'LIKED', letterId: letter.id })
+                    detailLetterDispatch({ type: 'LIKED' })
+                    letterDispatch({ type: 'LIKED', letterId: letter.id })
+                } else {
+                    usersDispatch({ type: 'LIKE', userId: loginUser.id, letterId: letter.id })
+                    loginUserDispatch({ type: 'LIKE', letterId: letter.id })
+                    detailLetterDispatch({ type: 'LIKE' })
+                    letterDispatch({ type: 'LIKE', letterId: letter.id })
+                }
+            } else {
+                alert('자추금지')
+            }
+        }
+        console.log("클릭후", letter.letter.likeCount)
+    }
+
     return (
         <BackgroundBlur modal={openLetterState.toString()}>
             <DetailContainer modal={openLetterState.toString()}>
@@ -151,6 +181,7 @@ function DetailLetter({ letter, history }) {
                     </IconContainer>
                     {   
                         letter && 
+                        /* eslint-disable-next-line */
                         letter.attName.map((name, i) => {
                             if (i === idx) return <img key={i} src={`${letter.attRoot}${name}`} alt="사진"/>
                         }) 
@@ -211,7 +242,15 @@ function DetailLetter({ letter, history }) {
                     </div>
                 </div>
                 <div className="likeImageContainer">
-                    <img className="likeImage" src="/images/like_none.png" alt="좋아요" />
+                    <img className="likeImage" src={
+                        loginUser.id === ''
+                        ? "/images/like_none.png"
+                        : loginUser.like.find(like => like === letter.id)
+                        ? "/images/like.png"
+                        : loginUser.id === letter.userId
+                        ? "/images/like.png"
+                        : "/images/like_none.png"
+                    } alt="좋아요" onClick={onClickLikeButton}/>
                     <p>{ letter.letter.likeCount }</p>
                 </div>
             </DetailContainer>

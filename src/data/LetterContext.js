@@ -171,9 +171,10 @@ const initialLetters = [
     },
 ];
 
-const searchLetters = [...initialLetters];
+const searchLetters = [...initialLetters.sort((a, b) => b.letter.writeDate - a.letter.writeDate)];
 
 function letterReducer(state, action) {
+    let letter;
     switch (action.type) {
         case 'CREATE':
             return state
@@ -200,8 +201,29 @@ function letterReducer(state, action) {
                 .sort((a, b) => b.letter.writeDate - a.letter.writeDate)
         case 'REMOVE_REPLY':
             const reply = state.find(letter => letter.id === action.letterId).reply.filter(reply => reply.id !== action.commentId)
-            const letter = state.find(letter => letter.id === action.letterId)
+            letter = state.find(letter => letter.id === action.letterId)
             letter.reply = reply
+            return state
+                .filter(letter => letter.id !== action.letterId)
+                .concat(letter)
+                .sort((a, b) => b.letter.writeDate - a.letter.writeDate)
+        case 'LIKE':
+            letter = state.find(letter => letter.id === action.letterId)
+            letter.letter.likeCount += 1
+            return state
+                .filter(letter => letter.id !== action.letterId)
+                .concat(letter)
+                .sort((a, b) => b.letter.writeDate - a.letter.writeDate)
+        case 'LIKED':
+            letter = state.find(letter => letter.id === action.letterId)
+            letter.letter.likeCount -= 1
+            return state
+                .filter(letter => letter.id !== action.letterId)
+                .concat(letter)
+                .sort((a, b) => b.letter.writeDate - a.letter.writeDate)
+        case 'VIEWCOUNT':
+            letter = state.find(letter => letter.id === action.letterId)
+            letter.letter.viewCount += 1
             return state
                 .filter(letter => letter.id !== action.letterId)
                 .concat(letter)
@@ -218,7 +240,7 @@ function searchLetterReducer(state, action) {
             array.sort((a, b) => b.letter.writeDate - a.letter.writeDate)
             return array
         case 'COPY':
-            return action.payload;
+            return action.payload.sort((a, b) => b.letter.writeDate - a.letter.writeDate);
         case 'REMOVE_USER':
             return state
                 .filter(letter => letter.userId !== action.id)

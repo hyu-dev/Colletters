@@ -47,6 +47,14 @@ function userReducer(state, action) {
             return state.filter(user => user.id !== action.payload.id).concat(action.payload)
         case 'REMOVE':
             return state.filter(user => user.id !== action.id)
+        case 'LIKE':
+            userInfo = state.find(user => user.id === action.userId);
+            userInfo.like = [...userInfo.like, action.letterId]
+            return state.filter(user => user.id !== action.userId).concat(userInfo)
+        case 'LIKED':
+            userInfo = state.find(user => user.id === action.userId);
+            userInfo.like = userInfo.like.filter(like => like !== action.letterId)
+            return state.filter(user => user.id !== action.userId).concat(userInfo)
         default:
             throw new Error(`Unhandled action type ${ action.type }`);
     }

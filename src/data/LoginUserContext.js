@@ -7,6 +7,7 @@ const initialUser = {
     email: '',
     attRoot: '',
     attName: '',
+    like: []
 }
 
 function userReducer(state, action) {
@@ -21,6 +22,16 @@ function userReducer(state, action) {
             return userInfo
         case 'UPDATE_FILE':
             return action.payload
+        case 'LIKE':
+            return {
+                ...state,
+                like: [...state.like, action.letterId]
+            }
+        case 'LIKED':
+            return {
+                ...state,
+                like: state.like.filter(like => like !== action.letterId)
+            }
         default:
             throw new Error(`Unhandled action type: ${ action.type }`);
     }

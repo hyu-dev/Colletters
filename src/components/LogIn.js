@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState } from 'react';
 import '../scss/LogIn.scss'
 import { Link, withRouter } from 'react-router-dom';
@@ -12,9 +11,10 @@ function LogIn(props) {
     const [userPwd, setUserPwd] = useState('')
     const users = useUserState();
     const loginUserDispatch = useLoginUserDispatch();
+    /* eslint-disable-next-line */
     const userInfo = users.find((user) => {
         if (user.id === userId && user.pwd === userPwd) {
-            return true
+            return user
         }
     })
     const onLoginHandler = (props, userInfo) => {
