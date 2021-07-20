@@ -260,3 +260,30 @@
     }
     
 }
+
+.likeImageContainer {
+    width: auto;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 30px;
+    bottom: 0;
+    .likeImage {
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+    }
+    p {
+        margin: 0;
+        padding: 0;
+        font-family: Rockwell;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 15px;
+        text-align: center;
+    }
+}
+    

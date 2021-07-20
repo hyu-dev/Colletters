@@ -4,26 +4,29 @@ const initialUser = [
     {
         id: 'user',
         pwd: '1234',
-        nickName: '유저일번',
+        nickName: 'user',
         email: 'user@gmail.com',
         attRoot: '/images/profile/',
         attName: 'userProfile.png',
+        like: []
     },
     {
         id: 'youjeong',
         pwd: '1234',
-        nickName: '유정쓰',
+        nickName: 'youjeong',
         email: 'hyu630115@gmail.com',
         attRoot: '/images/profile/',
         attName: 'userProfile2.jpg',
+        like: []
     },
     {
         id: 'test',
         pwd: '1234',
-        nickName: '임시유저임',
+        nickName: 'test',
         email: 'test@gmail.com',
         attRoot: '/images/profile/',
         attName: 'userProfile3.jpg',
+        like: []
     },
 ];
 

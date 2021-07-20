@@ -4,7 +4,7 @@ const initialLetters = [
     {
         id: 1,
         userId: "user",
-        nickName: "유저일번",
+        nickName: "user",
         attRoot: '/images/attachment/',
         attName: ['att4.jpg', 'att1.jpg', 'att2.jpg'],
         isBlind: 'N',
@@ -32,7 +32,7 @@ const initialLetters = [
     {
         id: 2,
         userId: "youjeong",
-        nickName: "유정쓰",
+        nickName: "youjeong",
         attRoot: '/images/attachment/',
         attName: ['att5.jpg', 'att6.jpg', 'att7.jpg'],
         isBlind: 'N',
@@ -60,7 +60,7 @@ const initialLetters = [
     {
         id: 3,
         userId: "user",
-        nickName: "유저일번",
+        nickName: "user",
         attRoot: '/images/attachment/',
         attName: ['att8.jpg', 'att9.jpg'],
         isBlind: 'N',
@@ -68,8 +68,8 @@ const initialLetters = [
             title: '제목3',
             content: "내용3",
             tag: ["태그5"],
-            viewCount: 20,
-            likeCount: 1,
+            viewCount: 0,
+            likeCount: 0,
             writeDate: new Date("2021-05-21"),
         },
         reply: [
@@ -93,7 +93,7 @@ const initialLetters = [
     {
         id: 4,
         userId: "test",
-        nickName: "임시유저임",
+        nickName: "test",
         attRoot: '/images/attachment/',
         attName: ['att10.jpg', 'att11.jpg', 'att12.png'],
         isBlind: 'N',
@@ -101,8 +101,8 @@ const initialLetters = [
             title: '제목4',
             content: "내용4",
             tag: ["태그6", "태그7", "태그8"],
-            viewCount: 1555,
-            likeCount: 211,
+            viewCount: 0,
+            likeCount: 0,
             writeDate: new Date("2021-05-22"),
         },
         reply: [
@@ -126,7 +126,7 @@ const initialLetters = [
     {
         id: 5,
         userId: "user",
-        nickName: "유저일번",
+        nickName: "user",
         attRoot: '/images/attachment/',
         attName: ['att12.png'],
         isBlind: 'Y',
@@ -149,7 +149,7 @@ const initialLetters = [
     {
         id: 6,
         userId: "test",
-        nickName: "임시유저임",
+        nickName: "test",
         attRoot: '/images/attachment/',
         attName: ['att11.jpg', 'att12.png'],
         isBlind: 'N',

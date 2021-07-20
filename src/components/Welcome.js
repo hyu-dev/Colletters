@@ -13,7 +13,7 @@ function Welcome(props) {
             <div className="homeBtnContainer">
                 <button onClick={() => {
                     props.history.push({ pathname: '/' })
-                }}>본 공간에 가다</button>
+                }}>로그인 페이지 이동</button>
             </div>
         </div>
     );

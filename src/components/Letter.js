@@ -19,16 +19,13 @@ function Letter({ letter }) {
         setUserProfile([userInfo.attRoot, userInfo.attName])
     }, [users, letter.userId])
 
+    const onClickLetter = () => {
+        openLetterDispatch({ type: 'OPEN' }); 
+        detailLetterDispatch({ type: 'UPDATE', letter: letter }); 
+    }
+
     return(
-        <div 
-            className="letter" 
-            onClick={
-                () => { 
-                    openLetterDispatch({ type: 'OPEN' }); 
-                    detailLetterDispatch({ type: 'UPDATE', letter: letter }); 
-                } 
-            }
-        >
+        <div className="letter" onClick={onClickLetter}>
             <img className="userProfile" src={`${userProfile[0]}${userProfile[1]}`} alt="" />
             <p className="userNickName">{ letter.nickName }</p>
             <img className="letterImg" src={ `${ letter.attRoot }${ letter.attName[0] }` } alt="이미지" />

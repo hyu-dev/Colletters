@@ -210,6 +210,10 @@ function DetailLetter({ letter, history }) {
                         }
                     </div>
                 </div>
+                <div className="likeImageContainer">
+                    <img className="likeImage" src="/images/like_none.png" alt="좋아요" />
+                    <p>{ letter.letter.likeCount }</p>
+                </div>
             </DetailContainer>
         </BackgroundBlur>
     );
