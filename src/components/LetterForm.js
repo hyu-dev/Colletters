@@ -25,10 +25,23 @@ function LetterForm(props) {
     const [Title, setTitle] = useState('');
     const [Content, setContent] = useState('');
     const [Images, setImages] = useState([]);
+    const [imageAttRoot, setImageAttRoot] = useState('');
+    const [imageAttName, setImageAttName] = useState([]);
     const ImageWrapperRef = useRef();
     const SelectRef = useRef();
     const EditableRef = useRef();
+    const updateLetter = props.history.location.state;
 
+    useEffect(() => {
+        if (updateLetter) {
+            setTitle(updateLetter.letter.title);
+            EditableRef.current.innerText = updateLetter.letter.content;
+            setContent(updateLetter.letter.content);
+            setImageAttName([...updateLetter.attName]);
+            setImageAttRoot(updateLetter.attRoot);
+            setTagList([...updateLetter.letter.tag])
+        }
+    }, [updateLetter])
 
     const createTags = (value) => {
         if (TagList.length >= 5) {
@@ -47,7 +60,11 @@ function LetterForm(props) {
     }
 
     const createImages = (file) => {
-        if (Images.length >= 5) {
+        let length = 0
+        if (updateLetter) length = Images.length + imageAttName.length
+        else length = Images.length
+
+        if (length >= 5) {
             return alert('더 이상 이미지를 첨부할 수 없습니다')
         }
         for (let f of Images) {
@@ -59,7 +76,10 @@ function LetterForm(props) {
     }
 
     const deleteImages = (file) => {
-        setImages(Images.filter(image => image.name !== file.name))
+        const type = typeof(file)
+        console.log(type)
+        if (type === 'string') setImageAttName(imageAttName.filter(name => name !== file))
+        else setImages(Images.filter(image => image.name !== file.name))
     }
 
     const onChangeColor = (value, index) => {
@@ -139,7 +159,7 @@ function LetterForm(props) {
         return imageFileName
     }
     
-    const onSubmitHandler = () => {
+    const onSubmitHandler = (e) => {
         if (Title === '') {
             return alert('제목을 입력하세요')
         } else if (Content === ''){
@@ -149,13 +169,14 @@ function LetterForm(props) {
         } else if (Images.length < 1) {
             return alert('최소 1개이상의 사진을 등록하세요')
         }
+        const typeName = e.target.textContent;
         onSubmitImages().then(res => {
             const letters = {
-                id: nextId.current,
+                id: typeName === '끼적이다' ? nextId.current : updateLetter.id,
                 userId: loginUser.id,
                 nickName: loginUser.nickName,
                 attRoot: '/uploads/',
-                attName: [...res],
+                attName: typeName === '끼적이다' ? [...res] : [...imageAttName, ...res],
                 isBlind: SelectRef.current.value,
                 letter: {
                     title: Title,
@@ -167,9 +188,14 @@ function LetterForm(props) {
                 },
                 reply: [],
             }
-            nextId.current += 1;
-            letterDispatch({ type: 'CREATE', letter: letters })
-            alert('게시글이 정상적으로 등록되었습니다')
+            if (typeName === '끼적이다') {
+                nextId.current += 1;
+                letterDispatch({ type: 'CREATE', letter: letters })
+                alert('게시글이 정상적으로 등록되었습니다')
+            } else {
+                letterDispatch({ type: 'UPDATE', letter: letters })
+                alert('게시글이 정상적으로 수정되었습니다')
+            }
             props.history.push({ pathname: "/main" })
         })
     }
@@ -192,7 +218,7 @@ function LetterForm(props) {
                             placeholder="제목 (20자 이내)"
                         />
                         <div className="content" contentEditable="true" onKeyDown={onKeyDown} onKeyUp={onKeyUp} onClick={onFocus} ref={EditableRef}>
-                            <p data-placeholder="내용 (300자 이내)" ></p>
+                            <p data-placeholder="내용 (300자 이내)"></p>
                         </div>
                         <div
                             draggable="false"
@@ -202,6 +228,12 @@ function LetterForm(props) {
                             onDrop={onImageDrop}
                             ref={ImageWrapperRef}
                         >
+                            {
+                                updateLetter 
+                                && imageAttName.map(name => 
+                                    <Attachment key={name} root={imageAttRoot} name={name} onDelete={deleteImages} />
+                                )
+                            }
                             {
                                 Images.length > 0 
                                 && Images.map(image => <Attachment key={image.name} img={image} onDelete={deleteImages} />)
@@ -236,7 +268,7 @@ function LetterForm(props) {
                     </aside>
                 </div>
                 <div className="LetterbuttonContainer">
-                    <button className="writeBtn" onClick={onSubmitHandler}>끼적이다</button>
+                    <button className="writeBtn" onClick={onSubmitHandler}>{updateLetter ? '바꾸다' : '끼적이다'}</button>
                     <button className="backBtn" onClick={onBackHistory}>나가다</button>
                 </div>
             </section>
@@ -342,7 +374,7 @@ const ImageContainer = styled.div`
     }
 `;
 
-const Attachment = React.memo(({ img, onDelete }) => {
+const Attachment = React.memo(({ img, onDelete, ...rest }) => {
     const [ImageSrc, setImageSrc] = useState('');
 
     useEffect(() => {
@@ -350,18 +382,27 @@ const Attachment = React.memo(({ img, onDelete }) => {
     })
 
     const ImageReader = () => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            setImageSrc(e.target.result)
+        if (rest.name) {
+            setImageSrc(`${rest.root}${rest.name}`)
+        } else {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setImageSrc(e.target.result)
+            }
+            reader.readAsDataURL(img);
         }
-        reader.readAsDataURL(img);
+    }
+
+    const onDeleteFile = () => {
+        if (rest.name) onDelete(rest.name)
+        else onDelete(img)
     }
 
     return (
         <ImageContainer draggable="false">
             <img src={ImageSrc} alt="이미지" draggable="false"/>
             <ImageDeleteIcon>
-                <FcRemoveImage onClick={() => {onDelete(img)}}/>
+                <FcRemoveImage onClick={onDeleteFile}/>
             </ImageDeleteIcon>
         </ImageContainer>
     )

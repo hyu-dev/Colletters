@@ -13,7 +13,7 @@ import { useUserState } from '../data/UserContext';
 import { withRouter } from 'react-router-dom';
 import { useLetterDispatch, useLetterState, useSearchLetterDispatch } from '../data/LetterContext';
 import { useLoginUserState } from '../data/LoginUserContext';
-import { initialLetter, useDetailLetterDispatch } from '../data/DetailLetterContext';
+import { useDetailLetterDispatch } from '../data/DetailLetterContext';
 
 const DetailContainer = styled.div`
     width: 1100px;

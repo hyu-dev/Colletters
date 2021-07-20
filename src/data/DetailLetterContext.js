@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { useRef } from 'react';
 
 export const initialLetter = {
     id: '',

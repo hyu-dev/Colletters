@@ -44,7 +44,6 @@ function Main(props) {
 
     useEffect(() => {
         topTagDispatch({ type: 'SORT' })
-        searchLetterDispatch({ type: 'SORT' })
         time.current = setInterval(() => {
             if (idx >= topTagState.length - 1) {
                 setIdx(0);

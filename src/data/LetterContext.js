@@ -130,22 +130,36 @@ const searchLetters = [...initialLetters];
 function letterReducer(state, action) {
     switch (action.type) {
         case 'CREATE':
-            return state.concat(action.letter);
+            return state
+                .concat(action.letter)
+                .sort((a, b) => b.letter.writeDate - a.letter.writeDate);
         case 'UPDATE':
-            return state.filter(letter => letter.id !== action.letter.id).concat(action.letter)
+            return state
+                .filter(letter => letter.id !== action.letter.id)
+                .concat(action.letter)
+                .sort((a, b) => b.letter.writeDate - a.letter.writeDate)
         case 'UPDATE_REPLY':
-            return state.map(letter => {
-                return letter.id === action.letter.id ? action.letter : letter
-            })
+            return state
+                .map(letter => {
+                    return letter.id === action.letter.id ? action.letter : letter
+                })
+                .sort((a, b) => b.letter.writeDate - a.letter.writeDate)
         case 'REMOVE':
-            return state.filter(letter => letter.id !== action.id);
+            return state
+                .filter(letter => letter.id !== action.id)
+                .sort((a, b) => b.letter.writeDate - a.letter.writeDate);
         case 'REMOVE_USER':
-            return state.filter(letter => letter.userId !== action.id)
+            return state
+                .filter(letter => letter.userId !== action.id)
+                .sort((a, b) => b.letter.writeDate - a.letter.writeDate)
         case 'REMOVE_REPLY':
             const reply = state.find(letter => letter.id === action.letterId).reply.filter(reply => reply.id !== action.commentId)
             const letter = state.find(letter => letter.id === action.letterId)
             letter.reply = reply
-            return state.filter(letter => letter.id !== action.letterId).concat(letter)
+            return state
+                .filter(letter => letter.id !== action.letterId)
+                .concat(letter)
+                .sort((a, b) => b.letter.writeDate - a.letter.writeDate)
         default:
             throw new Error(`Unhandled action type: ${action.type}`);
     }
@@ -160,13 +174,15 @@ function searchLetterReducer(state, action) {
         case 'COPY':
             return action.payload;
         case 'REMOVE_USER':
-            return state.filter(letter => letter.userId !== action.id)
+            return state
+                .filter(letter => letter.userId !== action.id)
+                .sort((a, b) => b.letter.writeDate - a.letter.writeDate)
         case 'SEARCH_HASH':
-            return action.payload;
+            return action.payload.sort((a, b) => b.letter.writeDate - a.letter.writeDate);
         case 'SEARCH_NICKNAME':
-            return action.payload;
+            return action.payload.sort((a, b) => b.letter.writeDate - a.letter.writeDate);
         case 'SEARCH_MYLETTER':
-            return action.payload;
+            return action.payload.sort((a, b) => b.letter.writeDate - a.letter.writeDate);
         default:
             throw new Error(`Unhandled action type: ${action.type}`)
     }
