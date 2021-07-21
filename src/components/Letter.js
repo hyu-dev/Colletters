@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaSlackHash } from 'react-icons/fa';
 import { getCookie, getCookieValue, setCookie } from '../cookie';
-import { useDetailLetterDispatch } from '../data/DetailLetterContext';
+import { useDetailLetterDispatch, useDetailLetterState } from '../data/DetailLetterContext';
 import { useLetterDispatch } from '../data/LetterContext';
 import { useLoginUserState } from '../data/LoginUserContext';
 import { useOpenLetterDispatch } from '../data/ModalContext';
@@ -15,6 +15,7 @@ function Letter({ letter }) {
     const loginUser = useLoginUserState();
     const letterDispatch = useLetterDispatch();
     const openLetterDispatch = useOpenLetterDispatch();
+    const detailLetterState = useDetailLetterState();
     const detailLetterDispatch = useDetailLetterDispatch();
 
     const [userProfile, setUserProfile] = useState(['', '']);
@@ -22,7 +23,7 @@ function Letter({ letter }) {
     useEffect(() => {
         const userInfo = users.find(user => user.id === letter.userId)
         setUserProfile([userInfo.attRoot, userInfo.attName])
-    }, [users, letter.userId, detailLetterDispatch, letterDispatch])
+    }, [users, letter.userId, detailLetterState, letterDispatch])
 
     const onClickLetter = () => {
         console.log("클릭전", letter.letter.viewCount)
