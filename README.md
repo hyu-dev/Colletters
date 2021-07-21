@@ -64,6 +64,6 @@
 
 ## 영상참조
 
-[가입하기](https://github.com/hyu-dev/Colletters/issues/12)
-[로그인 및 회원가입](https://github.com/hyu-dev/Colletters/issues/13)
+[가입하기](https://github.com/hyu-dev/Colletters/issues/12)  
+[로그인 및 회원가입](https://github.com/hyu-dev/Colletters/issues/13)  
 [게시글작성](https://github.com/hyu-dev/Colletters/issues/14)
