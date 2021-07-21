@@ -66,4 +66,7 @@
 
 [가입하기](https://github.com/hyu-dev/Colletters/issues/12)  
 [로그인 및 회원가입](https://github.com/hyu-dev/Colletters/issues/13)  
-[게시글작성](https://github.com/hyu-dev/Colletters/issues/14)
+[게시글검색](https://github.com/hyu-dev/Colletters/issues/16)  
+[게시글작성](https://github.com/hyu-dev/Colletters/issues/14)  
+[상세페이지](https://github.com/hyu-dev/Colletters/issues/17)  
+[게시글수정삭제](https://github.com/hyu-dev/Colletters/issues/18)
