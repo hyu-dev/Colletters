@@ -209,6 +209,7 @@ const MyInformation = React.memo((props) => {
                     email: loginUser.email,
                     attRoot: '/uploads/',
                     attName: res.data.filename,
+                    like: [...loginUser.like]
                 }
                 loginUserDispatch({ type: 'UPDATE_FILE', payload: userInfo})
                 userDispatch({ type: 'UPDATE_FILE', payload: userInfo})

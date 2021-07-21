@@ -245,9 +245,11 @@ function DetailLetter({ letter, history }) {
                     <img className="likeImage" src={
                         loginUser.id === ''
                         ? "/images/like_none.png"
-                        : loginUser.like.find(like => like === letter.id)
+                        : loginUser.id === letter.userId 
                         ? "/images/like.png"
-                        : loginUser.id === letter.userId
+                        : loginUser.like.length < 1
+                        ? "/images/like_none.png"
+                        : loginUser.like.find(like => like === letter.id) 
                         ? "/images/like.png"
                         : "/images/like_none.png"
                     } alt="좋아요" onClick={onClickLikeButton}/>
