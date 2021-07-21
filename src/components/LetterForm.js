@@ -192,7 +192,7 @@ function LetterForm(props) {
                     likeCount: 0,
                     writeDate: new Date(),
                 },
-                reply: [],
+                reply: typeName === '끼적이다' ? [] : [...updateLetter.reply],
             }
             if (typeName === '끼적이다') {
                 nextId.current += 1;

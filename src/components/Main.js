@@ -11,7 +11,7 @@ import DetailLetter from './DetailLetter.js';
 
 import { useLetterState, useSearchLetterDispatch, useSearchLetterState } from '../data/LetterContext';
 import { OpenLetterProvider, OpenTagProvider } from '../data/ModalContext';
-import { useDetailLetterDispatch, useDetailLetterState } from '../data/DetailLetterContext';
+import { useDetailLetterState } from '../data/DetailLetterContext';
 import { useTopTagDispatch, useTopTagNextId, useTopTagState } from '../data/TopTagsContext';
 import { IconContainer } from './components';
 import { useLoginUserState } from '../data/LoginUserContext';
@@ -26,7 +26,6 @@ function Main(props) {
     const searchLetterState = useSearchLetterState();
     const searchLetterDispatch = useSearchLetterDispatch();
     const detailLetterState = useDetailLetterState();
-    const detailLetterDispatch = useDetailLetterDispatch();
     const topTagState = useTopTagState();
     const topTagDispatch = useTopTagDispatch();
     const nextId = useTopTagNextId();
