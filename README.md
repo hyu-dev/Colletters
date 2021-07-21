@@ -61,3 +61,9 @@
 
 - 2021/05/21 ~ 2021/06/01 : 화면UI 구현
 - 2021/07/13 ~ 2021/07/23(예상) : 기능 구현
+
+## 영상참조
+
+[가입하기](https://github.com/hyu-dev/Colletters/issues/12)  
+[로그인 및 회원가입](https://github.com/hyu-dev/Colletters/issues/13)  
+[게시글작성](https://github.com/hyu-dev/Colletters/issues/14)

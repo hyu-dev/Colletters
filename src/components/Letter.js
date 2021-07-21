@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaSlackHash } from 'react-icons/fa';
 import { getCookie, getCookieValue, setCookie } from '../cookie';
-import { useDetailLetterDispatch, useDetailLetterState } from '../data/DetailLetterContext';
+import { useDetailLetterDispatch } from '../data/DetailLetterContext';
 import { useLetterDispatch } from '../data/LetterContext';
 import { useLoginUserState } from '../data/LoginUserContext';
 import { useOpenLetterDispatch } from '../data/ModalContext';

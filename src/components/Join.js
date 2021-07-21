@@ -14,6 +14,7 @@ const initialUser = {
     email: [],
     attRoot: '/images/profile/',
     attName: 'basic.png',
+    like: []
 }
 
 function Join(props) {
