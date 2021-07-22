@@ -42,7 +42,7 @@ function Main(props) {
     const [style, setStyle] = useState(letterStyle)
     const count = useRef(1);
 
-    const testFunc = useCallback(() => {
+    const onInfinityScroll = useCallback(() => {
         const scrollHeight = document.documentElement.scrollHeight;
         const clientHeight = document.documentElement.clientHeight + Math.ceil(document.documentElement.scrollTop)
         /* eslint-disable-next-line */
@@ -76,10 +76,10 @@ function Main(props) {
             left: 0,
             behavior: 'smooth'
         })
-        body.addEventListener("scroll", testFunc)
+        body.addEventListener("scroll", onInfinityScroll)
         searchLetterDispatch({ type: 'COPY', payload: letterState })
         return () => {
-            body.removeEventListener("scroll", testFunc)
+            body.removeEventListener("scroll", onInfinityScroll)
         }
     /* eslint-disable-next-line */
     }, [loginUser, letterState])

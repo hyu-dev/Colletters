@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaSlackHash } from 'react-icons/fa';
-import { getCookie, getCookieValue, setCookie } from '../cookie';
 import { useDetailLetterDispatch, useDetailLetterState } from '../data/DetailLetterContext';
-import { useLetterDispatch } from '../data/LetterContext';
-import { useLoginUserState } from '../data/LoginUserContext';
 import { useOpenLetterDispatch } from '../data/ModalContext';
 import { useUserState } from '../data/UserContext';
 import '../scss/Letter.scss';
@@ -12,8 +9,6 @@ import { IconContainer } from './components';
 
 function Letter({ letter }) {
     const users = useUserState();
-    const loginUser = useLoginUserState();
-    const letterDispatch = useLetterDispatch();
     const openLetterDispatch = useOpenLetterDispatch();
     const detailLetterState = useDetailLetterState();
     const detailLetterDispatch = useDetailLetterDispatch();
@@ -23,28 +18,11 @@ function Letter({ letter }) {
     useEffect(() => {
         const userInfo = users.find(user => user.id === letter.userId)
         setUserProfile([userInfo.attRoot, userInfo.attName])
-    }, [users, letter.userId, detailLetterState, letterDispatch])
+    }, [users, letter.userId, detailLetterState])
 
     const onClickLetter = () => {
-        console.log("클릭전", letter.letter.viewCount)
         openLetterDispatch({ type: 'OPEN' }); 
         detailLetterDispatch({ type: 'UPDATE', letter: letter });
-        if (getCookie("view") === 'view') {
-            const arr = getCookieValue("view").split(",")
-            const lett = arr.find(a => {
-                return a.substring(0, a.indexOf("_")) === loginUser.id && parseInt(a.substring(a.indexOf("_") + 1)) === letter.id
-            })
-            if (!lett) {
-                setCookie("view", `${loginUser.id}_${letter.id}`)
-                letterDispatch({ type: 'VIEWCOUNT', letterId: letter.id })
-                detailLetterDispatch({ type: 'VIEWCOUNT' })
-            }
-        } else {
-            setCookie("view", `${loginUser.id}_${letter.id}`)
-            letterDispatch({ type: 'VIEWCOUNT', letterId: letter.id })
-            detailLetterDispatch({ type: 'VIEWCOUNT' })
-        }
-        console.log("클릭후", letter.letter.viewCount)
     }
 
     return(

@@ -27,7 +27,6 @@ export function setCookie(key, value, exp = 1, options = { path: '/' }) {
     let valueArr = value + ","
     if (document.cookie.substring(0, document.cookie.indexOf("=")) === 'view') {
         valueArr = document.cookie.substring(document.cookie.indexOf("=") + 1) + value + ","
-        console.log(valueArr)
     }
     date.setTime(date.getTime() + exp * 24 * 60 * 60 * 1000);
 

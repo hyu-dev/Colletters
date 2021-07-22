@@ -14,6 +14,7 @@ import { withRouter } from 'react-router-dom';
 import { useLetterDispatch, useLetterState, useSearchLetterDispatch } from '../data/LetterContext';
 import { useLoginUserDispatch, useLoginUserState } from '../data/LoginUserContext';
 import { useDetailLetterDispatch } from '../data/DetailLetterContext';
+import { getCookie, getCookieValue, setCookie } from '../cookie';
 
 const DetailContainer = styled.div`
     width: 1100px;
@@ -55,6 +56,26 @@ function DetailLetter({ letter, history }) {
     const nextId = useRef(letter.reply.length + 1);
     const [userProfile, setUserProfile] = useState(['', '']);
     const height = useRef(500)
+
+    useEffect(() => {
+        if (letter.id !== '') {
+            if (getCookie("view") === 'view') {
+                const arr = getCookieValue("view").split(",")
+                const lett = arr.find(a => {
+                    return a.substring(0, a.indexOf("_")) === loginUser.id && parseInt(a.substring(a.indexOf("_") + 1)) === letter.id
+                })
+                if (!lett) {
+                    setCookie("view", `${loginUser.id}_${letter.id}`)
+                    letterDispatch({ type: 'VIEWCOUNT', letterId: letter.id })
+                    detailLetterDispatch({ type: 'VIEWCOUNT' })
+                }
+            } else {
+                setCookie("view", `${loginUser.id}_${letter.id}`)
+                letterDispatch({ type: 'VIEWCOUNT', letterId: letter.id })
+                detailLetterDispatch({ type: 'VIEWCOUNT' })
+            }
+        }
+    }, [letter])
 
     useEffect(() => {
         const userInfo = users.find(user => user.id === letter.userId)
@@ -130,7 +151,6 @@ function DetailLetter({ letter, history }) {
     }
 
     const onClickLikeButton = () => {
-        console.log("클릭전", letter.letter.likeCount)
         if (loginUser.id === '') {
             /* eslint-disable-next-line */
             if (confirm('로그인 정보가 필요합니다\n로그인페이지로 이동하시겠습니까?')) {
@@ -154,7 +174,6 @@ function DetailLetter({ letter, history }) {
                 alert('자추금지')
             }
         }
-        console.log("클릭후", letter.letter.likeCount)
     }
 
     return (
