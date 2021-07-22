@@ -78,7 +78,6 @@ function LetterForm(props) {
 
     const deleteImages = async (file) => {
         const type = typeof(file)
-        console.log(type)
         if (type === 'string') {
             setImageAttName(imageAttName.filter(name => name !== file))
             setDeleteImageName([...deleteImageName, file])
@@ -126,9 +125,7 @@ function LetterForm(props) {
     
     const onKeyDown = (e) => {
         if (e.code === 'Backspace') {
-            // console.log('백스페이스 누름')
             if (e.target.innerText === '') {
-                // console.log('비어있음')
                 EditableRef.current.contentEditable = false
                 e.target.innerHTML = '<p data-placeholder="내용 (300자 이내)"></p>'
             }
