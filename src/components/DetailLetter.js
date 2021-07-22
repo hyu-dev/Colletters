@@ -58,27 +58,28 @@ function DetailLetter({ letter, history }) {
     const height = useRef(500)
 
     useEffect(() => {
-        if (getCookie("view") === 'view') {
-            const arr = getCookieValue("view").split(",")
-            const lett = arr.find(a => {
-                return a.substring(0, a.indexOf("_")) === loginUser.id && parseInt(a.substring(a.indexOf("_") + 1)) === letter.id
-            })
-            if (!lett) {
+        if (letter.id !== '') {
+            if (getCookie("view") === 'view') {
+                const arr = getCookieValue("view").split(",")
+                const lett = arr.find(a => {
+                    return a.substring(0, a.indexOf("_")) === loginUser.id && parseInt(a.substring(a.indexOf("_") + 1)) === letter.id
+                })
+                if (!lett) {
+                    setCookie("view", `${loginUser.id}_${letter.id}`)
+                    letterDispatch({ type: 'VIEWCOUNT', letterId: letter.id })
+                    detailLetterDispatch({ type: 'VIEWCOUNT' })
+                }
+            } else {
                 setCookie("view", `${loginUser.id}_${letter.id}`)
                 letterDispatch({ type: 'VIEWCOUNT', letterId: letter.id })
                 detailLetterDispatch({ type: 'VIEWCOUNT' })
             }
-        } else {
-            setCookie("view", `${loginUser.id}_${letter.id}`)
-            letterDispatch({ type: 'VIEWCOUNT', letterId: letter.id })
-            detailLetterDispatch({ type: 'VIEWCOUNT' })
         }
-    }, [])
+    }, [letter])
 
     useEffect(() => {
         const userInfo = users.find(user => user.id === letter.userId)
         if (userInfo) setUserProfile([userInfo.attRoot, userInfo.attName])
-        
     }, [users, letter.userId])
 
     const onMoveLetterForm = () => {
