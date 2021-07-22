@@ -27,6 +27,7 @@ function LetterForm(props) {
     const [Images, setImages] = useState([]);
     const [imageAttRoot, setImageAttRoot] = useState('');
     const [imageAttName, setImageAttName] = useState([]);
+    const [deleteImageName, setDeleteImageName] = useState([]);
     const ImageWrapperRef = useRef();
     const SelectRef = useRef();
     const EditableRef = useRef();
@@ -75,11 +76,16 @@ function LetterForm(props) {
         setImages([...Images, file])
     }
 
-    const deleteImages = (file) => {
+    const deleteImages = async (file) => {
         const type = typeof(file)
         console.log(type)
-        if (type === 'string') setImageAttName(imageAttName.filter(name => name !== file))
-        else setImages(Images.filter(image => image.name !== file.name))
+        if (type === 'string') {
+            setImageAttName(imageAttName.filter(name => name !== file))
+            setDeleteImageName([...deleteImageName, file])
+        }
+        else {
+            setImages(Images.filter(image => image.name !== file.name))
+        }
     }
 
     const onChangeColor = (value, index) => {
@@ -200,6 +206,16 @@ function LetterForm(props) {
                 alert('게시글이 정상적으로 등록되었습니다')
             } else {
                 letterDispatch({ type: 'UPDATE', letter: letters })
+                let checkDelete = new Array(deleteImageName.length);
+                // 기존에 업로드된 파일 삭제
+                deleteImageName.forEach(img => {
+                    axios.put('/api/upload', { filename: img })
+                    .then(res => checkDelete.push(res.data.state))
+                    .catch(err => checkDelete.push(err))
+                })
+                for (let i in checkDelete) {
+                    return checkDelete[i] !== true && alert('게시글 수정에 오류가 발생하였습니다')
+                }
                 alert('게시글이 정상적으로 수정되었습니다')
             }
             props.history.push({ pathname: "/main" })
