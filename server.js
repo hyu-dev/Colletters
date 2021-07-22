@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const upload = multer({ dest: 'public/uploads/' });
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 const app = express();
 const http = require('http').createServer(app)
 
