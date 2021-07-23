@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect, useState, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import { withRouter } from 'react-router-dom';
@@ -108,6 +107,7 @@ const initialUser = {
     email: [],
     attRoot: '',
     attName: '',
+    like: []
 }
 
 function UserTag(props) {
@@ -135,6 +135,22 @@ function UserTag(props) {
         }
     }
 
+    const onLeaveColleters = () => {
+        /* eslint-disable-next-line */
+        if (confirm("탈퇴하시겠습니까?")) {
+            usersDispatch({ type: 'REMOVE', id: user.id})
+            letterDispatch({ type: 'REMOVE_USER', id: user.id })
+            searchLetterDispatch({ type: 'REMOVE_USER', id: user.id })
+            setUser({ type: 'UPDATE', user: initialUser })
+        }
+    }
+
+    const onLogoutColleters = () => {
+        /* eslint-disable-next-line */
+        if (confirm("로그아웃하시겠습니까?")) {
+            setUser({ type: 'UPDATE', user: initialUser })
+        }
+    }
 
     return (
         <BackgroundBlur modal={ openTagState.toString() }>
@@ -151,19 +167,8 @@ function UserTag(props) {
                         </div>
                         { changeInfo(change) }
                         <div className="textBtnContainer">
-                            <button className="textButton" onClick={ () => {
-                                if (confirm("탈퇴하시겠습니까?")) {
-                                    usersDispatch({ type: 'REMOVE', id: user.id})
-                                    letterDispatch({ type: 'REMOVE_USER', id: user.id })
-                                    searchLetterDispatch({ type: 'REMOVE_USER', id: user.id })
-                                    setUser({ type: 'UPDATE', user: initialUser })
-                                }
-                            }}>잘 가</button>
-                            <button className="textButton" onClick={ () => {
-                                if (confirm("로그아웃하시겠습니까?")) {
-                                    setUser({ type: 'UPDATE', user: initialUser })
-                                }
-                            } }>또 봐</button>
+                            <button className="textButton" onClick={onLeaveColleters}>잘 가</button>
+                            <button className="textButton" onClick={onLogoutColleters}>또 봐</button>
                         </div>
                         </>
                     : 
@@ -192,6 +197,7 @@ const MyInformation = React.memo((props) => {
     const fileRef = useRef();
     const fileReader = useRef();
     const lastLetterTitle = letters.find(letter => letter.userId === loginUser.id)
+
     const openFile = () => {
         fileRef.current.click()
     }
@@ -223,9 +229,7 @@ const MyInformation = React.memo((props) => {
 
 
     useEffect(() => {
-        if (props.open) {
-            openFile();
-        }
+        if (props.open) openFile();
     }, [props.open])
 
     return (
@@ -260,11 +264,13 @@ const MyInformation = React.memo((props) => {
                 </tbody>
             </table>
         </div>
-        <div className="writeBtnContainer"><Button onClick={() => {
-            props.history.push({
-                pathname: "/form",
-            })
-        }}>글 끼적이러 가다</Button></div>
+        <div className="writeBtnContainer">
+            <Button onClick={() => {
+                props.history.push({
+                    pathname: "/form",
+                })
+            }}>글 끼적이러 가다</Button>
+        </div>
         </>
     )
 })
@@ -332,16 +338,8 @@ const ChangePwd = React.memo((props) => {
             pwd: ChangePwd,
         }
 
-        const initialState = {
-            id: '',
-            pwd: '',
-            nickName: '',
-            email: '',
-            attRoot: '',
-            attName: '',
-        }
         userDispatch({ type: 'UPDATE_PWD', payload: userInfo })
-        loginUserDispatch({ type: 'UPDATE_PWD', payload: initialState })
+        loginUserDispatch({ type: 'UPDATE_PWD', payload: initialUser })
         alert('비밀번호가 성공적으로 변경되었습니다\n변경된 비밀번호로 로그인해주세요')
         props.history.push("/")
     }
