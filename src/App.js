@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React from 'react';
 import './App.scss';
-import LogIn from './components/LogIn';
 import Join from './components/Join';
 import { Route } from 'react-router-dom';
 import Welcome from './components/Welcome';
@@ -11,14 +10,17 @@ import { LetterProvider } from './data/LetterContext';
 import { DetailLetterProvider } from './data/DetailLetterContext';
 import { LoginUserProvider } from './data/LoginUserContext';
 import { TopTagsProvider } from './data/TopTagsContext';
+import Login from './pages/Login';
+import { ToggleProvider } from './data/_reducers/toggleComponent';
 
 function App() {
   return (
     <div className="App">
       <h1 className="appTitle">COLLETTERS</h1>
       <LoginUserProvider>
+      <ToggleProvider>
         <Route exact path="/">
-          <LogIn isMain={false} />
+          <Login isMain={false} />
         </Route>
         <Route path="/join">
           <Join />
@@ -38,6 +40,7 @@ function App() {
             </DetailLetterProvider>
           </TopTagsProvider>
         </LetterProvider>
+      </ToggleProvider>
       </LoginUserProvider>
     </div>
   );
